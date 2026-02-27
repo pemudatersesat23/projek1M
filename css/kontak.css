@@ -1,0 +1,130 @@
+/* ═══════════════ KONTAK ═══════════════ */
+#kontak {
+    background: #fff;
+}
+
+.kontak-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.kontak-left {}
+
+.kontak-left h2 {
+    margin-bottom: 12px;
+}
+
+.kontak-left p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 28px;
+}
+
+.kontak-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.k-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.k-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: .2px;
+    text-transform: uppercase;
+}
+
+.k-val {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.form-card {
+    background: var(--gray);
+    border-radius: 22px;
+    padding: 30px;
+    border: 1px solid rgba(17, 17, 17, .07);
+}
+
+.form-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.form-card .fc-sub {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 22px;
+}
+
+.form-row {
+    display: grid;
+    gap: 14px;
+}
+
+.form-row.two {
+    grid-template-columns: 1fr 1fr;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    margin-bottom: 6px;
+    color: #374151;
+    text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(17, 17, 17, .12);
+    background: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 13.5px;
+    color: var(--black);
+    outline: none;
+    transition: border-color .18s, box-shadow .18s;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(15, 76, 129, .10);
+}
+
+.field textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-submit {
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+    border-radius: 14px;
+}

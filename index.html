@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LPK Kizuku International Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- ═══ CSS per Section ═══ -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/kontak.css">
+    <link rel="stylesheet" href="css/berita.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <!-- ═══ NAVBAR ═══ -->
+    <nav id="navbar">
+        <a class="nav-brand" href="#beranda">
+            <div class="nav-logo" aria-hidden="true"></div>
+            <div class="nav-name">LPK Kizuku <span>International Academy</span></div>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#beranda" class="active">Beranda</a></li>
+            <li><a href="#program">Program</a></li>
+            <li><a href="#keunggulan">Keunggulan</a></li>
+            <li><a href="#testimoni">Testimoni</a></li>
+            <li><a href="#kontak">Kontak</a></li>
+        </ul>
+        <div class="nav-cta">
+            <a class="btn btn-outline" href="#kontak">Konsultasi</a>
+            <a class="btn btn-primary" href="#kontak">Daftar Sekarang</a>
+        </div>
+        <button class="hamburger" id="hambtn" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobmenu">
+        <a href="#beranda">Beranda</a>
+        <a href="#program">Program</a>
+        <a href="#keunggulan">Keunggulan</a>
+        <a href="#testimoni">Testimoni</a>
+        <a href="#kontak">Kontak</a>
+        <div class="mob-cta">
+            <a class="btn btn-outline" href="#kontak">Konsultasi</a>
+            <a class="btn btn-primary" href="#kontak">Daftar Sekarang</a>
+        </div>
+    </div>
+
+    <!-- ═══ BERANDA / HERO ═══ -->
+    <section id="beranda">
+        <div class="hero-bg">
+            <div class="hero-shape s1"></div>
+            <div class="hero-shape s2"></div>
+            <div class="hero-shape s3"></div>
+        </div>
+        <div class="hero-grid"></div>
+
+        <div class="hero-inner">
+            <!-- Left -->
+            <div class="hero-left">
+                <div class="hero-pill">
+                    <div class="hero-pill-dot"></div>
+                    Terpercaya sejak 2014 &nbsp;·&nbsp; 🇯🇵 Jepang
+                </div>
+                <h1 class="hero-h1">
+                    Wujudkan Karier<br>
+                    <span class="line-accent">Impian di Jepang</span><br>
+                    Bersama Kami
+                </h1>
+                <p class="hero-sub">
+                    LPK Kizuku International Academy hadir untuk mempersiapkan kamu dengan pelatihan bahasa, budaya, dan
+                    skill kerja terbaik menuju Jepang.
+                </p>
+                <div class="hero-btns">
+                    <a class="btn btn-primary btn-lg" href="#program">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                        Lihat Program
+                    </a>
+                    <a class="btn btn-outline btn-lg" href="#kontak">
+                        Konsultasi Gratis
+                    </a>
+                </div>
+                <div class="hero-trust">
+                    <div class="trust-avatars">
+                        <span>R</span><span>A</span><span>S</span>
+                    </div>
+                    <div class="trust-text">
+                        <strong>1000+ alumni ditempatkan</strong>
+                        di berbagai perusahaan Jepang
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right – visual -->
+            <div class="hero-right">
+                <!-- Main program card -->
+                <div class="hero-card main-card">
+                    <div class="mc-header">
+                        <div class="mc-logo" aria-hidden="true"></div>
+                        <div>
+                            <div class="mc-title">Kizuku International Academy</div>
+                            <div class="mc-sub">Program tersedia</div>
+                        </div>
+                    </div>
+                    <div class="mc-prog-list">
+                        <div class="mc-prog">
+                            <span class="mc-dot" style="background:var(--red)"></span>
+                            Tokutei Ginou (TG)
+                            <span class="count">Open</span>
+                        </div>
+                        <div class="mc-prog">
+                            <span class="mc-dot" style="background:var(--blue)"></span>
+                            Engineering
+                            <span class="count">Open</span>
+                        </div>
+                        <div class="mc-prog">
+                            <span class="mc-dot" style="background:#111"></span>
+                            Kelas Bahasa Jepang
+                            <span class="count">Open</span>
+                        </div>
+                        <div class="mc-prog">
+                            <span class="mc-dot"
+                                style="background:linear-gradient(135deg,var(--red),var(--cyan))"></span>
+                            Returnee / Ex Jepang
+                            <span class="count">Open</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badge 1 -->
+                <div class="hero-card hero-badge-1">
+                    <div class="hb-icon" style="background:rgba(225,6,0,.10);font-size:20px;">🎌</div>
+                    <div class="hb-num"
+                        style="background:linear-gradient(135deg,var(--red),#ff5e58);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+                        98%</div>
+                    <div class="hb-label">Tingkat Penempatan</div>
+                </div>
+
+                <!-- Badge 2 -->
+                <div class="hero-card hero-badge-2">
+                    <div class="hb-icon" style="background:rgba(15,76,129,.10);font-size:20px;">🏆</div>
+                    <div class="hb-num"
+                        style="background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+                        10+</div>
+                    <div class="hb-label">Tahun Pengalaman</div>
+                </div>
+
+                <!-- Japan flag badge -->
+                <div class="jp-flag">
+                    <span class="flag">🇯🇵</span>
+                    <div>
+                        <div style="font-size:13px;font-weight:800;">Berangkat ke Jepang</div>
+                        <div style="font-size:11px;color:var(--muted);">Program resmi SSW/TG</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ STATS ═══ -->
+    <div class="stats-strip">
+        <div class="stats-inner container">
+            <div class="stat-item">
+                <div class="stat-num">1000<span>+</span></div>
+                <div class="stat-lbl">Alumni Ditempatkan</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">98<span>%</span></div>
+                <div class="stat-lbl">Tingkat Keberhasilan</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">10<span>+</span></div>
+                <div class="stat-lbl">Tahun Pengalaman</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">4</div>
+                <div class="stat-lbl">Program Tersedia</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ PROGRAM ═══ -->
+    <section id="program" class="section-pad">
+        <div class="container">
+            <div class="sec-head reveal">
+                <div class="sec-tag">✦ Program Kami</div>
+                <h2 class="sec-h2">Pilih Jalur yang Tepat<br>Untuk Kariermu</h2>
+                <p class="sec-p">Dari pemula hingga profesional, kami siapkan jalur pelatihan terstruktur yang
+                    mengantarkan kamu ke Jepang.</p>
+            </div>
+
+            <div class="prog-grid">
+                <!-- TG -->
+                <article class="prog-card red reveal reveal-d1">
+                    <div class="prog-glow" aria-hidden="true"></div>
+                    <div class="prog-badge"><span class="bdot"></span>TG / SSW</div>
+                    <h3>Program Tokutei Ginou (TG)</h3>
+                    <p>Jalur resmi kerja Jepang dengan sistem pelatihan terarah: bahasa, disiplin, budaya kerja, sampai
+                        simulasi interview.</p>
+                    <ul class="feat-list">
+                        <li>Bahasa Jepang intensif (N5–N4)</li>
+                        <li>Budaya &amp; disiplin kerja Jepang</li>
+                        <li>Simulasi interview user Jepang</li>
+                        <li>Pendampingan dokumen lengkap</li>
+                    </ul>
+                    <div class="prog-footer">
+                        <a class="btn btn-red" href="#kontak">Daftar TG Batch</a>
+                        <a class="btn btn-outline" href="#kontak">Lihat Detail</a>
+                        <span class="prog-note">⚡ Kuota terbatas</span>
+                    </div>
+                </article>
+
+                <!-- Engineering -->
+                <article class="prog-card blue reveal reveal-d2">
+                    <div class="prog-glow" aria-hidden="true"></div>
+                    <div class="prog-badge"><span class="bdot"></span>Engineering</div>
+                    <h3>Program Engineering</h3>
+                    <p>Program profesional untuk bidang teknik &amp; konstruksi. Fokus pada kesiapan kerja, bahasa
+                        teknis, dan etika kerja Jepang.</p>
+                    <ul class="feat-list">
+                        <li>Bahasa teknis &amp; terminologi lapangan</li>
+                        <li>Disiplin kerja &amp; mindset profesional</li>
+                        <li>Interview preparation</li>
+                        <li>Pendampingan penempatan</li>
+                    </ul>
+                    <div class="prog-footer">
+                        <a class="btn btn-blue" href="#kontak">Cek Persyaratan</a>
+                        <a class="btn btn-outline" href="#kontak">Lihat Detail</a>
+                        <span class="prog-note">✦ Jalur profesional</span>
+                    </div>
+                </article>
+
+                <!-- Japanese Class -->
+                <article class="prog-card dark reveal reveal-d3">
+                    <div class="prog-glow" aria-hidden="true"></div>
+                    <div class="prog-badge"><span class="bdot"></span>Japanese Class</div>
+                    <h3>Kelas Bahasa Jepang (N5–N3)</h3>
+                    <p>Kelas reguler dari pemula sampai menengah: grammar terstruktur, kaiwa aktif, dan latihan soal
+                        JLPT.</p>
+                    <ul class="feat-list">
+                        <li>Level: N5, N4, N3</li>
+                        <li>Grammar sistematis + drilling</li>
+                        <li>Kaiwa &amp; listening practice</li>
+                        <li>Latihan JLPT style</li>
+                    </ul>
+                    <div class="prog-footer">
+                        <a class="btn btn-black" href="#kontak">Join Kelas</a>
+                        <a class="btn btn-outline" href="#kontak">Lihat Jadwal</a>
+                        <span class="prog-note">★ Tersedia kelas pemula</span>
+                    </div>
+                </article>
+
+                <!-- Returnee -->
+                <article class="prog-card mix reveal reveal-d4">
+                    <div class="prog-glow" aria-hidden="true"></div>
+                    <div class="prog-badge"><span class="bdot"></span>Returnee / Ex Japan</div>
+                    <h3>Program Returnee (Ex Jepang)</h3>
+                    <p>Untuk alumni magang/eks Jepang yang ingin upgrade jalur karier: peningkatan bahasa, re-matching,
+                        dan jalur lanjutan.</p>
+                    <ul class="feat-list">
+                        <li>Upgrade level bahasa &amp; kaiwa</li>
+                        <li>Persiapan dokumen lanjutan</li>
+                        <li>Re-matching user</li>
+                        <li>Konsultasi jalur karier</li>
+                    </ul>
+                    <div class="prog-footer">
+                        <a class="btn btn-primary" href="#kontak">Konsultasi Program</a>
+                        <a class="btn btn-outline" href="#kontak">Lihat Detail</a>
+                        <span class="prog-note">Untuk yang sudah pernah ke Jepang</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ KEUNGGULAN ═══ -->
+    <section id="keunggulan" class="section-pad">
+        <div class="container">
+            <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
+                <div class="sec-tag">✦ Mengapa Kizuku</div>
+                <h2 class="sec-h2">Keunggulan yang Membuat<br>Kami Berbeda</h2>
+                <p class="sec-p" style="margin:0 auto;">Kami tidak sekadar mengajar bahasa — kami mempersiapkan kamu
+                    seutuhnya untuk sukses bekerja di Jepang.</p>
+            </div>
+
+            <div class="keung-grid">
+                <div class="keung-card reveal reveal-d1">
+                    <div class="keung-icon c-blue">🎓</div>
+                    <h4>Pengajar Berpengalaman</h4>
+                    <p>Tenaga pengajar kami adalah praktisi yang pernah bekerja atau belajar langsung di Jepang,
+                        memberikan insight nyata dunia kerja Jepang.</p>
+                </div>
+                <div class="keung-card reveal reveal-d2">
+                    <div class="keung-icon c-red">🇯🇵</div>
+                    <h4>Kurikulum Berbasis Realita</h4>
+                    <p>Materi disesuaikan dengan kebutuhan aktual pasar kerja Jepang — bukan sekadar teori, tapi
+                        langsung aplikatif di lapangan.</p>
+                </div>
+                <div class="keung-card reveal reveal-d3">
+                    <div class="keung-icon c-cyan">🤝</div>
+                    <h4>Jaringan Perusahaan Luas</h4>
+                    <p>Kami telah membangun relasi dengan ratusan perusahaan Jepang yang aktif mencari tenaga kerja
+                        Indonesia berkualitas.</p>
+                </div>
+                <div class="keung-card reveal reveal-d4">
+                    <div class="keung-icon c-green">✅</div>
+                    <h4>Pendampingan Penuh</h4>
+                    <p>Dari pertama daftar hingga kamu sudah bekerja di Jepang, tim kami mendampingi setiap langkah
+                        prosesmu tanpa biaya tersembunyi.</p>
+                </div>
+                <div class="keung-card reveal reveal-d5">
+                    <div class="keung-icon c-orange">⚡</div>
+                    <h4>Proses Cepat & Transparan</h4>
+                    <p>Proses seleksi, pelatihan, hingga pemberangkatan dilakukan secara transparan dengan timeline yang
+                        jelas dan dapat dipantau.</p>
+                </div>
+                <div class="keung-card reveal reveal-d6">
+                    <div class="keung-icon c-dark">🏆</div>
+                    <h4>Rekam Jejak Terbukti</h4>
+                    <p>Lebih dari 1000 alumni telah berhasil kami tempatkan di Jepang dengan tingkat keberhasilan
+                        mencapai 98%. Hasil nyata, bukan janji.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ TESTIMONI ═══ -->
+    <section id="testimoni" class="section-pad">
+        <div class="container">
+            <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
+                <div class="sec-tag">✦ Testimoni</div>
+                <h2 class="sec-h2">Cerita Sukses<br>Alumni Kizuku</h2>
+                <p class="sec-p" style="margin:0 auto;">Bukan kami yang bilang — dengarlah langsung dari mereka yang
+                    sudah membuktikannya.</p>
+            </div>
+
+            <div class="testi-grid">
+                <div class="testi-card reveal reveal-d1">
+                    <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <p class="testi-text">"Dulu saya nol bahasa Jepang. Setelah 6 bulan di Kizuku, saya lulus N4 dan
+                        langsung diterima di perusahaan manufaktur di Aichi. Pelatihan disini beneran total, bukan cuma
+                        ngajar bahasa tapi juga budaya dan cara kerja Jepang."</p>
+                    <div class="testi-person">
+                        <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">R</div>
+                        <div>
+                            <div class="testi-name">Rizki Pratama</div>
+                            <div class="testi-role">Alumni TG · Bekerja di Aichi, Jepang</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testi-card reveal reveal-d2">
+                    <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <p class="testi-text">"Program Engineering Kizuku sangat fokus dan relevan. Saya dapat kerja di
+                        bidang konstruksi di Osaka hanya 3 bulan setelah pelatihan. Staf nya juga responsif banget dalam
+                        membantu proses dokumen dan visa."</p>
+                    <div class="testi-person">
+                        <div class="testi-avatar" style="background:linear-gradient(135deg,var(--blue),var(--cyan))">A
+                        </div>
+                        <div>
+                            <div class="testi-name">Andi Setiawan</div>
+                            <div class="testi-role">Alumni Engineering · Osaka, Jepang</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testi-card reveal reveal-d3">
+                    <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <p class="testi-text">"Saya returnee yang sempat bingung mau lanjut kemana. Kizuku bantu saya
+                        upgrade bahasa dari N4 ke N3 dan matching dengan perusahaan baru yang lebih baik. Sekarang sudah
+                        tahun kedua di Jepang dan alhamdulillah karier makin berkembang."</p>
+                    <div class="testi-person">
+                        <div class="testi-avatar" style="background:linear-gradient(135deg,#1a1a2e,#555)">S</div>
+                        <div>
+                            <div class="testi-name">Siti Nurhaliza</div>
+                            <div class="testi-role">Alumni Returnee · Tokyo, Jepang</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ KONTAK ═══ -->
+    <section id="kontak" class="section-pad">
+        <div class="container">
+            <div class="kontak-grid">
+                <div class="kontak-left reveal">
+                    <div class="sec-tag">✦ Hubungi Kami</div>
+                    <h2 class="sec-h2">Siap Mulai<br>Perjalananmu?</h2>
+                    <p>Tim kami siap membantu kamu memilih program terbaik, menjawab pertanyaan, dan memandu proses
+                        pendaftaran dari awal hingga akhir.</p>
+
+                    <div class="kontak-item">
+                        <div class="k-icon">📍</div>
+                        <div>
+                            <div class="k-label">Alamat</div>
+                            <div class="k-val">Jl. Contoh No. 123, Kota Anda, Indonesia</div>
+                        </div>
+                    </div>
+                    <div class="kontak-item">
+                        <div class="k-icon">📱</div>
+                        <div>
+                            <div class="k-label">WhatsApp</div>
+                            <div class="k-val">+62 812-XXXX-XXXX</div>
+                        </div>
+                    </div>
+                    <div class="kontak-item">
+                        <div class="k-icon">📧</div>
+                        <div>
+                            <div class="k-label">Email</div>
+                            <div class="k-val">info@kizuku-academy.com</div>
+                        </div>
+                    </div>
+                    <div class="kontak-item">
+                        <div class="k-icon">⏰</div>
+                        <div>
+                            <div class="k-label">Jam Operasional</div>
+                            <div class="k-val">Senin – Sabtu, 08.00 – 17.00 WIB</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px;">
+                        <a class="btn btn-primary" href="https://wa.me/62812XXXXXXXX" target="_blank"
+                            style="margin-right:10px;">
+                            💬 Chat WhatsApp
+                        </a>
+                        <a class="btn btn-outline" href="mailto:info@kizuku-academy.com">
+                            ✉️ Kirim Email
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-card reveal reveal-d2">
+                    <h3>Form Pendaftaran</h3>
+                    <p class="fc-sub">Isi form di bawah, kami akan menghubungi kamu dalam 1×24 jam.</p>
+                    <div class="form-row">
+                        <div class="form-row two">
+                            <div class="field">
+                                <label>Nama Lengkap</label>
+                                <input type="text" placeholder="Nama kamu">
+                            </div>
+                            <div class="field">
+                                <label>No. WhatsApp</label>
+                                <input type="text" placeholder="08xx-xxxx-xxxx">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Email</label>
+                            <input type="email" placeholder="nama@email.com">
+                        </div>
+                        <div class="field">
+                            <label>Program yang Diminati</label>
+                            <select>
+                                <option value="">-- Pilih Program --</option>
+                                <option>Tokutei Ginou (TG / SSW)</option>
+                                <option>Engineering</option>
+                                <option>Kelas Bahasa Jepang</option>
+                                <option>Returnee / Ex Jepang</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Pesan / Pertanyaan</label>
+                            <textarea
+                                placeholder="Tuliskan pertanyaan atau informasi tambahan kamu di sini..."></textarea>
+                        </div>
+                        <button class="btn btn-primary form-submit">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                            Kirim Pendaftaran
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ BERITA TERKINI ═══ -->
+    <section id="berita" class="section-pad">
+        <div class="container">
+            <div class="sec-head reveal"
+                style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:36px;">
+                <div>
+                    <div class="sec-tag">📰 Berita Terkini</div>
+                    <h2 class="sec-h2" style="margin-bottom:6px;">Update &amp; Informasi<br>Terbaru Kizuku</h2>
+                    <p class="sec-p">Tetap update dengan berita, info program, dan kisah sukses alumni kami.</p>
+                </div>
+                <button class="btn btn-outline" onclick="openAdmin('tab-berita')" style="flex-shrink:0;">+ Kelola
+                    Berita</button>
+            </div>
+
+            <!-- Featured + Side -->
+            <div class="berita-featured reveal">
+                <div class="berita-card b-featured" id="news-featured">
+                    <div class="berita-img-placeholder mix-bg"><span style="position:relative;z-index:1;">🎌</span>
+                    </div>
+                    <div class="berita-body">
+                        <div class="berita-meta">
+                            <span class="b-kategori kat-info">Info Program</span>
+                            <span class="b-date">20 Feb 2025</span>
+                        </div>
+                        <h4>Pembukaan Batch Baru Program Tokutei Ginou (TG) – Maret 2025</h4>
+                        <p>LPK Kizuku dengan bangga mengumumkan pembukaan batch baru Program Tokutei Ginou untuk
+                            keberangkatan Maret 2025. Kuota sangat terbatas, hanya 30 peserta. Pendaftaran dibuka mulai
+                            hari ini dan akan ditutup saat kuota penuh. Segera hubungi tim kami untuk informasi lebih
+                            lanjut.</p>
+                    </div>
+                </div>
+                <div class="berita-small-grid" id="news-side">
+                    <div class="berita-card b-small">
+                        <div class="berita-img-placeholder red-bg" style="aspect-ratio:16/5;font-size:24px;"><span
+                                style="position:relative;z-index:1;">🏆</span></div>
+                        <div class="berita-body">
+                            <div class="berita-meta"><span class="b-kategori kat-alumni">Alumni</span><span
+                                    class="b-date">15 Feb 2025</span></div>
+                            <h4>25 Alumni Kizuku Berhasil Berangkat ke Jepang Bulan Ini</h4>
+                        </div>
+                    </div>
+                    <div class="berita-card b-small">
+                        <div class="berita-img-placeholder" style="aspect-ratio:16/5;font-size:24px;"><span
+                                style="position:relative;z-index:1;">📚</span></div>
+                        <div class="berita-body">
+                            <div class="berita-meta"><span class="b-kategori kat-tips">Tips</span><span
+                                    class="b-date">10 Feb 2025</span></div>
+                            <h4>5 Tips Lolos Interview User Jepang yang Wajib Kamu Tahu</h4>
+                        </div>
+                    </div>
+                    <div class="berita-card b-small">
+                        <div class="berita-img-placeholder dark-bg" style="aspect-ratio:16/5;font-size:24px;"><span
+                                style="position:relative;z-index:1;">🎓</span></div>
+                        <div class="berita-body">
+                            <div class="berita-meta"><span class="b-kategori kat-promo">Promo</span><span
+                                    class="b-date">5 Feb 2025</span></div>
+                            <h4>Diskon 20% Kelas Bahasa Jepang untuk Pendaftar Awal Maret</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3 cards -->
+            <div class="berita-grid-row reveal" id="news-grid" style="margin-top:18px;">
+                <div class="berita-card">
+                    <div class="berita-img-placeholder red-bg"><span style="position:relative;z-index:1;">👩‍💼</span>
+                    </div>
+                    <div class="berita-body">
+                        <div class="berita-meta"><span class="b-kategori kat-alumni">Alumni</span><span class="b-date">1
+                                Feb 2025</span></div>
+                        <h4>Siti Berhasil Naik Jabatan di Perusahaan Jepang Setelah 2 Tahun</h4>
+                        <p>Alumni Returnee Kizuku, Siti Nurhaliza, kini menduduki posisi supervisor di perusahaan
+                            manufaktur di Tokyo.</p>
+                    </div>
+                </div>
+                <div class="berita-card">
+                    <div class="berita-img-placeholder" style="background:linear-gradient(135deg,#10b981,#059669)"><span
+                            style="position:relative;z-index:1;font-size:48px;">✅</span></div>
+                    <div class="berita-body">
+                        <div class="berita-meta"><span class="b-kategori kat-info">Info</span><span class="b-date">28
+                                Jan 2025</span></div>
+                        <h4>Kizuku Raih Akreditasi A dari Lembaga Sertifikasi Nasional</h4>
+                        <p>Komitmen kami terhadap kualitas pelatihan kini diakui secara resmi dengan predikat akreditasi
+                            tertinggi.</p>
+                    </div>
+                </div>
+                <div class="berita-card">
+                    <div class="berita-img-placeholder dark-bg"><span
+                            style="position:relative;z-index:1;font-size:48px;">🤝</span></div>
+                    <div class="berita-body">
+                        <div class="berita-meta"><span class="b-kategori kat-info">Kerjasama</span><span
+                                class="b-date">20 Jan 2025</span></div>
+                        <h4>MOU Baru dengan 15 Perusahaan Jepang untuk Penempatan 2025</h4>
+                        <p>Kizuku memperluas jaringan ke lebih banyak perusahaan Jepang, membuka peluang lebih besar
+                            bagi calon peserta.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="berita-load-more reveal">
+                <button class="btn btn-outline btn-lg" id="load-more-btn" onclick="loadMoreNews()">
+                    Lihat Berita Lainnya →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ ADMIN PANEL ═══ -->
+    <div id="admin-panel">
+        <div class="admin-modal">
+            <div class="admin-topbar">
+                <div>
+                    <h2>⚙️ Panel Admin — LPK Kizuku</h2>
+                    <p>Kelola data siswa, pendaftaran, dan konten berita</p>
+                </div>
+                <button class="admin-close" onclick="closeAdmin()">✕</button>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchTab('tab-siswa', this)">📋 Data Siswa</button>
+                <button class="admin-tab" onclick="switchTab('tab-tambah', this)">➕ Tambah Siswa</button>
+                <button class="admin-tab" onclick="switchTab('tab-berita', this)" id="tab-btn-berita">📰 Kelola
+                    Berita</button>
+                <button class="admin-tab" onclick="switchTab('tab-laporan', this)">📊 Laporan</button>
+            </div>
+
+            <div class="admin-body">
+
+                <!-- TAB: DATA SISWA -->
+                <div id="tab-siswa" class="admin-tab-content">
+                    <div class="db-stats-row">
+                        <div class="db-stat">
+                            <div class="db-stat-num blue" id="stat-total">0</div>
+                            <div class="db-stat-lbl">Total Siswa</div>
+                        </div>
+                        <div class="db-stat">
+                            <div class="db-stat-num green" id="stat-aktif">0</div>
+                            <div class="db-stat-lbl">Aktif Belajar</div>
+                        </div>
+                        <div class="db-stat">
+                            <div class="db-stat-num red" id="stat-berangkat">0</div>
+                            <div class="db-stat-lbl">Sudah Berangkat</div>
+                        </div>
+                        <div class="db-stat">
+                            <div class="db-stat-num orange" id="stat-proses">0</div>
+                            <div class="db-stat-lbl">Dalam Proses</div>
+                        </div>
+                    </div>
+                    <div class="db-toolbar">
+                        <input class="db-search" id="db-search" type="text"
+                            placeholder="🔍  Cari nama, program, status..." oninput="filterSiswa()">
+                        <select class="db-filter" id="db-filter-prog" onchange="filterSiswa()">
+                            <option value="">Semua Program</option>
+                            <option>Tokutei Ginou (TG)</option>
+                            <option>Engineering</option>
+                            <option>Kelas Bahasa Jepang</option>
+                            <option>Returnee / Ex Jepang</option>
+                        </select>
+                        <select class="db-filter" id="db-filter-status" onchange="filterSiswa()">
+                            <option value="">Semua Status</option>
+                            <option>Aktif</option>
+                            <option>Proses</option>
+                            <option>Berangkat</option>
+                            <option>Lulus</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="exportCSV()" style="padding:9px 16px;font-size:12px;">⬇
+                            Export CSV</button>
+                    </div>
+                    <div class="db-table-wrap">
+                        <table id="siswa-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama</th>
+                                    <th>Program</th>
+                                    <th>No. WA</th>
+                                    <th>Kota Asal</th>
+                                    <th>Tgl. Daftar</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="siswa-tbody"></tbody>
+                        </table>
+                    </div>
+                    <p id="empty-msg" style="text-align:center;color:var(--muted);padding:30px;display:none;">Belum ada
+                        data siswa. Tambahkan siswa di tab "Tambah Siswa".</p>
+                </div>
+
+                <!-- TAB: TAMBAH SISWA -->
+                <div id="tab-tambah" class="admin-tab-content" style="display:none;">
+                    <h3 style="font-size:17px;font-weight:800;margin-bottom:4px;">Tambah Data Siswa Baru</h3>
+                    <p style="color:var(--muted);font-size:13.5px;margin-bottom:22px;">Data akan tersimpan di database
+                        lokal browser.</p>
+                    <div class="add-form-grid">
+                        <div class="add-field">
+                            <label>Nama Lengkap *</label>
+                            <input type="text" id="add-nama" placeholder="Nama lengkap siswa">
+                        </div>
+                        <div class="add-field">
+                            <label>No. WhatsApp *</label>
+                            <input type="text" id="add-wa" placeholder="08xx-xxxx-xxxx">
+                        </div>
+                        <div class="add-field">
+                            <label>Email</label>
+                            <input type="email" id="add-email" placeholder="email@gmail.com">
+                        </div>
+                        <div class="add-field">
+                            <label>Tanggal Lahir</label>
+                            <input type="date" id="add-tgl-lahir">
+                        </div>
+                        <div class="add-field">
+                            <label>Kota Asal *</label>
+                            <input type="text" id="add-kota" placeholder="Contoh: Surabaya">
+                        </div>
+                        <div class="add-field">
+                            <label>Program *</label>
+                            <select id="add-program">
+                                <option value="">-- Pilih Program --</option>
+                                <option>Tokutei Ginou (TG)</option>
+                                <option>Engineering</option>
+                                <option>Kelas Bahasa Jepang</option>
+                                <option>Returnee / Ex Jepang</option>
+                            </select>
+                        </div>
+                        <div class="add-field">
+                            <label>Status</label>
+                            <select id="add-status">
+                                <option value="Aktif">Aktif</option>
+                                <option value="Proses">Dalam Proses</option>
+                                <option value="Berangkat">Sudah Berangkat</option>
+                                <option value="Lulus">Lulus</option>
+                            </select>
+                        </div>
+                        <div class="add-field">
+                            <label>Pendidikan Terakhir</label>
+                            <select id="add-pendidikan">
+                                <option>SMA/SMK</option>
+                                <option>D3</option>
+                                <option>S1</option>
+                                <option>S2</option>
+                            </select>
+                        </div>
+                        <div class="add-field span2">
+                            <label>Catatan</label>
+                            <textarea id="add-catatan" placeholder="Catatan tambahan tentang siswa..."
+                                rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="add-submit-row">
+                        <button class="btn btn-primary btn-lg" onclick="tambahSiswa()">
+                            ✅ Simpan Data Siswa
+                        </button>
+                        <button class="btn btn-outline btn-lg" onclick="resetForm()">🔄 Reset Form</button>
+                    </div>
+                    <div id="add-msg"
+                        style="margin-top:14px;padding:12px 16px;border-radius:12px;display:none;font-weight:700;font-size:13.5px;">
+                    </div>
+                </div>
+
+                <!-- TAB: BERITA -->
+                <div id="tab-berita" class="admin-tab-content" style="display:none;">
+                    <h3 style="font-size:17px;font-weight:800;margin-bottom:4px;">Kelola Berita &amp; Pengumuman</h3>
+                    <p style="color:var(--muted);font-size:13.5px;margin-bottom:20px;">Tambah atau hapus berita yang
+                        tampil di halaman publik.</p>
+
+                    <!-- Form tambah berita -->
+                    <div
+                        style="background:var(--gray);border-radius:16px;padding:20px;border:1px solid rgba(17,17,17,.07);margin-bottom:22px;">
+                        <h4 style="font-size:14px;font-weight:800;margin-bottom:14px;">+ Tambah Berita Baru</h4>
+                        <div class="add-form-grid">
+                            <div class="add-field span2">
+                                <label>Judul Berita *</label>
+                                <input type="text" id="news-judul" placeholder="Judul berita...">
+                            </div>
+                            <div class="add-field">
+                                <label>Kategori</label>
+                                <select id="news-kat">
+                                    <option value="kat-info">Info Program</option>
+                                    <option value="kat-alumni">Alumni</option>
+                                    <option value="kat-promo">Promo</option>
+                                    <option value="kat-tips">Tips</option>
+                                </select>
+                            </div>
+                            <div class="add-field">
+                                <label>Emoji / Ikon</label>
+                                <input type="text" id="news-emoji" placeholder="🎌" maxlength="4" value="📢">
+                            </div>
+                            <div class="add-field span2">
+                                <label>Isi Singkat</label>
+                                <textarea id="news-isi" placeholder="Ringkasan berita..." rows="2"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="margin-top:14px;" onclick="tambahBerita()">📰 Publish
+                            Berita</button>
+                        <div id="news-msg"
+                            style="display:none;margin-top:10px;padding:10px 14px;border-radius:10px;font-weight:700;font-size:13px;">
+                        </div>
+                    </div>
+
+                    <!-- List berita -->
+                    <div class="news-admin-grid" id="news-admin-list"></div>
+                </div>
+
+                <!-- TAB: LAPORAN -->
+                <div id="tab-laporan" class="admin-tab-content" style="display:none;">
+                    <h3 style="font-size:17px;font-weight:800;margin-bottom:20px;">📊 Ringkasan &amp; Laporan</h3>
+                    <div class="db-stats-row" style="grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;">
+                        <div class="db-stat" style="background:linear-gradient(135deg,var(--blue),#0a3560);color:#fff;">
+                            <div class="db-stat-num" id="rpt-total" style="color:#fff;-webkit-text-fill-color:#fff;">0
+                            </div>
+                            <div class="db-stat-lbl" style="color:rgba(255,255,255,.7);">Total Pendaftar</div>
+                        </div>
+                        <div class="db-stat" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;">
+                            <div class="db-stat-num" id="rpt-berangkat"
+                                style="color:#fff;-webkit-text-fill-color:#fff;">0</div>
+                            <div class="db-stat-lbl" style="color:rgba(255,255,255,.7);">Total Berangkat ke Jepang</div>
+                        </div>
+                    </div>
+                    <h4 style="font-size:14px;font-weight:800;margin-bottom:14px;">Distribusi per Program</h4>
+                    <div id="rpt-program" style="display:grid;gap:10px;"></div>
+                    <h4 style="font-size:14px;font-weight:800;margin:22px 0 14px;">Distribusi per Status</h4>
+                    <div id="rpt-status" style="display:grid;gap:10px;"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- FAB Admin -->
+    <button class="btn btn-primary admin-fab" onclick="openAdmin('tab-siswa')">
+        ⚙️ Admin Panel
+    </button>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="ft-brand">
+                    <div class="ft-nav-logo">
+                        <div class="ft-logo-box" aria-hidden="true"></div>
+                        <div class="ft-brand-name">
+                            LPK Kizuku
+                            <span>International Academy</span>
+                        </div>
+                    </div>
+                    <p class="ft-desc">Lembaga pelatihan kerja terpercaya yang mempersiapkan generasi Indonesia untuk
+                        bersaing dan berkarier di Jepang.</p>
+                    <div class="ft-socials">
+                        <a class="ft-soc" href="#" aria-label="Instagram">📸</a>
+                        <a class="ft-soc" href="#" aria-label="TikTok">🎵</a>
+                        <a class="ft-soc" href="#" aria-label="YouTube">▶️</a>
+                        <a class="ft-soc" href="#" aria-label="WhatsApp">💬</a>
+                    </div>
+                </div>
+
+                <div class="ft-col">
+                    <h5>Program</h5>
+                    <ul>
+                        <li><a href="#program">Tokutei Ginou (TG)</a></li>
+                        <li><a href="#program">Engineering</a></li>
+                        <li><a href="#program">Kelas Bahasa Jepang</a></li>
+                        <li><a href="#program">Returnee / Ex Jepang</a></li>
+                    </ul>
+                </div>
+
+                <div class="ft-col">
+                    <h5>Navigasi</h5>
+                    <ul>
+                        <li><a href="#beranda">Beranda</a></li>
+                        <li><a href="#keunggulan">Keunggulan</a></li>
+                        <li><a href="#testimoni">Testimoni</a></li>
+                        <li><a href="#kontak">Daftar Sekarang</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 LPK Kizuku International Academy. All rights reserved.</p>
+                <p>Dibuat dengan ❤️ untuk masa depan Indonesia di Jepang</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══ JavaScript per Section ═══ -->
+    <script src="js/navbar.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/berita.js"></script>
+    <script src="js/admin.js"></script>
+
+</body>
+
+</html>
