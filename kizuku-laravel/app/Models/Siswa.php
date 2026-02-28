@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Siswa extends Model
+{
+    protected $fillable = [
+        'nama', 'wa', 'email', 'kota', 'program',
+        'status', 'pendidikan', 'catatan', 'tgl_lahir',
+    ];
+
+    protected $casts = [
+        'tgl_lahir' => 'date',
+    ];
+}
