@@ -1,80 +1,160 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html class="light" lang="id">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Admin — @yield('admin-title', 'Panel') | LPK Kizuku</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/variables.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/buttons.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+  <title>@yield('admin-title', 'Dashboard') — Admin | LPK Kizuku</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0067a3",
+            "accent-red": "#E31E24",
+            "background-light": "#f5f7f8",
+            "background-dark": "#0f1c23",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
   <style>
-    body { font-family:'Sora',sans-serif; background:var(--gray); color:var(--black); margin:0; }
-    .admin-shell { min-height:100vh; display:flex; flex-direction:column; }
-    .admin-header {
-      background:linear-gradient(135deg,var(--blue),#0a3560);
-      padding:18px 28px;
-      display:flex; align-items:center; justify-content:space-between;
-      color:#fff; flex-shrink:0;
-    }
-    .admin-header h1 { font-size:17px; font-weight:800; margin:0; }
-    .admin-header p  { font-size:12px; color:rgba(255,255,255,.6); margin:2px 0 0; }
-    .admin-header-right { display:flex; align-items:center; gap:10px; }
-    .admin-nav {
-      background:#fff;
-      border-bottom:1px solid rgba(17,17,17,.08);
-      padding:0 28px;
-      display:flex; gap:4px;
-    }
-    .admin-nav a {
-      padding:12px 18px;
-      text-decoration:none;
-      font-size:13px; font-weight:700;
-      color:var(--muted);
-      border-bottom:2px solid transparent;
-      transition:color .18s, border-color .18s;
-    }
-    .admin-nav a:hover { color:var(--black); }
-    .admin-nav a.active { color:var(--blue); border-bottom-color:var(--blue); }
-    .admin-content { flex:1; padding:24px 28px; max-width:1200px; width:100%; margin:0 auto; }
-    .alert-success {
-      padding:12px 16px; border-radius:12px;
-      background:rgba(16,185,129,.12); color:#059669;
-      font-weight:700; font-size:13.5px; margin-bottom:20px;
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .sidebar-item-active { background-color: rgba(0, 103, 163, 0.1); color: #0067a3; border-right: 4px solid #0067a3; }
+    /* Sidebar mobile overlay */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 30; }
+    .sidebar-overlay.active { display: block; }
+    @media (max-width: 1023px) {
+      .admin-sidebar { transform: translateX(-100%); z-index: 40; transition: transform .25s ease; }
+      .admin-sidebar.open { transform: translateX(0); }
     }
   </style>
+  @yield('admin-styles')
 </head>
-<body>
-  <div class="admin-shell">
-    <div class="admin-header">
-      <div>
-        <h1>⚙️ Panel Admin — LPK Kizuku</h1>
-        <p>Kelola data siswa, pendaftaran, dan konten berita</p>
+<body class="bg-background-light text-slate-900 font-display">
+  <div class="flex min-h-screen">
+
+    {{-- Mobile Overlay --}}
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    {{-- Sidebar Navigation --}}
+    <aside class="admin-sidebar w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full" id="sidebar">
+      <div class="p-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+          <span class="text-white font-bold text-lg">K</span>
+        </div>
+        <div>
+          <h1 class="font-bold text-primary leading-tight">LPK Kizuku</h1>
+          <p class="text-xs text-slate-500">Admin Panel</p>
+        </div>
       </div>
-      <div class="admin-header-right">
-        <a class="btn btn-outline-white" href="{{ url('/') }}" style="font-size:12px;padding:7px 14px;">🏠 Ke Website</a>
-        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+
+      <nav class="flex-1 mt-4 px-3 space-y-1">
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">dashboard</span>
+          <span class="font-medium text-sm">Dashboard</span>
+        </a>
+        <a href="{{ route('admin.siswa.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.siswa.index') || request()->routeIs('admin.siswa.show') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">group</span>
+          <span class="font-medium text-sm">Data Siswa</span>
+        </a>
+        <a href="{{ route('admin.siswa.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.siswa.create') || request()->routeIs('admin.siswa.edit') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">person_add</span>
+          <span class="font-medium text-sm">Tambah Siswa</span>
+        </a>
+        <a href="{{ route('admin.berita.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.berita.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">newspaper</span>
+          <span class="font-medium text-sm">Berita</span>
+        </a>
+        <a href="{{ route('admin.payment.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.payment.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">payments</span>
+          <span class="font-medium text-sm">Payment</span>
+        </a>
+        <a href="{{ route('admin.export') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.export') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">download</span>
+          <span class="font-medium text-sm">Export</span>
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-slate-200 space-y-1">
+        <a href="{{ url('/') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors">
+          <span class="material-symbols-outlined text-[22px]">home</span>
+          <span class="font-medium text-sm">Ke Website</span>
+        </a>
+        <form method="POST" action="{{ route('logout') }}">
           @csrf
-          <button type="submit" class="btn btn-outline-white" style="font-size:12px;padding:7px 14px;">🚪 Logout</button>
+          <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-accent-red hover:bg-red-50 transition-colors">
+            <span class="material-symbols-outlined text-[22px]">logout</span>
+            <span class="font-medium text-sm">Logout</span>
+          </button>
         </form>
       </div>
-    </div>
+    </aside>
 
-    <div class="admin-nav">
-      <a href="{{ route('admin.siswa.index') }}" class="{{ request()->routeIs('admin.siswa.*') ? 'active' : '' }}">📋 Data Siswa</a>
-      <a href="{{ route('admin.siswa.create') }}" class="{{ request()->routeIs('admin.siswa.create') ? 'active' : '' }}">➕ Tambah Siswa</a>
-      <a href="{{ route('admin.berita.index') }}" class="{{ request()->routeIs('admin.berita.*') ? 'active' : '' }}">📰 Kelola Berita</a>
-    </div>
+    {{-- Main Content --}}
+    <main class="flex-1 lg:ml-64 min-h-screen">
+      {{-- Top Header --}}
+      <header class="h-16 bg-white border-b border-slate-200 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-10">
+        <div class="flex items-center gap-4">
+          <button class="lg:hidden p-1 text-slate-500 hover:text-primary" onclick="toggleSidebar()">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <h2 class="text-xl font-bold text-slate-800">@yield('admin-title', 'Dashboard')</h2>
+          <span class="text-slate-300 hidden sm:inline">|</span>
+          <a class="text-primary text-sm font-medium hover:underline hidden sm:inline" href="{{ url('/') }}">Home</a>
+        </div>
+        <div class="flex items-center gap-4 lg:gap-6">
+          <button class="relative p-1 text-slate-500 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-accent-red rounded-full"></span>
+          </button>
+          <div class="flex items-center gap-2 border-l border-slate-200 pl-4 lg:pl-6">
+            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary text-lg">account_circle</span>
+            </div>
+            <span class="text-sm font-medium hidden sm:inline">{{ Auth::user()->name ?? 'Admin' }}</span>
+          </div>
+        </div>
+      </header>
 
-    <div class="admin-content">
-      @if(session('success'))
-        <div class="alert-success">✅ {{ session('success') }}</div>
-      @endif
-      @yield('admin-content')
-    </div>
+      {{-- Page Content --}}
+      <div class="p-4 lg:p-8">
+        {{-- Flash Messages --}}
+        @if(session('success'))
+          <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3">
+            <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+            <span class="text-sm font-medium text-emerald-700">{{ session('success') }}</span>
+          </div>
+        @endif
+
+        @if(session('error'))
+          <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3">
+            <span class="material-symbols-outlined text-red-600">error</span>
+            <span class="text-sm font-medium text-red-700">{{ session('error') }}</span>
+          </div>
+        @endif
+
+        @yield('admin-content')
+      </div>
+    </main>
   </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+  </script>
+  @yield('admin-scripts')
 </body>
 </html>

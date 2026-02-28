@@ -9,6 +9,7 @@ class Siswa extends Model
     protected $fillable = [
         'nama', 'wa', 'email', 'kota', 'program',
         'status', 'pendidikan', 'catatan', 'tgl_lahir',
+        'extra_fields', 'payment_status',
     ];
 
     protected $casts = [
