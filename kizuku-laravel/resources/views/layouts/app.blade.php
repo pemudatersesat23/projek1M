@@ -24,40 +24,49 @@
 </head>
 <body>
 
-  <!-- ═══ NAVBAR ═══ -->
-  <nav id="navbar">
-    <a class="nav-brand" href="{{ url('/') }}#beranda">
-      <div class="nav-logo" aria-hidden="true"></div>
-      <div class="nav-name">LPK Kizuku <span>International Academy</span></div>
-    </a>
-    <ul class="nav-links">
-      <li><a href="{{ url('/') }}#beranda" class="active">Beranda</a></li>
-      <li><a href="{{ url('/') }}#program">Program</a></li>
-      <li><a href="{{ url('/') }}#keunggulan">Keunggulan</a></li>
-      <li><a href="{{ url('/') }}#testimoni">Testimoni</a></li>
-      <li><a href="{{ url('/') }}#kontak">Kontak</a></li>
-    </ul>
-    <div class="nav-cta">
-      <a class="btn btn-outline" href="{{ url('/') }}#kontak">Konsultasi</a>
-      <a class="btn btn-primary" href="{{ url('/') }}#kontak">Daftar Sekarang</a>
-    </div>
-    <button class="hamburger" id="hambtn" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+  <!-- ═══ NAVBAR ADMIN ═══ -->
+  @auth
+    @include('layouts.navigation')
+  @endauth
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobmenu">
-    <a href="{{ url('/') }}#beranda">Beranda</a>
-    <a href="{{ url('/') }}#program">Program</a>
-    <a href="{{ url('/') }}#keunggulan">Keunggulan</a>
-    <a href="{{ url('/') }}#testimoni">Testimoni</a>
-    <a href="{{ url('/') }}#kontak">Kontak</a>
-    <div class="mob-cta">
-      <a class="btn btn-outline" href="{{ url('/') }}#kontak">Konsultasi</a>
-      <a class="btn btn-primary" href="{{ url('/') }}#kontak">Daftar Sekarang</a>
+  <!-- ═══ NAVBAR PUBLIC ═══ -->
+  @guest
+    <nav id="navbar">
+      <a class="nav-brand" href="{{ url('/') }}#beranda">
+        <div class="nav-logo" aria-hidden="true"></div>
+        <div class="nav-name">LPK Kizuku <span>International Academy</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="{{ url('/') }}#beranda" class="active">Beranda</a></li>
+        <li><a href="{{ url('/') }}#program">Program</a></li>
+        <li><a href="{{ url('/') }}#keunggulan">Keunggulan</a></li>
+        <li><a href="{{ url('/') }}#testimoni">Testimoni</a></li>
+        <li><a href="{{ url('/') }}#kontak">Kontak</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="btn btn-outline" href="{{ route('login') }}">Masuk</a>
+        <a class="btn btn-outline" href="{{ url('/') }}#kontak">Konsultasi</a>
+        <a class="btn btn-primary" href="{{ url('/') }}#kontak">Daftar Sekarang</a>
+      </div>
+      <button class="hamburger" id="hambtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobmenu">
+      <a href="{{ url('/') }}#beranda">Beranda</a>
+      <a href="{{ url('/') }}#program">Program</a>
+      <a href="{{ url('/') }}#keunggulan">Keunggulan</a>
+      <a href="{{ url('/') }}#testimoni">Testimoni</a>
+      <a href="{{ url('/') }}#kontak">Kontak</a>
+      <div class="mob-cta">
+        <a class="btn btn-outline" href="{{ route('login') }}">Masuk</a>
+        <a class="btn btn-outline" href="{{ url('/') }}#kontak">Konsultasi</a>
+        <a class="btn btn-primary" href="{{ url('/') }}#kontak">Daftar Sekarang</a>
+      </div>
     </div>
-  </div>
+  @endguest
 
   @yield('content')
 

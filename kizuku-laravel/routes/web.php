@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
-// ═══ ADMIN ROUTES (dilindungi auth) ═══
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
+// ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══
+Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')->group(function () {
+    // Admin Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // CRUD Siswa
@@ -34,7 +34,12 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
 // ═══ BREEZE AUTH ROUTES ═══
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
+    // Check if user is admin
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    // Regular user stays on dashboard
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

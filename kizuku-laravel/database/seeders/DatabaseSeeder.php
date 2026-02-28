@@ -14,9 +14,18 @@ class DatabaseSeeder extends Seeder
     {
         // ═══ ADMIN USER ═══
         User::create([
-            'name'     => 'Admin Kizuku',
+            'name'     => 'Budi Administrator',
             'email'    => 'admin@kizuku.com',
             'password' => Hash::make('admin123'),
+            'role'     => 'admin',
+        ]);
+
+        // ═══ REGULAR USER (untuk testing) ═══
+        User::create([
+            'name'     => 'Rini Peserta Kizuku',
+            'email'    => 'user@kizuku.com',
+            'password' => Hash::make('user123'),
+            'role'     => 'user',
         ]);
 
         // ═══ DATA SISWA ═══
