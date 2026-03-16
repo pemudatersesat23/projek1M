@@ -64,9 +64,9 @@
           <span class="material-symbols-outlined text-[22px]">dashboard</span>
           <span class="font-medium text-sm">Dashboard</span>
         </a>
-        <a href="{{ route('admin.siswa.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.siswa.index') || request()->routeIs('admin.siswa.show') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+        <a href="{{ route('admin.applicants.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.applicants.index') || request()->routeIs('admin.applicants.show') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">group</span>
-          <span class="font-medium text-sm">Data Siswa</span>
+          <span class="font-medium text-sm">Data Pendaftar</span>
         </a>
         <a href="{{ route('admin.siswa.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.siswa.create') || request()->routeIs('admin.siswa.edit') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">person_add</span>

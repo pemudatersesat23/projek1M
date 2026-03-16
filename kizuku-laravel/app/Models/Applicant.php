@@ -11,7 +11,8 @@ class Applicant extends Model
         'batch_id',
         'nama',
         'jenis_kelamin',
-        'ttl',
+        'tempat_lahir',
+        'tanggal_lahir',
         'alamat',
         'phone',
         'email',
@@ -19,6 +20,10 @@ class Applicant extends Model
         'pengalaman',
         'motivasi',
         'status_seleksi'
+    ];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
     ];
 
     public function program()

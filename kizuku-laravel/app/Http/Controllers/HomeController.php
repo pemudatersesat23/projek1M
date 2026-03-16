@@ -43,7 +43,8 @@ class HomeController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
-            'ttl' => 'required|string|max:255',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
@@ -55,7 +56,7 @@ class HomeController extends Controller
             // File Validation
             'ktp' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'kk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'foto' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120', // Strict image validation
             'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);

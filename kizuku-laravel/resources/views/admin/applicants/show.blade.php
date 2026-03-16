@@ -27,7 +27,7 @@
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tempat, Tgl Lahir</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->ttl }}</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->tempat_lahir }}, {{ $applicant->tanggal_lahir->format('d/m/Y') }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pendidikan Terakhir</p>

@@ -13,33 +13,27 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ═══ ADMIN USER ═══
-        User::create([
-            'name'     => 'Budi Administrator',
-            'email'    => 'admin@kizuku.com',
-            'password' => Hash::make('admin123'),
-            'role'     => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@kizuku.co.id'],
+            [
+                'name'     => 'Budi Administrator',
+                'password' => Hash::make('admin123'),
+                'role'     => 'admin',
+            ]
+        );
 
         // ═══ REGULAR USER (untuk testing) ═══
-        User::create([
-            'name'     => 'Rini Peserta Kizuku',
-            'email'    => 'user@kizuku.com',
-            'password' => Hash::make('user123'),
-            'role'     => 'user',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'user@kizuku.com'],
+            [
+                'name'     => 'Rini Peserta Kizuku',
+                'password' => Hash::make('user123'),
+                'role'     => 'user',
+            ]
+        );
 
-        // ═══ DATA SISWA ═══
-        $siswas = [
-            ['nama'=>'Rizki Pratama',   'wa'=>'081234567890', 'email'=>'rizki@email.com',  'kota'=>'Surabaya',   'program'=>'Tokutei Ginou (TG)',   'status'=>'Berangkat', 'pendidikan'=>'SMA/SMK', 'catatan'=>'Lulus N4, berangkat Maret 2025'],
-            ['nama'=>'Andi Setiawan',   'wa'=>'082345678901', 'email'=>'andi@email.com',   'kota'=>'Bandung',    'program'=>'Engineering',          'status'=>'Berangkat', 'pendidikan'=>'D3',      'catatan'=>'Penempatan Osaka'],
-            ['nama'=>'Siti Nurhaliza',  'wa'=>'083456789012', 'email'=>'siti@email.com',   'kota'=>'Jakarta',    'program'=>'Returnee / Ex Jepang', 'status'=>'Aktif',     'pendidikan'=>'S1',      'catatan'=>'Target upgrade N3'],
-            ['nama'=>'Budi Santoso',    'wa'=>'084567890123', 'email'=>'budi@email.com',   'kota'=>'Malang',     'program'=>'Kelas Bahasa Jepang',  'status'=>'Aktif',     'pendidikan'=>'SMA/SMK', 'catatan'=>'Level N5'],
-            ['nama'=>'Dewi Rahayu',     'wa'=>'085678901234', 'email'=>'dewi@email.com',   'kota'=>'Yogyakarta', 'program'=>'Tokutei Ginou (TG)',   'status'=>'Proses',    'pendidikan'=>'SMA/SMK', 'catatan'=>'Menunggu jadwal interview'],
-            ['nama'=>'Fajar Kurniawan', 'wa'=>'086789012345', 'email'=>'fajar@email.com',  'kota'=>'Medan',      'program'=>'Engineering',          'status'=>'Aktif',     'pendidikan'=>'S1',      'catatan'=>'Background teknik sipil'],
-            ['nama'=>'Ayu Permatasari', 'wa'=>'087890123456', 'email'=>'ayu@email.com',    'kota'=>'Semarang',   'program'=>'Kelas Bahasa Jepang',  'status'=>'Lulus',     'pendidikan'=>'D3',      'catatan'=>'Lulus JLPT N4'],
-            ['nama'=>'Hendra Wijaya',   'wa'=>'088901234567', 'email'=>'hendra@email.com', 'kota'=>'Solo',       'program'=>'Tokutei Ginou (TG)',   'status'=>'Proses',    'pendidikan'=>'SMA/SMK', 'catatan'=>'Dokumen sedang diproses'],
-        ];
-        foreach ($siswas as $s) { Siswa::create($s); }
+        // ═══ DATA PROGRAM & BATCH ═══
+        $this->call(ProgramAndBatchSeeder::class);
 
         // ═══ DATA BERITA ═══
         $beritas = [

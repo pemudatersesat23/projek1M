@@ -329,9 +329,15 @@
                     </div>
                   </div>
 
-                  <div class="form-group-custom">
-                    <label>Tempat, Tanggal Lahir</label>
-                    <input type="text" name="ttl" value="{{ old('ttl') }}" placeholder="Jakarta, 01-01-2000" required>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group-custom">
+                      <label>Tempat Lahir</label>
+                      <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" placeholder="Contoh: Jakarta" required>
+                    </div>
+                    <div class="form-group-custom">
+                      <label>Tanggal Lahir</label>
+                      <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
+                    </div>
                   </div>
 
                   <div class="form-group-custom">
@@ -362,27 +368,27 @@
 
                   {{-- Document Uploads --}}
                   <div style="margin-top:24px; padding:20px; background:#f8fafc; border-radius:16px;">
-                    <h5 style="font-size:14px; font-weight:800; margin-bottom:16px; color:var(--detail-primary);">UPLOAD DOKUMEN (PDF/JPG, Max 5MB)</h5>
+                    <h5 style="font-size:14px; font-weight:800; margin-bottom:16px; color:var(--detail-primary);">UPLOAD DOKUMEN (PDF atau Gambar, Max 5MB)</h5>
                     <div class="space-y-4">
                       <div class="form-group-custom">
                         <label>Foto KTP <span style="color:red">*</span></label>
-                        <input type="file" name="ktp" required style="padding:8px; background:white;">
+                        <input type="file" name="ktp" accept="application/pdf,image/*" required style="padding:8px; background:white;">
                       </div>
                       <div class="form-group-custom">
                         <label>Kartu Keluarga (KK) <span style="color:red">*</span></label>
-                        <input type="file" name="kk" required style="padding:8px; background:white;">
+                        <input type="file" name="kk" accept="application/pdf,image/*" required style="padding:8px; background:white;">
                       </div>
                       <div class="form-group-custom">
                         <label>Pas Foto Terbaru <span style="color:red">*</span></label>
-                        <input type="file" name="foto" required style="padding:8px; background:white;">
+                        <input type="file" name="foto" accept="image/*" required style="padding:8px; background:white;">
                       </div>
                       <div class="form-group-custom">
                         <label>Ijazah Terakhir <span style="color:red">*</span></label>
-                        <input type="file" name="ijazah" required style="padding:8px; background:white;">
+                        <input type="file" name="ijazah" accept="application/pdf,image/*" required style="padding:8px; background:white;">
                       </div>
                       <div class="form-group-custom">
-                        <label>Sertifikat Pendukung (Optional)</label>
-                        <input type="file" name="sertifikat" style="padding:8px; background:white;">
+                        <label>Sertifikat Pendukung (Opsional)</label>
+                        <input type="file" name="sertifikat" accept="application/pdf,image/*" style="padding:8px; background:white;">
                       </div>
                     </div>
                   </div>

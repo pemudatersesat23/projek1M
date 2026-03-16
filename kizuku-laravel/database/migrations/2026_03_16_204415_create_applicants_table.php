@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('batch_id')->constrained()->onDelete('cascade');
             $table->string('nama');
             $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->string('ttl');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
             $table->text('alamat');
             $table->string('phone');
             $table->string('email');
