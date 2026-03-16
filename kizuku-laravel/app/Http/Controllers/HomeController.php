@@ -38,47 +38,37 @@ class HomeController extends Controller
         return view('program-detail', compact('program', 'activeBatch', 'nextBatch'));
     }
 
-    public function storePendaftaran(Request $request)
+    public function storePendaftaran(\App\Http\Requests\PendaftaranRequest $request, \App\Services\FileUploadService $uploadService)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:L,P',
-            'tempat_lahir' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'pendidikan' => 'required|string|max:255',
-            'pengalaman' => 'nullable|string',
-            'motivasi' => 'nullable|string',
-            'program_id' => 'required|exists:programs,id',
-            'batch_id' => 'required|exists:batches,id',
-            // File Validation
-            'ktp' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'kk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120', // Strict image validation
-            'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-        ]);
+        \Log::info('Pendaftaran submission started', $request->safe()->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));
+        
+        try {
+            \Log::info('Validation passed via Request class');
 
-        $applicant = Applicant::create($request->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));
+            $applicant = Applicant::create($request->safe()->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));
+            \Log::info('Applicant created', ['id' => $applicant->id]);
 
-        // Handle File Uploads
-        $docs = [];
-        $fileFields = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat'];
-
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
-                $path = $request->file($field)->store('documents', 'public');
-                $docs[$field] = $path;
+            // Handle File Uploads using Service
+            $fileFields = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat'];
+            $filesToUpload = [];
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+                    $filesToUpload[$field] = $request->file($field);
+                }
             }
-        }
 
-        if (!empty($docs)) {
-            $docs['applicant_id'] = $applicant->id;
-            ApplicantDocument::create($docs);
-        }
+            if (!empty($filesToUpload)) {
+                $docs = $uploadService->uploadMultiple($filesToUpload);
+                $docs['applicant_id'] = $applicant->id;
+                ApplicantDocument::create($docs);
+                \Log::info('Documents saved via Service');
+            }
 
-        return redirect()->back()->with('success', 'Pendaftaran berhasil! Kami akan mereview data kamu segera.');
+            \Log::info('Redirecting back');
+            return redirect()->back()->with('success', 'Pendaftaran berhasil! Kami akan mereview data kamu segera.');
+        } catch (\Exception $e) {
+            \Log::error('Pendaftaran error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return redirect()->back()->withErrors('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
+        }
     }
 }

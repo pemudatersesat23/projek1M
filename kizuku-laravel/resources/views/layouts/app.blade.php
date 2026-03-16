@@ -135,7 +135,7 @@
 
   <!-- FAB Admin -->
   @auth
-    <a class="btn btn-primary admin-fab" href="{{ route('admin.siswa.index') }}">⚙️ Admin Panel</a>
+    <a class="btn btn-primary admin-fab" href="{{ route('admin.dashboard') }}">⚙️ Admin Panel</a>
   @endauth
 
   <script src="{{ asset('js/navbar.js') }}"></script>

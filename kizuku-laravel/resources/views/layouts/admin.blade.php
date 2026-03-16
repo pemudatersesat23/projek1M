@@ -68,10 +68,6 @@
           <span class="material-symbols-outlined text-[22px]">group</span>
           <span class="font-medium text-sm">Data Pendaftar</span>
         </a>
-        <a href="{{ route('admin.siswa.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.siswa.create') || request()->routeIs('admin.siswa.edit') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
-          <span class="material-symbols-outlined text-[22px]">person_add</span>
-          <span class="font-medium text-sm">Tambah Siswa</span>
-        </a>
         <a href="{{ route('admin.berita.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.berita.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">newspaper</span>
           <span class="font-medium text-sm">Berita</span>
@@ -96,10 +92,6 @@
         <a href="{{ route('admin.batches.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.batches.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">layers</span>
           <span class="font-medium text-sm">Batch Pendaftaran</span>
-        </a>
-        <a href="{{ route('admin.applicants.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.applicants.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
-          <span class="material-symbols-outlined text-[22px]">recent_actors</span>
-          <span class="font-medium text-sm">Data Pendaftar</span>
         </a>
       </nav>
 

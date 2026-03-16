@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
@@ -19,9 +18,6 @@ Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('
 Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')->group(function () {
     // Admin Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-    // CRUD Siswa
-    Route::resource('siswa', SiswaController::class);
 
     // CRUD Berita
     Route::resource('berita', \App\Http\Controllers\BeritaController::class);
