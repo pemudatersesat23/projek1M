@@ -33,36 +33,11 @@ footer::before {
     margin-bottom: 14px;
 }
 
-.ft-logo-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--red), rgba(225, 6, 0, .5));
-    position: relative;
-    flex-shrink: 0;
-}
-
-.ft-logo-box::after {
-    content: "";
-    position: absolute;
-    inset: 9px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--blue), var(--cyan));
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 35% 100%, 0 65%);
-}
-
-.ft-brand-name {
-    font-weight: 800;
-    font-size: 14px;
-    color: #fff;
-    line-height: 1.2;
-}
-
-.ft-brand-name span {
-    display: block;
-    font-size: 11px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, .5);
+.ft-logo-img {
+    max-height: 220px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
 }
 
 .ft-desc {

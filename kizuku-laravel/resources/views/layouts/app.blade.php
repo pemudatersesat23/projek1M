@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'LPK Kizuku International Academy')</title>
+  <link rel="icon" type="image/png" href="{{ asset('image/logo tab broswer.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -20,6 +21,7 @@
   <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
   <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
   <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/lang-toggle.css') }}">
   @stack('styles')
 </head>
 <body>
@@ -33,8 +35,7 @@
   @guest
     <nav id="navbar">
       <a class="nav-brand" href="{{ url('/') }}#beranda">
-        <div class="nav-logo" aria-hidden="true"></div>
-        <div class="nav-name">LPK Kizuku <span>International Academy</span></div>
+        <img src="{{ asset('image/logo kiuzuku utama.png') }}" alt="LPK Kizuku International Academy" class="nav-logo-img">
       </a>
       <ul class="nav-links">
         <li><a href="{{ url('/') }}#beranda" class="active">Beranda</a></li>
@@ -44,7 +45,17 @@
         <li><a href="{{ url('/') }}#kontak">Kontak</a></li>
       </ul>
       <div class="nav-cta">
-        <a class="btn btn-outline" href="{{ route('login') }}">Masuk</a>
+        <button class="lang-toggle" id="langToggleDesktop" aria-label="Ganti Bahasa">
+          <div class="brush-bg"></div>
+          <div class="lang-label lang-label-jp">
+            <span class="lang-char">日本語</span>
+          </div>
+          <div class="lang-divider"></div>
+          <div class="lang-label lang-label-id active">
+            <span class="lang-char">ID</span>
+          </div>
+          <div class="hanko">語</div>
+        </button>
         <a class="btn btn-outline" href="{{ url('/') }}#kontak">Konsultasi</a>
         <a class="btn btn-primary" href="{{ url('/') }}#kontak">Daftar Sekarang</a>
       </div>
@@ -61,7 +72,17 @@
       <a href="{{ url('/') }}#testimoni">Testimoni</a>
       <a href="{{ url('/') }}#kontak">Kontak</a>
       <div class="mob-cta">
-        <a class="btn btn-outline" href="{{ route('login') }}">Masuk</a>
+        <button class="lang-toggle lang-toggle-mobile" aria-label="Ganti Bahasa">
+          <div class="brush-bg"></div>
+          <div class="lang-label lang-label-jp">
+            <span class="lang-char">日本語</span>
+          </div>
+          <div class="lang-divider"></div>
+          <div class="lang-label lang-label-id active">
+            <span class="lang-char">ID</span>
+          </div>
+          <div class="hanko">語</div>
+        </button>
         <a class="btn btn-outline" href="{{ url('/') }}#kontak">Konsultasi</a>
         <a class="btn btn-primary" href="{{ url('/') }}#kontak">Daftar Sekarang</a>
       </div>
@@ -76,11 +97,7 @@
       <div class="footer-inner">
         <div class="ft-brand">
           <div class="ft-nav-logo">
-            <div class="ft-logo-box" aria-hidden="true"></div>
-            <div class="ft-brand-name">
-              LPK Kizuku
-              <span>International Academy</span>
-            </div>
+            <img src="{{ asset('image/logo kiuzuku utama.png') }}" alt="LPK Kizuku International Academy" class="ft-logo-img">
           </div>
           <p class="ft-desc">Lembaga pelatihan kerja terpercaya yang mempersiapkan generasi Indonesia untuk bersaing dan berkarier di Jepang.</p>
           <div class="ft-socials">
@@ -122,6 +139,7 @@
   @endauth
 
   <script src="{{ asset('js/navbar.js') }}"></script>
+  <script src="{{ asset('js/lang-toggle.js') }}"></script>
   @stack('scripts')
 
 </body>

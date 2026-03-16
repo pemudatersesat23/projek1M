@@ -40,7 +40,7 @@
     <div class="hero-right">
       <div class="hero-card main-card">
         <div class="mc-header">
-          <div class="mc-logo" aria-hidden="true"></div>
+          <img src="{{ asset('image/logo tab broswer.png') }}" alt="Kizuku Logo" class="mc-logo-img">
           <div>
             <div class="mc-title">Kizuku International Academy</div>
             <div class="mc-sub">Program tersedia</div>
