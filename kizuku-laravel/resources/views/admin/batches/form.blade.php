@@ -6,7 +6,7 @@
     <a href="{{ route('admin.batches.index') }}" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 mb-2">
       <span class="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Daftar
     </a>
-    <h3 class="text-slate-800 font-bold text-2xl">{{ isset($batch) ? 'Edit Batch: ' . $batch->name : 'Buka Gelombang Pendaftaran Baru' }}</h3>
+    <h3 class="text-slate-800 font-bold text-2xl">{{ isset($batch) ? 'Edit Batch: ' . $batch->nama_batch : 'Buka Gelombang Pendaftaran Baru' }}</h3>
   </div>
 
   <form action="{{ isset($batch) ? route('admin.batches.update', $batch) : route('admin.batches.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -26,20 +26,20 @@
               <select name="program_id" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
                 <option value="">-- Pilih Program --</option>
                 @foreach($programs as $p)
-                  <option value="{{ $p->id }}" {{ old('program_id', $batch->program_id ?? '') == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
+                  <option value="{{ $p->id }}" {{ old('program_id', $batch->program_id ?? '') == $p->id ? 'selected' : '' }}>{{ $p->nama_program }}</option>
                 @endforeach
               </select>
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Nama Batch <span class="text-accent-red">*</span></label>
-              <input type="text" name="name" value="{{ old('name', $batch->name ?? '') }}" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Batch 1 - 2024">
+              <input type="text" name="nama_batch" value="{{ old('nama_batch', $batch->nama_batch ?? '') }}" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Batch 1 - 2024">
             </div>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Kuota Peserta</label>
-              <input type="number" name="quota" value="{{ old('quota', $batch->quota ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: 30">
+              <input type="number" name="kuota" value="{{ old('kuota', $batch->kuota ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: 30">
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Link Form Eksternal (Opsional)</label>
@@ -59,12 +59,12 @@
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Masa Pendaftaran</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Mulai</label>
-                <input type="date" name="registration_start" value="{{ old('registration_start', $batch->registration_start?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+                <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Buka</label>
+                <input type="date" name="tanggal_buka" value="{{ old('tanggal_buka', $batch->tanggal_buka?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               </div>
               <div>
-                <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Berakhir</label>
-                <input type="date" name="registration_end" value="{{ old('registration_end', $batch->registration_end?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+                <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Tutup</label>
+                <input type="date" name="tanggal_tutup" value="{{ old('tanggal_tutup', $batch->tanggal_tutup?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               </div>
             </div>
           </div>
@@ -74,11 +74,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Mulai Kelas</label>
-                <input type="date" name="class_start" value="{{ old('class_start', $batch->class_start?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+                <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai', $batch->tanggal_mulai?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               </div>
               <div>
                 <label class="block text-xs font-medium text-slate-500 mb-1">Estimasi Selesai</label>
-                <input type="date" name="class_estimate_end" value="{{ old('class_estimate_end', $batch->class_estimate_end?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+                <input type="date" name="tanggal_selesai" value="{{ old('tanggal_selesai', $batch->tanggal_selesai?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               </div>
             </div>
           </div>

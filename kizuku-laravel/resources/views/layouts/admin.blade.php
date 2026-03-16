@@ -97,6 +97,10 @@
           <span class="material-symbols-outlined text-[22px]">layers</span>
           <span class="font-medium text-sm">Batch Pendaftaran</span>
         </a>
+        <a href="{{ route('admin.applicants.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.applicants.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">recent_actors</span>
+          <span class="font-medium text-sm">Data Pendaftar</span>
+        </a>
       </nav>
 
       <div class="p-4 border-t border-slate-200 space-y-1">

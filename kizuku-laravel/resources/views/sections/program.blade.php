@@ -18,12 +18,12 @@
       @foreach($programs as $index => $p)
       <article class="prog-card {{ $cardClasses[$index % 4] }} reveal reveal-d{{ ($index % 4) + 1 }}">
         <div class="prog-glow" aria-hidden="true"></div>
-        <div class="prog-badge"><span class="bdot"></span>{{ $p->name }}</div>
-        <h3>{{ $p->name }}</h3>
-        <p>{{ Str::limit($p->explanation, 120) }}</p>
+        <div class="prog-badge"><span class="bdot"></span>{{ $p->nama_program }}</div>
+        <h3>{{ $p->nama_program }}</h3>
+        <p>{{ Str::limit($p->deskripsi, 120) }}</p>
         <ul class="feat-list">
           @php 
-            $benefits = array_filter(explode("\n", str_replace('-', '', $p->benefits)));
+            $benefits = array_filter(explode("\n", str_replace('-', '', $p->benefit)));
           @endphp
           @foreach(array_slice($benefits, 0, 4) as $b)
             <li>{{ trim($b) }}</li>
@@ -32,7 +32,7 @@
         <div class="prog-footer">
           @php $activeBatch = $p->batches->first(); @endphp
           @if($activeBatch)
-            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">Daftar {{ $activeBatch->name }}</a>
+            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">Daftar {{ $activeBatch->nama_batch }}</a>
           @else
             <a class="btn btn-primary" href="{{ route('programs.show', $p->slug) }}">Lihat Detail</a>
           @endif

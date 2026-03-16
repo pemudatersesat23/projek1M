@@ -12,7 +12,7 @@ class ProgramController extends Controller
 {
     public function index()
     {
-        $programs = Program::latest()->get();
+        $programs = Program::latest()->paginate(10);
         return view('admin.programs.index', compact('programs'));
     }
 
@@ -23,24 +23,24 @@ class ProgramController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'explanation' => 'nullable|string',
-            'target_participants' => 'nullable|string',
-            'duration' => 'nullable|string',
-            'benefits' => 'nullable|string',
-            'selection_flow' => 'nullable|string',
-            'cost' => 'nullable|string',
+        $request->validate([
+            'nama_program' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'target_peserta' => 'nullable|string',
+            'durasi' => 'nullable|string',
+            'benefit' => 'nullable|string',
+            'alur_seleksi' => 'nullable|string',
+            'biaya' => 'nullable|string',
             'faq' => 'nullable|array',
-            'materi' => 'nullable|string',
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->nama_program);
 
-        Program::create($validated);
+        Program::create($data);
 
-        return redirect()->route('admin.programs.index')->with('success', 'Program berhasil dibuat.');
+        return redirect()->route('admin.programs.index')->with('success', 'Program berhasil ditambahkan.');
     }
 
     public function show(Program $program)
@@ -55,22 +55,22 @@ class ProgramController extends Controller
 
     public function update(Request $request, Program $program)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'explanation' => 'nullable|string',
-            'target_participants' => 'nullable|string',
-            'duration' => 'nullable|string',
-            'benefits' => 'nullable|string',
-            'selection_flow' => 'nullable|string',
-            'cost' => 'nullable|string',
+        $request->validate([
+            'nama_program' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'target_peserta' => 'nullable|string',
+            'durasi' => 'nullable|string',
+            'benefit' => 'nullable|string',
+            'alur_seleksi' => 'nullable|string',
+            'biaya' => 'nullable|string',
             'faq' => 'nullable|array',
-            'materi' => 'nullable|string',
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->nama_program);
 
-        $program->update($validated);
+        $program->update($data);
 
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil diperbarui.');
     }

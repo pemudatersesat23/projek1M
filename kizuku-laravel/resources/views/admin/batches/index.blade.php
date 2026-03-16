@@ -27,47 +27,28 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          @php
-            $statusClasses = [
-              'akan_dibuka' => 'bg-amber-100 text-amber-700',
-              'dibuka'      => 'bg-emerald-100 text-emerald-700',
-              'ditutup'     => 'bg-red-100 text-red-700',
-              'berjalan'    => 'bg-blue-100 text-blue-700',
-              'selesai'     => 'bg-slate-100 text-slate-600',
-            ];
-          @endphp
-          @forelse($batches as $b)
-          <tr class="hover:bg-slate-50 transition-colors">
-            <td class="px-6 py-4">
-              <div class="font-bold text-slate-800">{{ $b->name }}</div>
-              <div class="text-[10px] text-slate-400 uppercase tracking-tight">ID: #{{ $b->id }}</div>
-            </td>
-            <td class="px-6 py-4">
-              <span class="text-sm font-medium text-slate-700 px-2.5 py-1 bg-slate-100 rounded-lg">
-                {{ $b->program->name }}
-              </span>
-            </td>
-            <td class="px-6 py-4 text-sm text-slate-600">
-              @if($b->registration_start)
-                {{ $b->registration_start->format('d M') }} - {{ $b->registration_end->format('d M Y') }}
-              @else
-                -
-              @endif
-            </td>
-            <td class="px-6 py-4 text-sm text-slate-600">
-              {{ $b->class_start ? $b->class_start->format('d/m/Y') : '-' }}
-            </td>
-            <td class="px-6 py-4">
-              <span class="px-2.5 py-1 rounded-full {{ $statusClasses[$b->status] ?? 'bg-slate-100 text-slate-600' }} text-[10px] font-bold uppercase tracking-wide">
-                {{ str_replace('_', ' ', $b->status) }}
-              </span>
-            </td>
+          @forelse($batches as $batch)
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">{{ $batch->nama_batch }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ $batch->program->nama_program }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                  {{ $batch->tanggal_buka?->format('d/m/Y') }} - {{ $batch->tanggal_tutup?->format('d/m/Y') }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 text-xs font-bold rounded-full 
+                    @if($batch->status === 'dibuka') bg-green-100 text-green-600 
+                    @elseif($batch->status === 'akan_dibuka') bg-blue-100 text-blue-600 
+                    @else bg-slate-100 text-slate-500 @endif">
+                    {{ str_replace('_', ' ', ucfirst($batch->status)) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ $batch->applicants()->count() }} / {{ $batch->kuota ?? '∞' }}</td>
             <td class="px-6 py-4 text-right">
               <div class="flex items-center justify-end gap-2">
-                <a href="{{ route('admin.batches.edit', $b) }}" class="p-2 text-slate-400 hover:text-primary transition-colors hover:bg-primary/5 rounded-lg" title="Edit">
+                <a href="{{ route('admin.batches.edit', $batch) }}" class="p-2 text-slate-400 hover:text-primary transition-colors hover:bg-primary/5 rounded-lg" title="Edit">
                   <span class="material-symbols-outlined">edit</span>
                 </a>
-                <form action="{{ route('admin.batches.destroy', $b) }}" method="POST" onsubmit="return confirm('Hapus batch ini?')">
+                <form action="{{ route('admin.batches.destroy', $batch) }}" method="POST" onsubmit="return confirm('Hapus batch ini?')">
                   @csrf @method('DELETE')
                   <button type="submit" class="p-2 text-slate-400 hover:text-accent-red transition-colors hover:bg-red-50 rounded-lg" title="Hapus">
                     <span class="material-symbols-outlined">delete</span>
@@ -89,5 +70,10 @@
         </tbody>
       </table>
     </div>
+    @if($batches->hasPages())
+    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100">
+      {{ $batches->links() }}
+    </div>
+    @endif
   </div>
 @endsection

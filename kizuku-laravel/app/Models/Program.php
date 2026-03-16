@@ -7,9 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'explanation', 'target_participants',
-        'duration', 'benefits', 'selection_flow', 'cost',
-        'faq', 'materi', 'brosur_path', 'thumbnail_path', 'status'
+        'nama_program',
+        'slug',
+        'deskripsi',
+        'target_peserta',
+        'durasi',
+        'benefit',
+        'alur_seleksi',
+        'biaya',
+        'faq',
+        'materi',
+        'brosur',
+        'thumbnail_path',
+        'status'
     ];
 
     protected $casts = [
@@ -19,5 +29,10 @@ class Program extends Model
     public function batches()
     {
         return $this->hasMany(Batch::class);
+    }
+
+    public function applicants()
+    {
+        return $this->hasMany(Applicant::class);
     }
 }

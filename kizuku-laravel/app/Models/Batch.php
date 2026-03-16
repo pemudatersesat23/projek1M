@@ -7,17 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 class Batch extends Model
 {
     protected $fillable = [
-        'program_id', 'name', 'status',
-        'registration_start', 'registration_end',
-        'class_start', 'class_estimate_end',
-        'quota', 'link_form'
+        'program_id',
+        'nama_batch',
+        'status',
+        'tanggal_buka',
+        'tanggal_tutup',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'kuota',
+        'link_form'
     ];
 
     protected $casts = [
-        'registration_start' => 'date',
-        'registration_end' => 'date',
-        'class_start' => 'date',
-        'class_estimate_end' => 'date',
+        'tanggal_buka' => 'date',
+        'tanggal_tutup' => 'date',
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
     ];
 
     public function program()
@@ -25,8 +30,8 @@ class Batch extends Model
         return $this->belongsTo(Program::class);
     }
 
-    public function registrants()
+    public function applicants()
     {
-        return $this->hasMany(Siswa::class);
+        return $this->hasMany(Applicant::class);
     }
 }

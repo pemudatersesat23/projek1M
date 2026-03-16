@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('siswas', function (Blueprint $table) {
-            $table->foreignId('batch_id')->nullable()->after('program')->constrained()->onDelete('set null');
+        Schema::create('admins', function (Blueprint $table) {
+            $table->id();
+            $table->string('username')->unique();
+            $table->string('password');
+            $table->string('nama_lengkap')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('siswas', function (Blueprint $table) {
-            $table->dropForeign(['batch_id']);
-            $table->dropColumn('batch_id');
-        });
+        Schema::dropIfExists('admins');
     }
 };

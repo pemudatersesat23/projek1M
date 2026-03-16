@@ -12,7 +12,7 @@ class BatchController extends Controller
 {
     public function index()
     {
-        $batches = Batch::with('program')->latest()->get();
+        $batches = Batch::with('program')->latest()->paginate(10);
         return view('admin.batches.index', compact('batches'));
     }
 
@@ -24,21 +24,21 @@ class BatchController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'program_id' => 'required|exists:programs,id',
-            'name' => 'required|string|max:255',
+            'nama_batch' => 'required|string|max:255',
             'status' => 'required|in:akan_dibuka,dibuka,ditutup,berjalan,selesai',
-            'registration_start' => 'nullable|date',
-            'registration_end' => 'nullable|date',
-            'class_start' => 'nullable|date',
-            'class_estimate_end' => 'nullable|date',
-            'quota' => 'nullable|integer',
-            'link_form' => 'nullable|string',
+            'tanggal_buka' => 'nullable|date',
+            'tanggal_tutup' => 'nullable|date',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date',
+            'kuota' => 'nullable|integer',
+            'link_form' => 'nullable|url',
         ]);
 
-        Batch::create($validated);
+        Batch::create($request->all());
 
-        return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil dibuat.');
+        return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil ditambahkan.');
     }
 
     public function show(Batch $batch)
@@ -48,25 +48,25 @@ class BatchController extends Controller
 
     public function edit(Batch $batch)
     {
-        $programs = Program::where('status', 'aktif')->get();
+        $programs = Program::all();
         return view('admin.batches.edit', compact('batch', 'programs'));
     }
 
     public function update(Request $request, Batch $batch)
     {
-        $validated = $request->validate([
+        $request->validate([
             'program_id' => 'required|exists:programs,id',
-            'name' => 'required|string|max:255',
+            'nama_batch' => 'required|string|max:255',
             'status' => 'required|in:akan_dibuka,dibuka,ditutup,berjalan,selesai',
-            'registration_start' => 'nullable|date',
-            'registration_end' => 'nullable|date',
-            'class_start' => 'nullable|date',
-            'class_estimate_end' => 'nullable|date',
-            'quota' => 'nullable|integer',
-            'link_form' => 'nullable|string',
+            'tanggal_buka' => 'nullable|date',
+            'tanggal_tutup' => 'nullable|date',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date',
+            'kuota' => 'nullable|integer',
+            'link_form' => 'nullable|url',
         ]);
 
-        $batch->update($validated);
+        $batch->update($request->all());
 
         return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil diperbarui.');
     }

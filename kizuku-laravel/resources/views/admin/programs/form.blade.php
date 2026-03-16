@@ -6,7 +6,7 @@
     <a href="{{ route('admin.programs.index') }}" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 mb-2">
       <span class="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Daftar
     </a>
-    <h3 class="text-slate-800 font-bold text-2xl">{{ isset($program) ? 'Edit Program: ' . $program->name : 'Buat Program Baru' }}</h3>
+    <h3 class="text-slate-800 font-bold text-2xl">{{ isset($program) ? 'Edit Program: ' . $program->nama_program : 'Buat Program Baru' }}</h3>
   </div>
 
   <form action="{{ isset($program) ? route('admin.programs.update', $program) : route('admin.programs.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -22,20 +22,20 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Nama Program <span class="text-accent-red">*</span></label>
-            <input type="text" name="name" value="{{ old('name', $program->name ?? '') }}" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Tokutei Ginou (TG)">
+            <input type="text" name="nama_program" value="{{ old('nama_program', $program->nama_program ?? '') }}" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Tokutei Ginou (TG)">
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Penjelasan Program</label>
-            <textarea name="explanation" rows="4" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Deskripsi lengkap program...">{{ old('explanation', $program->explanation ?? '') }}</textarea>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Deskripsi Program</label>
+            <textarea name="deskripsi" rows="4" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Deskripsi lengkap program...">{{ old('deskripsi', $program->deskripsi ?? '') }}</textarea>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Durasi Belajar</label>
-              <input type="text" name="duration" value="{{ old('duration', $program->duration ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: 5-6 Bulan">
+              <input type="text" name="durasi" value="{{ old('durasi', $program->durasi ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: 5-6 Bulan">
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Biaya Estimasi</label>
-              <input type="text" name="cost" value="{{ old('cost', $program->cost ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Rp 5.000.000">
+              <input type="text" name="biaya" value="{{ old('biaya', $program->biaya ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Rp 5.000.000">
             </div>
           </div>
         </div>
@@ -49,15 +49,15 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Target Peserta</label>
-            <textarea name="target_participants" rows="2" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('target_participants', $program->target_participants ?? '') }}</textarea>
+            <textarea name="target_peserta" rows="2" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('target_peserta', $program->target_peserta ?? '') }}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Benefit Program</label>
-            <textarea name="benefits" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Gunakan tanda hubung (-) untuk list...">{{ old('benefits', $program->benefits ?? '') }}</textarea>
+            <textarea name="benefit" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Gunakan tanda hubung (-) untuk list...">{{ old('benefit', $program->benefit ?? '') }}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Alur Seleksi</label>
-            <textarea name="selection_flow" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('selection_flow', $program->selection_flow ?? '') }}</textarea>
+            <textarea name="alur_seleksi" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('alur_seleksi', $program->alur_seleksi ?? '') }}</textarea>
           </div>
         </div>
       </div>

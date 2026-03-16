@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
-use App\Models\Siswa;
+use App\Models\Applicant;
+use App\Models\Program;
+use App\Models\Batch;
 use Illuminate\Http\Request;
+
+use App\Models\ApplicantDocument;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -24,11 +29,11 @@ class HomeController extends Controller
 
     public function showProgram($slug)
     {
-        $program = \App\Models\Program::where('slug', $slug)->firstOrFail();
+        $program = Program::where('slug', $slug)->firstOrFail();
         
         // Find active batch (dibuka) or next upcoming batch (akan_dibuka)
         $activeBatch = $program->batches()->where('status', 'dibuka')->first();
-        $nextBatch = $program->batches()->where('status', 'akan_dibuka')->orderBy('registration_start')->first();
+        $nextBatch = $program->batches()->where('status', 'akan_dibuka')->orderBy('tanggal_buka')->first();
 
         return view('program-detail', compact('program', 'activeBatch', 'nextBatch'));
     }
@@ -37,24 +42,42 @@ class HomeController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'wa'   => 'required|string|max:50',
-            'email' => 'nullable|email|max:255',
-            'program' => 'nullable|string|max:255',
-            'batch_id' => 'nullable|exists:batches,id',
-            'catatan' => 'nullable|string',
+            'jenis_kelamin' => 'required|in:L,P',
+            'ttl' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'pendidikan' => 'required|string|max:255',
+            'pengalaman' => 'nullable|string',
+            'motivasi' => 'nullable|string',
+            'program_id' => 'required|exists:programs,id',
+            'batch_id' => 'required|exists:batches,id',
+            // File Validation
+            'ktp' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'kk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'foto' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        Siswa::create([
-            'nama'     => $request->nama,
-            'wa'       => $request->wa,
-            'email'    => $request->email,
-            'kota'     => '-',
-            'program'  => $request->program ?? 'Belum dipilih',
-            'batch_id' => $request->batch_id,
-            'status'   => 'Proses',
-            'catatan'  => $request->catatan,
-        ]);
+        $applicant = Applicant::create($request->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));
 
-        return redirect()->back()->with('success', 'Pendaftaran berhasil! Kami akan menghubungi kamu segera.');
+        // Handle File Uploads
+        $docs = [];
+        $fileFields = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat'];
+
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $path = $request->file($field)->store('documents', 'public');
+                $docs[$field] = $path;
+            }
+        }
+
+        if (!empty($docs)) {
+            $docs['applicant_id'] = $applicant->id;
+            ApplicantDocument::create($docs);
+        }
+
+        return redirect()->back()->with('success', 'Pendaftaran berhasil! Kami akan mereview data kamu segera.');
     }
 }

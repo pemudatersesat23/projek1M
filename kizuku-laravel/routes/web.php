@@ -33,6 +33,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
     Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
 
+    // CRUD Applicants
+    Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);
+    Route::patch('applicants/{applicant}/status', [\App\Http\Controllers\Admin\ApplicantController::class, 'updateStatus'])->name('applicants.updateStatus');
+
     // Payment Settings
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
 

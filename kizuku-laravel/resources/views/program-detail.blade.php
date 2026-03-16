@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $program->name . ' — LPK Kizuku International Academy')
+@section('title', $program->nama_program . ' — LPK Kizuku International Academy')
 
 @push('styles')
 <style>
@@ -168,6 +168,30 @@
     padding-top: 32px;
     border-top: 1px solid #f1f5f9;
   }
+
+  .form-group-custom {
+    margin-bottom: 16px;
+  }
+  .form-group-custom label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 6px;
+  }
+  .form-group-custom input, .form-group-custom select, .form-group-custom textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .form-group-custom input:focus {
+    border-color: var(--detail-primary);
+    box-shadow: 0 0 0 4px rgba(0,103,163,0.1);
+    outline: none;
+  }
   
   @media (max-width: 1023px) {
     .pd-hero-grid, .pd-main-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -185,16 +209,16 @@
       <div class="pd-hero-grid">
         <div class="reveal">
           <div class="pd-tag">✦ Program Pelatihan</div>
-          <h1 class="pd-h1">{{ $program->name }}</h1>
-          <p class="pd-p">{{ $program->explanation }}</p>
+          <h1 class="pd-h1">{{ $program->nama_program }}</h1>
+          <p class="pd-p">{{ $program->deskripsi }}</p>
           <div class="pd-stats">
             <div class="pd-stat-card">
               <span class="pd-stat-label">Durasi</span>
-              <span class="pd-stat-val">{{ $program->duration }}</span>
+              <span class="pd-stat-val">{{ $program->durasi }}</span>
             </div>
             <div class="pd-stat-card">
               <span class="pd-stat-label">Biaya</span>
-              <span class="pd-stat-val">{{ $program->cost }}</span>
+              <span class="pd-stat-val">{{ $program->biaya }}</span>
             </div>
             <div class="pd-stat-card">
               <span class="pd-stat-label">Status</span>
@@ -204,9 +228,9 @@
         </div>
         <div class="reveal reveal-d2">
           @if($program->thumbnail_path)
-            <img src="{{ asset($program->thumbnail_path) }}" alt="{{ $program->name }}" style="width:100%; border-radius:32px; box-shadow:0 30px 60px rgba(0,0,0,0.1);">
+            <img src="{{ asset($program->thumbnail_path) }}" alt="{{ $program->nama_program }}" style="width:100%; border-radius:32px; box-shadow:0 30px 60px rgba(0,0,0,0.1);">
           @else
-            <div style="width:100%; aspect-ratio:4/3; background:var(--detail-primary); border-radius:32px; display:flex; items-center; justify-center; color:white; font-size:48px; font-weight:800;">
+            <div style="width:100%; aspect-ratio:4/3; background:var(--detail-primary); border-radius:32px; display:flex; align-items:center; justify-content:center; color:white; font-size:48px; font-weight:800;">
               KIZUKU
             </div>
           @endif
@@ -223,7 +247,7 @@
           <h3 class="pd-section-h3">Apa yang Kamu Dapatkan?</h3>
           <div class="pd-benefit-list" style="margin-bottom:60px;">
             @php 
-              $benefits = array_filter(explode("\n", str_replace('-', '', $program->benefits)));
+              $benefits = array_filter(explode("\n", str_replace('-', '', $program->benefit)));
             @endphp
             @foreach($benefits as $b)
               <div class="pd-benefit-item">
@@ -234,7 +258,7 @@
           </div>
 
           <h3 class="pd-section-h3">Alur Seleksi</h3>
-          <p class="pd-p" style="margin-bottom:60px; white-space: pre-line;">{{ $program->selection_flow }}</p>
+          <p class="pd-p" style="margin-bottom:60px; white-space: pre-line;">{{ $program->alur_seleksi }}</p>
 
           @if($program->faq)
           <h3 class="pd-section-h3">FAQ (Sering Ditanyakan)</h3>
@@ -254,26 +278,26 @@
           <div class="batch-card reveal reveal-d2">
             @if($activeBatch)
               <div class="batch-status-badge">PENDAFTARAN DIBUKA</div>
-              <span class="batch-name">{{ $activeBatch->name }}</span>
+              <span class="batch-name">{{ $activeBatch->nama_batch }}</span>
               <div class="batch-dates">
                 <div class="batch-date-item">
                   <span class="batch-date-label">Pendaftaran</span>
-                  <span class="batch-date-val">{{ $activeBatch->registration_start?->format('d M') }} – {{ $activeBatch->registration_end?->format('d M Y') }}</span>
+                  <span class="batch-date-val">{{ $activeBatch->tanggal_buka?->format('d M') }} – {{ $activeBatch->tanggal_tutup?->format('d M Y') }}</span>
                 </div>
                 <div class="batch-date-item">
                   <span class="batch-date-label">Mulai Kelas</span>
-                  <span class="batch-date-val">{{ $activeBatch->class_start?->format('d M Y') }}</span>
+                  <span class="batch-date-val">{{ $activeBatch->tanggal_mulai?->format('d M Y') }}</span>
                 </div>
-                @if($activeBatch->quota)
+                @if($activeBatch->kuota)
                 <div class="batch-date-item">
                   <span class="batch-date-label">Sisa Kuota</span>
-                  <span class="batch-date-val">{{ $activeBatch->quota }} Peserta</span>
+                  <span class="batch-date-val">{{ $activeBatch->kuota }} Peserta</span>
                 </div>
                 @endif
               </div>
               
               <div class="pendaftaran-form-box">
-                <h4 style="font-weight:800; margin-bottom:16px;">Daftar Sekarang</h4>
+                <h4 style="font-weight:800; margin-bottom:16px;">Formulir Pendaftaran</h4>
                 
                 @if(session('success'))
                   <div style="padding:12px 16px; border-radius:12px; background:#ecfdf5; color:#059669; font-weight:700; font-size:13px; margin-bottom:16px;">
@@ -281,17 +305,98 @@
                   </div>
                 @endif
 
-                <form action="{{ route('pendaftaran.store') }}" method="POST" class="space-y-4">
+                <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                   @csrf
-                  <input type="hidden" name="program" value="{{ $program->name }}">
+                  <input type="hidden" name="program_id" value="{{ $program->id }}">
                   <input type="hidden" name="batch_id" value="{{ $activeBatch->id }}">
                   
-                  <div class="field">
-                    <input type="text" name="nama" placeholder="Nama Lengkap" required style="width:100%; padding:12px; border:1px solid #e2e8f0; border-radius:12px;">
+                  <div class="form-group-custom">
+                    <label>Nama Lengkap</label>
+                    <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Sesuai KTP" required>
                   </div>
-                  <div class="field">
-                    <input type="text" name="wa" placeholder="No. WhatsApp (08xx...)" required style="width:100%; padding:12px; border:1px solid #e2e8f0; border-radius:12px;">
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group-custom">
+                      <label>Jenis Kelamin</label>
+                      <select name="jenis_kelamin" required>
+                        <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                      </select>
+                    </div>
+                    <div class="form-group-custom">
+                      <label>Pendidikan Terakhir</label>
+                      <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="Contoh: SMK Teknik" required>
+                    </div>
                   </div>
+
+                  <div class="form-group-custom">
+                    <label>Tempat, Tanggal Lahir</label>
+                    <input type="text" name="ttl" value="{{ old('ttl') }}" placeholder="Jakarta, 01-01-2000" required>
+                  </div>
+
+                  <div class="form-group-custom">
+                    <label>Alamat Lengkap</label>
+                    <textarea name="alamat" rows="2" placeholder="Alamat domisili saat ini" required>{{ old('alamat') }}</textarea>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group-custom">
+                      <label>No. HP / WhatsApp</label>
+                      <input type="text" name="phone" value="{{ old('phone') }}" placeholder="08xxxxxxxx" required>
+                    </div>
+                    <div class="form-group-custom">
+                      <label>Email</label>
+                      <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group-custom">
+                    <label>Pengalaman Kerja (Opsional)</label>
+                    <textarea name="pengalaman" rows="2" placeholder="Sebutkan jika ada...">{{ old('pengalaman') }}</textarea>
+                  </div>
+
+                  <div class="form-group-custom">
+                    <label>Motivasi Bergabung</label>
+                    <textarea name="motivasi" rows="2" placeholder="Apa tujuan kamu ikut program ini?">{{ old('motivasi') }}</textarea>
+                  </div>
+
+                  {{-- Document Uploads --}}
+                  <div style="margin-top:24px; padding:20px; background:#f8fafc; border-radius:16px;">
+                    <h5 style="font-size:14px; font-weight:800; margin-bottom:16px; color:var(--detail-primary);">UPLOAD DOKUMEN (PDF/JPG, Max 5MB)</h5>
+                    <div class="space-y-4">
+                      <div class="form-group-custom">
+                        <label>Foto KTP <span style="color:red">*</span></label>
+                        <input type="file" name="ktp" required style="padding:8px; background:white;">
+                      </div>
+                      <div class="form-group-custom">
+                        <label>Kartu Keluarga (KK) <span style="color:red">*</span></label>
+                        <input type="file" name="kk" required style="padding:8px; background:white;">
+                      </div>
+                      <div class="form-group-custom">
+                        <label>Pas Foto Terbaru <span style="color:red">*</span></label>
+                        <input type="file" name="foto" required style="padding:8px; background:white;">
+                      </div>
+                      <div class="form-group-custom">
+                        <label>Ijazah Terakhir <span style="color:red">*</span></label>
+                        <input type="file" name="ijazah" required style="padding:8px; background:white;">
+                      </div>
+                      <div class="form-group-custom">
+                        <label>Sertifikat Pendukung (Optional)</label>
+                        <input type="file" name="sertifikat" style="padding:8px; background:white;">
+                      </div>
+                    </div>
+                  </div>
+
+                  @if ($errors->any())
+                    <div style="padding:12px; background:#fef2f2; border:1px solid #fecaca; border-radius:12px; color:#991b1b; font-size:12px;">
+                      <ul class="list-disc pl-4">
+                        @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                        @endforeach
+                      </ul>
+                    </div>
+                  @endif
+
                   <button type="submit" class="btn btn-primary" style="width:100%; padding:14px; border-radius:12px; justify-content:center; display:flex;">
                     Kirim Pendaftaran
                   </button>
@@ -299,8 +404,8 @@
               </div>
             @elseif($nextBatch)
               <div class="batch-status-badge" style="background:#fef3c7; color:#d97706;">AKAN DATANG</div>
-              <span class="batch-name">{{ $nextBatch->name }}</span>
-              <p class="text-slate-500 text-sm mb-4">Batch ini akan dibuka pada {{ $nextBatch->registration_start?->format('d F Y') }}.</p>
+              <span class="batch-name">{{ $nextBatch->nama_batch }}</span>
+              <p class="text-slate-500 text-sm mb-4">Batch ini akan dibuka pada {{ $nextBatch->tanggal_buka?->format('d F Y') }}.</p>
               <a href="https://wa.me/62812XXXXXXXX" class="btn btn-outline" style="width:100%; justify-content:center; display:flex;">Ingatkan Saya di WA</a>
             @else
               <div class="batch-status-badge" style="background:#f1f5f9; color:#64748b;">BELUM TERSEDIA</div>

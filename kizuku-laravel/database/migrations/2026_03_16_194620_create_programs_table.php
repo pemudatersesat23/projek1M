@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nama_program');
             $table->string('slug')->unique();
-            $table->text('explanation')->nullable();
-            $table->text('target_participants')->nullable();
-            $table->string('duration')->nullable();
-            $table->text('benefits')->nullable();
-            $table->text('selection_flow')->nullable();
-            $table->string('cost')->nullable();
+            $table->text('deskripsi')->nullable();
+            $table->string('target_peserta')->nullable();
+            $table->string('durasi')->nullable();
+            $table->text('benefit')->nullable();
+            $table->text('alur_seleksi')->nullable();
+            $table->string('biaya')->nullable();
             $table->json('faq')->nullable();
-            $table->text('materi')->nullable();
-            $table->string('brosur_path')->nullable();
+            $table->string('materi')->nullable();
+            $table->string('brosur')->nullable();
             $table->string('thumbnail_path')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();

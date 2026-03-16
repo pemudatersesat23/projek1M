@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('program_id')->constrained()->onDelete('cascade');
-            $table->string('name');
+            $table->string('nama_batch');
             $table->enum('status', ['akan_dibuka', 'dibuka', 'ditutup', 'berjalan', 'selesai'])->default('akan_dibuka');
-            $table->date('registration_start')->nullable();
-            $table->date('registration_end')->nullable();
-            $table->date('class_start')->nullable();
-            $table->date('class_estimate_end')->nullable();
-            $table->integer('quota')->nullable();
+            $table->date('tanggal_buka')->nullable();
+            $table->date('tanggal_tutup')->nullable();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_selesai')->nullable();
+            $table->integer('kuota')->nullable();
             $table->string('link_form')->nullable();
             $table->timestamps();
         });
