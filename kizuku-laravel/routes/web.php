@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 // ═══ PUBLIC ROUTES ═══
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kampus-partner', [HomeController::class, 'allCampuses'])->name('kampus-partner.all');
+Route::get('/program/{slug}', [HomeController::class, 'showProgram'])->name('programs.show');
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
 // ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══
@@ -27,6 +28,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
 
     // CRUD Partner Campus
     Route::resource('partner-campus', \App\Http\Controllers\PartnerCampusController::class);
+
+    // CRUD Programs & Batches
+    Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
+    Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
 
     // Payment Settings
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');

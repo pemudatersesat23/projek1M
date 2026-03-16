@@ -23,9 +23,10 @@ class DashboardController extends Controller
         $growthTotal = $lastMonth > 0 ? round((($thisMonth - $lastMonth) / $lastMonth) * 100) : 0;
 
         // Program distribution
-        $programs = ['Engineering', 'Tokutei Ginou (TG)', 'Kelas Bahasa Jepang', 'Returnee / Ex Jepang'];
         $programStats = [];
-        foreach ($programs as $prog) {
+        $activePrograms = \App\Models\Program::where('status', 'aktif')->pluck('name');
+        
+        foreach ($activePrograms as $prog) {
             $count = Siswa::where('program', $prog)->count();
             $programStats[] = [
                 'nama'   => $prog,

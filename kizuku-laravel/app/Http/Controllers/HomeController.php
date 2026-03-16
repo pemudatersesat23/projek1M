@@ -22,6 +22,17 @@ class HomeController extends Controller
         return view('kampus-partner', compact('campuses'));
     }
 
+    public function showProgram($slug)
+    {
+        $program = \App\Models\Program::where('slug', $slug)->firstOrFail();
+        
+        // Find active batch (dibuka) or next upcoming batch (akan_dibuka)
+        $activeBatch = $program->batches()->where('status', 'dibuka')->first();
+        $nextBatch = $program->batches()->where('status', 'akan_dibuka')->orderBy('registration_start')->first();
+
+        return view('program-detail', compact('program', 'activeBatch', 'nextBatch'));
+    }
+
     public function storePendaftaran(Request $request)
     {
         $request->validate([
@@ -29,6 +40,7 @@ class HomeController extends Controller
             'wa'   => 'required|string|max:50',
             'email' => 'nullable|email|max:255',
             'program' => 'nullable|string|max:255',
+            'batch_id' => 'nullable|exists:batches,id',
             'catatan' => 'nullable|string',
         ]);
 
@@ -38,6 +50,7 @@ class HomeController extends Controller
             'email'    => $request->email,
             'kota'     => '-',
             'program'  => $request->program ?? 'Belum dipilih',
+            'batch_id' => $request->batch_id,
             'status'   => 'Proses',
             'catatan'  => $request->catatan,
         ]);

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Siswa extends Model
 {
     protected $fillable = [
-        'nama', 'wa', 'email', 'kota', 'program',
+        'nama', 'wa', 'email', 'kota', 'program', 'batch_id',
         'status', 'pendidikan', 'catatan', 'tgl_lahir',
         'extra_fields', 'payment_status',
     ];
@@ -15,4 +15,9 @@ class Siswa extends Model
     protected $casts = [
         'tgl_lahir' => 'date',
     ];
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
 }
