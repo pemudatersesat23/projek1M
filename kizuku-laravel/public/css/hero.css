@@ -117,7 +117,6 @@
     align-items: center;
 }
 
-.hero-left {}
 
 .hero-pill {
     display: inline-flex;
@@ -168,10 +167,11 @@
 }
 
 .hero-h1 .line-accent {
-    background: linear-gradient(90deg, var(--red), var(--blue), var(--cyan));
+    background: linear-gradient(90deg, #ff7e67, #4facfe, #00f2fe);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
 
 .hero-sub {
