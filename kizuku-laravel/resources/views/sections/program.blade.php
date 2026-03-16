@@ -9,7 +9,7 @@
     <div class="prog-grid">
       @php
         $programs = \App\Models\Program::where('status', 'aktif')->with(['batches' => function($q) {
-          $q->where('status', 'dibuka');
+          $q->whereIn('status', ['dibuka', 'akan_dibuka']);
         }])->get();
         
         $cardClasses = ['red', 'blue', 'dark', 'mix'];
@@ -30,16 +30,19 @@
           @endforeach
         </ul>
         <div class="prog-footer">
-          @php $activeBatch = $p->batches->first(); @endphp
+          @php 
+            $activeBatch = $p->batches->where('status', 'dibuka')->first(); 
+            $upcomingBatch = $p->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
+          @endphp
+
           @if($activeBatch)
             <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">Daftar {{ $activeBatch->nama_batch }}</a>
-          @else
-            <a class="btn btn-primary" href="{{ route('programs.show', $p->slug) }}">Lihat Detail</a>
-          @endif
-          <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">Detail</a>
-          @if($activeBatch)
             <span class="prog-note">⚡ Batch dibuka</span>
+          @elseif($upcomingBatch)
+            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">Lihat Jadwal</a>
+            <span class="prog-note">📅 Segera: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>
           @else
+            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">Detail</a>
             <span class="prog-note">✦ Info pendaftaran</span>
           @endif
         </div>
