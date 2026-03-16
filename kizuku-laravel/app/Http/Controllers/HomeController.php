@@ -11,8 +11,15 @@ class HomeController extends Controller
     public function index()
     {
         $beritas = Berita::latest()->take(7)->get();
+        $campuses = \App\Models\PartnerCampus::latest()->take(4)->get();
 
-        return view('home', compact('beritas'));
+        return view('home', compact('beritas', 'campuses'));
+    }
+
+    public function allCampuses()
+    {
+        $campuses = \App\Models\PartnerCampus::latest()->get();
+        return view('kampus-partner', compact('campuses'));
     }
 
     public function storePendaftaran(Request $request)

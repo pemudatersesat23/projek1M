@@ -1,19 +1,34 @@
-<!-- ═══ KEUNGGULAN ═══ -->
-<section id="keunggulan" class="section-pad">
+<!-- ═══ KAMPUS PARTNER ═══ -->
+<section id="kampus-partner" class="section-pad">
   <div class="container">
     <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
-      <div class="sec-tag">✦ Mengapa Kizuku</div>
-      <h2 class="sec-h2">Keunggulan yang Membuat<br>Kami Berbeda</h2>
-      <p class="sec-p" style="margin:0 auto;">Kami tidak sekadar mengajar bahasa — kami mempersiapkan kamu seutuhnya untuk sukses bekerja di Jepang.</p>
+      <div class="sec-tag" data-id="✦ Mitra Kami" data-jp="✦ パートナー">✦ Mitra Kami</div>
+      <h2 class="sec-h2" data-id="Kampus Partner" data-jp="提携キャンパス">Kampus Partner</h2>
+      <p class="sec-p" style="margin:0 auto;" data-id="Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik." data-jp="私たちは最高の教育を提供するために有名な教育機関と提携しています。">Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik.</p>
     </div>
-    <div class="keung-grid">
-      <div class="keung-card reveal reveal-d1"><div class="keung-icon c-blue">🎓</div><h4>Pengajar Berpengalaman</h4><p>Tenaga pengajar kami adalah praktisi yang pernah bekerja atau belajar langsung di Jepang, memberikan insight nyata dunia kerja Jepang.</p></div>
-      <div class="keung-card reveal reveal-d2"><div class="keung-icon c-red">🇯🇵</div><h4>Kurikulum Berbasis Realita</h4><p>Materi disesuaikan dengan kebutuhan aktual pasar kerja Jepang — bukan sekadar teori, tapi langsung aplikatif di lapangan.</p></div>
-      <div class="keung-card reveal reveal-d3"><div class="keung-icon c-cyan">🤝</div><h4>Jaringan Perusahaan Luas</h4><p>Kami telah membangun relasi dengan ratusan perusahaan Jepang yang aktif mencari tenaga kerja Indonesia berkualitas.</p></div>
-      <div class="keung-card reveal reveal-d4"><div class="keung-icon c-green">✅</div><h4>Pendampingan Penuh</h4><p>Dari pertama daftar hingga kamu sudah bekerja di Jepang, tim kami mendampingi setiap langkah prosesmu tanpa biaya tersembunyi.</p></div>
-      <div class="keung-card reveal reveal-d5"><div class="keung-icon c-orange">⚡</div><h4>Proses Cepat & Transparan</h4><p>Proses seleksi, pelatihan, hingga pemberangkatan dilakukan secara transparan dengan timeline yang jelas dan dapat dipantau.</p></div>
-      <div class="keung-card reveal reveal-d6"><div class="keung-icon c-dark">🏆</div><h4>Rekam Jejak Terbukti</h4><p>Lebih dari 1000 alumni telah berhasil kami tempatkan di Jepang dengan tingkat keberhasilan mencapai 98%. Hasil nyata, bukan janji.</p></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 px-4 md:px-0 max-w-5xl mx-auto">
+      @forelse($campuses as $campus)
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center reveal">
+          <div class="w-full h-24 flex items-center justify-center p-2 mb-4">
+            <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}" class="max-w-full max-h-full object-contain">
+          </div>
+          <h4 class="font-semibold text-sm text-slate-800">{{ $campus->name }}</h4>
+        </div>
+      @empty
+        <div class="col-span-full text-center text-slate-500 py-8" data-id="Belum ada kampus partner." data-jp="提携キャンパスはまだありません。">
+          Belum ada kampus partner.
+        </div>
+      @endforelse
     </div>
+    
+    @if(\App\Models\PartnerCampus::count() > 4)
+    <div class="text-center mt-10 reveal">
+      <a href="{{ route('kampus-partner.all') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm transition-colors" data-id="Lihat Semua Kampus Partner" data-jp="すべての提携キャンパスを見る">
+        Lihat Semua Kampus Partner
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+    @endif
   </div>
 </section>
 

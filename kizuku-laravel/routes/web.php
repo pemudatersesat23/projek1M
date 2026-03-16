@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 // ═══ PUBLIC ROUTES ═══
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/kampus-partner', [HomeController::class, 'allCampuses'])->name('kampus-partner.all');
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
 // ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══
@@ -22,7 +23,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('siswa', SiswaController::class);
 
     // CRUD Berita
-    Route::resource('berita', BeritaController::class);
+    Route::resource('berita', \App\Http\Controllers\BeritaController::class);
+
+    // CRUD Partner Campus
+    Route::resource('partner-campus', \App\Http\Controllers\PartnerCampusController::class);
 
     // Payment Settings
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');

@@ -40,7 +40,7 @@
       <ul class="nav-links">
         <li><a href="{{ url('/') }}#beranda" class="active">Beranda</a></li>
         <li><a href="{{ url('/') }}#program">Program</a></li>
-        <li><a href="{{ url('/') }}#keunggulan">Keunggulan</a></li>
+        <li><a href="{{ url('/') }}#kampus-partner">Kampus Partner</a></li>
         <li><a href="{{ url('/') }}#testimoni">Testimoni</a></li>
         <li><a href="{{ url('/') }}#kontak">Kontak</a></li>
       </ul>
@@ -68,7 +68,7 @@
     <div class="mobile-menu" id="mobmenu">
       <a href="{{ url('/') }}#beranda">Beranda</a>
       <a href="{{ url('/') }}#program">Program</a>
-      <a href="{{ url('/') }}#keunggulan">Keunggulan</a>
+      <a href="{{ url('/') }}#kampus-partner">Kampus Partner</a>
       <a href="{{ url('/') }}#testimoni">Testimoni</a>
       <a href="{{ url('/') }}#kontak">Kontak</a>
       <div class="mob-cta">
@@ -120,7 +120,7 @@
           <h5>Navigasi</h5>
           <ul>
             <li><a href="{{ url('/') }}#beranda">Beranda</a></li>
-            <li><a href="{{ url('/') }}#keunggulan">Keunggulan</a></li>
+            <li><a href="{{ url('/') }}#kampus-partner">Kampus Partner</a></li>
             <li><a href="{{ url('/') }}#testimoni">Testimoni</a></li>
             <li><a href="{{ url('/') }}#kontak">Daftar Sekarang</a></li>
           </ul>
