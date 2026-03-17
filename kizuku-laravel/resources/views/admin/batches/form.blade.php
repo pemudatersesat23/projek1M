@@ -1,17 +1,17 @@
 @extends('layouts.admin')
-@section('admin-title', isset($batch) ? 'Edit Batch' : 'Buka Batch Baru')
+@section('admin-title', $batch->exists ? 'Edit Batch' : 'Buka Batch Baru')
 
 @section('admin-content')
   <div class="mb-8">
     <a href="{{ route('admin.batches.index') }}" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 mb-2">
       <span class="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Daftar
     </a>
-    <h3 class="text-slate-800 font-bold text-2xl">{{ isset($batch) ? 'Edit Batch: ' . $batch->nama_batch : 'Buka Gelombang Pendaftaran Baru' }}</h3>
+    <h3 class="text-slate-800 font-bold text-2xl">{{ $batch->exists ? 'Edit Batch: ' . $batch->nama_batch : 'Buka Gelombang Pendaftaran Baru' }}</h3>
   </div>
 
-  <form action="{{ isset($batch) ? route('admin.batches.update', $batch) : route('admin.batches.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <form action="{{ $batch->exists ? route('admin.batches.update', $batch) : route('admin.batches.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     @csrf
-    @if(isset($batch)) @method('PUT') @endif
+    @if($batch->exists) @method('PUT') @endif
 
     <div class="lg:col-span-2 space-y-6">
       {{-- Informasi Batch --}}

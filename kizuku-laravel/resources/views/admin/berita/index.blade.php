@@ -111,6 +111,9 @@
           </div>
 
           <div class="flex items-center gap-2 mt-3">
+            <a href="{{ route('admin.berita.edit', $n) }}" class="px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">edit</span> Edit
+            </a>
             <form method="POST" action="{{ route('admin.berita.destroy', $n) }}" class="inline" onsubmit="return confirm('Hapus berita ini?')">
               @csrf @method('DELETE')
               <button type="submit" class="px-3 py-1.5 border border-red-200 text-accent-red rounded-lg text-xs font-medium hover:bg-red-50 transition-colors flex items-center gap-1">

@@ -17,7 +17,9 @@ class Applicant extends Model
         'phone',
         'email',
         'pendidikan',
+        'jurusan_ipk',
         'pengalaman',
+        'pengalaman_kerja',
         'motivasi',
         'status_seleksi'
     ];

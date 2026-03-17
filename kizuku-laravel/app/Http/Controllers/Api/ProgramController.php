@@ -54,4 +54,34 @@ class ProgramController extends Controller
     {
         return response()->json(['message' => 'Action not allowed'], 405);
     }
+
+    /**
+     * Get the active batch for a specific program.
+     */
+    public function activeBatch(string $id)
+    {
+        $program = \App\Models\Program::findOrFail($id);
+        
+        $activeBatch = $program->batches()
+            ->where('status', 'dibuka')
+            ->first();
+
+        if (!$activeBatch) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pendaftaran Ditutup'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $activeBatch->id,
+                'nama_batch' => $activeBatch->nama_batch,
+                'tanggal_buka' => $activeBatch->tanggal_buka?->format('Y-m-d'),
+                'tanggal_tutup' => $activeBatch->tanggal_tutup?->format('Y-m-d'),
+                'kuota' => $activeBatch->kuota,
+            ]
+        ]);
+    }
 }

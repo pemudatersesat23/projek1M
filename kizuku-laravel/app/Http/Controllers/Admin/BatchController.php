@@ -19,7 +19,8 @@ class BatchController extends Controller
     public function create()
     {
         $programs = Program::where('status', 'aktif')->get();
-        return view('admin.batches.create', compact('programs'));
+        $batch = new Batch(); // Inisialisasi objek kosong untuk form
+        return view('admin.batches.create', compact('programs', 'batch'));
     }
 
     public function store(Request $request)

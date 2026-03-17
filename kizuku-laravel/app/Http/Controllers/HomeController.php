@@ -15,7 +15,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $beritas = Berita::latest()->take(7)->get();
+        $beritas = Berita::published()->latest()->take(7)->get();
         $campuses = \App\Models\PartnerCampus::latest()->take(4)->get();
 
         return view('home', compact('beritas', 'campuses'));
@@ -34,8 +34,13 @@ class HomeController extends Controller
         // Find active batch (dibuka) or next upcoming batch (akan_dibuka)
         $activeBatch = $program->batches()->where('status', 'dibuka')->first();
         $nextBatch = $program->batches()->where('status', 'akan_dibuka')->orderBy('tanggal_buka')->first();
+        
+        // Get batch history (history of previous and current batches)
+        $batchHistory = $program->batches()
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('program-detail', compact('program', 'activeBatch', 'nextBatch'));
+        return view('program-detail', compact('program', 'activeBatch', 'nextBatch', 'batchHistory'));
     }
 
     public function storePendaftaran(\App\Http\Requests\PendaftaranRequest $request, \App\Services\FileUploadService $uploadService)
