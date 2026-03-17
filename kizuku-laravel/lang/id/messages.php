@@ -103,6 +103,8 @@ return [
         'experience' => 'Pengalaman Kerja',
         'upload' => 'Dokumen Pendukung',
         'submit' => 'Kirim Pendaftaran Sekarang',
+        'upload_placeholder' => 'Pilih File',
+        'file_selected' => 'File Terpilih!',
         'placeholders' => [
             'ktp' => 'Sesuai KTP',
             'pendidikan' => 'SMK / S1 Teknik',

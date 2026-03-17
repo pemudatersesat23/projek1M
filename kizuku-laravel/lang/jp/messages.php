@@ -103,6 +103,8 @@ return [
         'experience' => '職歴',
         'upload' => '添付書類',
         'submit' => '今すぐ登録を送信',
+        'upload_placeholder' => 'ファイルを選択',
+        'file_selected' => 'ファイルが選択されました！',
         'placeholders' => [
             'ktp' => '身分証明書通り',
             'pendidikan' => '専門学校 / 大学卒業',
