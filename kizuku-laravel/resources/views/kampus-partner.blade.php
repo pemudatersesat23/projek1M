@@ -25,13 +25,31 @@
       </a>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+    <div class="kampus-grid reveal" style="padding: 0; max-width: none;">
       @forelse($campuses as $campus)
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center text-center">
-          <div class="w-full h-32 flex items-center justify-center p-4 bg-slate-50 rounded-xl mb-6">
-            <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}" class="max-w-full max-h-full object-contain mix-blend-multiply">
+        <div class="kampus-card">
+          <!-- Banner -->
+          <div class="kampus-banner">
+            @if($campus->banner)
+              <img src="{{ asset($campus->banner) }}" alt="Banner {{ $campus->name }}">
+            @else
+              <div class="kampus-banner-empty">No Banner</div>
+            @endif
           </div>
-          <h3 class="font-bold text-slate-800 text-lg dynamic-lang" data-id="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" data-jp="{{ $campus->getTranslation('name', 'jp', false) ?: $campus->name }}">{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}</h3>
+          
+          <!-- Overlapping Logo -->
+          <div class="kampus-logo-wrapper">
+            <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}">
+          </div>
+
+          <!-- Content -->
+          <div class="kampus-content">
+            <h3 class="kampus-name dynamic-lang" data-id="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" data-jp="{{ $campus->getTranslation('name', 'jp', false) ?: $campus->name }}">{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}</h3>
+            
+            <div class="kampus-divider"></div>
+            
+            <p class="kampus-desc dynamic-lang" data-id="{{ $campus->getTranslation('description', 'id', false) ?: 'Belum ada deskripsi.' }}" data-jp="{{ $campus->getTranslation('description', 'jp', false) ?: '説明はありません。' }}">{{ $campus->getTranslation('description', 'id', false) ?: 'Belum ada deskripsi.' }}</p>
+          </div>
         </div>
       @empty
         <div class="col-span-full py-20 text-center">

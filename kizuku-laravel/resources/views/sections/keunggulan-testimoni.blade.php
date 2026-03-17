@@ -6,16 +6,34 @@
       <h2 class="sec-h2 dynamic-lang" data-id="Kampus Partner" data-jp="提携キャンパス">Kampus Partner</h2>
       <p class="sec-p dynamic-lang" style="margin:0 auto;" data-id="Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik." data-jp="私たちは最高の教育を提供するために有名な教育機関と提携しています。">Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik.</p>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 px-4 md:px-0 max-w-5xl mx-auto">
+    <div class="kampus-grid reveal">
       @forelse($campuses as $campus)
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center reveal">
-          <div class="w-full h-24 flex items-center justify-center p-2 mb-4">
-            <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}" class="max-w-full max-h-full object-contain">
+        <div class="kampus-card">
+          <!-- Banner -->
+          <div class="kampus-banner">
+            @if($campus->banner)
+              <img src="{{ asset($campus->banner) }}" alt="Banner {{ $campus->name }}">
+            @else
+              <div class="kampus-banner-empty">No Banner</div>
+            @endif
           </div>
-          <h4 class="font-semibold text-sm text-slate-800 dynamic-lang" data-id="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" data-jp="{{ $campus->getTranslation('name', 'jp', false) ?: $campus->name }}">{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}</h4>
+          
+          <!-- Overlapping Logo -->
+          <div class="kampus-logo-wrapper">
+            <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}">
+          </div>
+
+          <!-- Content -->
+          <div class="kampus-content">
+            <h4 class="kampus-name dynamic-lang" data-id="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" data-jp="{{ $campus->getTranslation('name', 'jp', false) ?: $campus->name }}">{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}</h4>
+            
+            <div class="kampus-divider"></div>
+            
+            <p class="kampus-desc dynamic-lang" data-id="{{ $campus->getTranslation('description', 'id', false) ?: 'Belum ada deskripsi.' }}" data-jp="{{ $campus->getTranslation('description', 'jp', false) ?: '説明はありません。' }}">{{ $campus->getTranslation('description', 'id', false) ?: 'Belum ada deskripsi.' }}</p>
+          </div>
         </div>
       @empty
-        <div class="col-span-full text-center text-slate-500 py-8 dynamic-lang" data-id="Belum ada kampus partner." data-jp="提携キャンパスはまだありません。">
+        <div class="col-span-full text-center text-slate-500 py-8 dynamic-lang" style="grid-column: 1 / -1;" data-id="Belum ada kampus partner." data-jp="提携キャンパスはまだありません。">
           Belum ada kampus partner.
         </div>
       @endforelse
