@@ -10,6 +10,7 @@ return [
         'kontak' => 'お問い合わせ',
         'login' => 'ログイン',
         'konsultasi' => '無料相談',
+        'see_all_partners' => 'すべての提携キャンパスを見る',
     ],
     'auth' => [
         'profile' => 'プロフィール',
@@ -35,6 +36,8 @@ return [
     'hero' => [
         'badge' => '✦ 独占的なトレーニングプログラム',
         'enroll_now' => '今すぐ登録',
+        'title' => '夢のキャリアを<br><span class="line-accent">日本で実現</span><br>私たちと共に',
+        'subtitle' => 'LPK Kizuku International Academyは、日本への最高の語学、文化、スキル研修を提供し、あなたの準備をサポートします。',
     ],
     'program' => [
         'duration' => '研修期間',
@@ -61,6 +64,21 @@ return [
         'no_schedule' => 'スケジュール未定',
         'no_schedule_p' => '現在、募集中のバッチはありません。最新情報については管理者にお問い合わせください。',
         'ask_admin' => '管理者に相談 (WA)',
+        'labels' => [
+            'target' => '対象参加者',
+            'materi' => '主な内容',
+            'focus' => 'トレーニングの焦点',
+            'output' => 'プログラムのアウトプット',
+        ],
+        'batch' => [
+            'pendaftaran' => '登録期間',
+            'mulai' => 'クラス開始',
+            'kuota' => '定員',
+            'peserta' => '名',
+            'estimasi' => '終了予定',
+            'wa_btn' => 'WhatsAppで登録',
+            'enroll_btn' => '今すぐ登録',
+        ],
     ],
     'form' => [
         'title' => '登録フォーム',
@@ -85,6 +103,21 @@ return [
         'experience' => '職歴',
         'upload' => '添付書類',
         'submit' => '今すぐ登録を送信',
+        'placeholders' => [
+            'ktp' => '身分証明書通り',
+            'pendidikan' => '専門学校 / 大学卒業',
+            'pob' => '出生地を入力',
+            'address' => '現在の住所',
+            'experience' => '役職と期間（例：2年 メカニック）',
+            'ssw_field' => '特定技能分野',
+            'jp_level' => '日本語レベル',
+            'ipk' => '最終GPA',
+            'major' => '専攻学科',
+            'shift_pagi' => '午前 (09:00 - 12:00)',
+            'shift_siang' => '午後 (13:00 - 16:00)',
+            'shift_malam' => '夜間 (19:00 - 21:00)',
+        ],
+        'registration_success' => '登録が正常に送信されました！ まもなくWhatsAppでご連絡いたします。',
     ],
     'home' => [
         'hero_pill' => '2014年から信頼 &nbsp;·&nbsp; 🇯🇵 日本',
@@ -131,6 +164,14 @@ return [
             'kat-alumni' => '卒業生',
             'kat-promo'  => 'プロモーション',
             'kat-tips'   => 'ヒント',
+        ],
+        'testi_items' => [
+            'rizki_content' => '以前は日本語が全く分かりませんでした。Kizukuで6ヶ月学んだ後、N4に合格し、愛知県の製造会社にすぐに採用されました。',
+            'rizki_role' => '特定技能卒業生 · 愛知県で勤務',
+            'andi_content' => 'Kizukuのエンジニアリングプログラムは非常に集中しており、関連性が高いです。研修のわずか3ヶ月後に大阪の建設分野で仕事を見つけました。',
+            'andi_role' => 'エンジニアリング卒業生 · 大阪府',
+            'siti_content' => '帰国者として、次にどこへ行けばいいのか迷っていました。Kizukuは私の言語レベルをN4からN3に引き上げ、より良い新しい会社とのマッチングを助けてくれました。',
+            'siti_role' => '帰国者プログラム卒業生 · 東京都',
         ],
     ],
 ];

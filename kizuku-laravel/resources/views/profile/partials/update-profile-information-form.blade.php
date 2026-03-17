@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Informasi Profil') }}
+            {{ __('messages.dashboard.profile') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update informasi profil akun Anda.") }}
+            {{ __('messages.dashboard.profile_desc') }}
         </p>
     </header>
 
@@ -19,8 +19,8 @@
 
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Nama Lengkap')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" placeholder="Masukkan nama lengkap Anda" />
+            <x-input-label for="name" :value="__('messages.nav.home') === 'Beranda' ? 'Nama Lengkap' : '氏名'" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" placeholder="{{ __('messages.nav.home') === 'Beranda' ? 'Masukkan nama lengkap Anda' : '氏名を入力してください' }}" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
@@ -53,12 +53,12 @@
         <div style="background: rgba(17, 17, 17, .04); padding: 16px; border-radius: 12px; border: 1px solid rgba(17, 17, 17, .08);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <p style="font-size: 14px; color: #666; margin: 0;">Status Akun</p>
+                    <p style="font-size: 14px; color: #666; margin: 0;">{{ __('messages.dashboard.login_as') }}</p>
                     <p style="font-size: 16px; font-weight: 600; color: #111; margin: 4px 0 0 0;">
                         @if($user->role === 'admin')
-                            <span style="color: var(--red, #e10600);">🔑 Administrator</span>
+                            <span style="color: var(--red, #e10600);">🔑 {{ __('messages.dashboard.admin_label') }}</span>
                         @else
-                            <span style="color: #2563eb;">👤 User Biasa</span>
+                            <span style="color: #2563eb;">👤 {{ __('messages.dashboard.user_label') }}</span>
                         @endif
                     </p>
                 </div>
@@ -77,7 +77,7 @@
                 cursor: pointer;
                 transition: all .3s;
             " onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
-                💾 Simpan Perubahan
+                💾 {{ __('messages.dashboard.edit_profile') }}
             </button>
 
             @if (session('status') === 'profile-updated')
@@ -87,7 +87,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-green-600"
-                >✅ Profil berhasil diperbarui!</p>
+                >✅ {{ __('messages.nav.home') === 'Beranda' ? 'Profil berhasil diperbarui!' : 'プロファイルが正常に更新されました！' }}</p>
             @endif
         </div>
     </form>

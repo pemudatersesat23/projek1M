@@ -73,10 +73,10 @@ class HomeController extends Controller
             }
 
             \Log::info('Redirecting back');
-            return redirect()->back()->with('success', 'Pendaftaran berhasil! Kami akan mereview data kamu segera.');
+            return redirect()->back()->with('success', __('messages.form.registration_success'));
         } catch (\Exception $e) {
             \Log::error('Pendaftaran error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withErrors('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
+            return redirect()->back()->withErrors(__('messages.form.error_occurred') ?? 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
         }
     }
 }

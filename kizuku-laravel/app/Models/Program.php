@@ -39,7 +39,8 @@ class Program extends Model
         'alur_seleksi',
         'materi',
         'durasi',
-        'biaya'
+        'biaya',
+        'faq'
     ];
 
     protected $casts = [

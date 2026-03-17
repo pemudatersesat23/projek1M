@@ -4,12 +4,12 @@
 @section('admin-content')
   <div class="flex items-center justify-between mb-8">
     <div>
-      <h3 class="text-slate-800 font-bold text-2xl">Daftar Program</h3>
-      <p class="text-slate-500 text-sm">Kelola informasi program pelatihan KIZUKU</p>
+      <h3 class="text-slate-800 font-bold text-2xl">{{ __('messages.nav.program') }}</h3>
+      <p class="text-slate-500 text-sm">{{ __('messages.dashboard.admin_label') }} - {{ __('messages.form.title') }}</p>
     </div>
     <a href="{{ route('admin.programs.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
       <span class="material-symbols-outlined text-lg">add</span>
-      Tambah Program
+      {{ __('messages.home.home_btn_primary') === 'Mulai Sekarang' ? 'Tambah Program' : 'プログラムを追加' }}
     </a>
   </div>
 
@@ -18,25 +18,27 @@
       <table class="w-full text-left">
         <thead class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider">
           <tr>
-            <th class="px-6 py-4">Nama Program</th>
-            <th class="px-6 py-4">Durasi</th>
-            <th class="px-6 py-4">Biaya</th>
+            <th class="px-6 py-4">{{ __('messages.nav.program') }}</th>
+            <th class="px-6 py-4">{{ __('messages.program.duration') }}</th>
+            <th class="px-6 py-4">{{ __('messages.program.investment') }}</th>
             <th class="px-6 py-4">Status</th>
             <th class="px-6 py-4">Batch Aktif</th>
-            <th class="px-6 py-4 text-right">Aksi</th>
+            <th class="px-6 py-4 text-right">{{ __('messages.auth.admin_panel') === 'Panel Admin' ? 'Aksi' : 'アクション' }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
           @forelse($programs as $program)
               <tr class="hover:bg-slate-50/50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">{{ $program->nama_program }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                  {{ $program->getTranslation('nama_program', app()->getLocale()) ?: $program->nama_program }}
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex flex-col">
-                    <span class="text-sm font-medium text-slate-700">{{ $program->durasi }}</span>
+                    <span class="text-sm font-medium text-slate-700">{{ $program->getTranslation('durasi', app()->getLocale()) ?: $program->durasi }}</span>
                     <span class="text-xs text-slate-400">Estimasi</span>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ $program->biaya }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ $program->getTranslation('biaya', app()->getLocale()) ?: $program->biaya }}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="px-2 py-1 text-xs font-bold rounded-full {{ $program->status === 'aktif' ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-500' }}">
                     {{ ucfirst($program->status) }}

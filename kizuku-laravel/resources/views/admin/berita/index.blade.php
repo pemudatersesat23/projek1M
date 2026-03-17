@@ -5,8 +5,8 @@
   {{-- Header --}}
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-      <h3 class="text-lg font-bold text-slate-800">Kelola Berita & Pengumuman</h3>
-      <p class="text-sm text-slate-500 mt-1">Tambah atau kelola berita yang tampil di halaman publik.</p>
+      <h3 class="text-lg font-bold text-slate-800">{{ __('messages.nav.home') === 'Beranda' ? 'Kelola Berita & Pengumuman' : 'ニュースとアナウンスの管理' }}</h3>
+      <p class="text-sm text-slate-500 mt-1">{{ __('messages.nav.home') === 'Beranda' ? 'Tambah atau kelola berita yang tampil di halaman publik.' : '公開ページに表示されるニュースを追加または管理します。' }}</p>
     </div>
   </div>
 
@@ -14,7 +14,7 @@
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
     <div class="px-6 py-4 border-b border-slate-200">
       <h4 class="font-bold text-slate-800 flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary">add_circle</span> Tambah Berita Baru
+        <span class="material-symbols-outlined text-primary">add_circle</span> {{ __('messages.nav.home') === 'Beranda' ? 'Tambah Berita Baru' : '新しいニュースを追加' }}
       </h4>
     </div>
 
@@ -36,10 +36,10 @@
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Kategori</label>
           <select name="kategori" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary cursor-pointer outline-none">
-            <option value="kat-info" {{ old('kategori')=='kat-info' ? 'selected' : '' }}>Info Program</option>
-            <option value="kat-alumni" {{ old('kategori')=='kat-alumni' ? 'selected' : '' }}>Alumni</option>
-            <option value="kat-promo" {{ old('kategori')=='kat-promo' ? 'selected' : '' }}>Promo</option>
-            <option value="kat-tips" {{ old('kategori')=='kat-tips' ? 'selected' : '' }}>Tips</option>
+            <option value="kat-info" {{ old('kategori')=='kat-info' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-info") }}</option>
+            <option value="kat-alumni" {{ old('kategori')=='kat-alumni' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-alumni") }}</option>
+            <option value="kat-promo" {{ old('kategori')=='kat-promo' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-promo") }}</option>
+            <option value="kat-tips" {{ old('kategori')=='kat-tips' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-tips") }}</option>
           </select>
         </div>
         <div>
@@ -74,12 +74,14 @@
 
   {{-- Berita List --}}
   @php
+  @php
     $kategoriLabel = [
-      'kat-info' => ['label' => 'Info', 'class' => 'bg-primary/10 text-primary'],
-      'kat-alumni' => ['label' => 'Alumni', 'class' => 'bg-emerald-100 text-emerald-700'],
-      'kat-promo' => ['label' => 'Promo', 'class' => 'bg-accent-red/10 text-accent-red'],
-      'kat-tips' => ['label' => 'Tips', 'class' => 'bg-amber-100 text-amber-700'],
+      'kat-info' => ['label' => __("messages.home.categories.kat-info"), 'class' => 'bg-primary/10 text-primary'],
+      'kat-alumni' => ['label' => __("messages.home.categories.kat-alumni"), 'class' => 'bg-emerald-100 text-emerald-700'],
+      'kat-promo' => ['label' => __("messages.home.categories.kat-promo"), 'class' => 'bg-accent-red/10 text-accent-red'],
+      'kat-tips' => ['label' => __("messages.home.categories.kat-tips"), 'class' => 'bg-amber-100 text-amber-700'],
     ];
+  @endphp
   @endphp
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,8 +92,8 @@
           {{ $n->emoji }}
         </div>
         <div class="flex-1 min-w-0">
-          <h5 class="font-bold text-sm text-slate-800 mb-1 truncate">{{ $n->judul }}</h5>
-          <p class="text-xs text-slate-500 line-clamp-2 mb-3">{{ $n->isi }}</p>
+          <h5 class="font-bold text-sm text-slate-800 mb-1 truncate">{{ $n->getTranslation('judul', app()->getLocale()) ?: $n->judul }}</h5>
+          <p class="text-xs text-slate-500 line-clamp-2 mb-3">{{ $n->getTranslation('isi', app()->getLocale()) ?: $n->isi }}</p>
 
           <div class="flex flex-wrap items-center gap-2">
             @php $kat = $kategoriLabel[$n->kategori] ?? ['label' => 'Info', 'class' => 'bg-slate-100 text-slate-600']; @endphp

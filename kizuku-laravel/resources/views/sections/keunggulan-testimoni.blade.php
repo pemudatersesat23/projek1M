@@ -54,7 +54,7 @@
     @if(\App\Models\PartnerCampus::count() > 4)
     <div class="text-center mt-10 reveal">
       <a href="{{ route('kampus-partner.all') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm transition-colors">
-        {{ __('messages.nav.home') === 'Beranda' ? 'Lihat Semua Kampus Partner' : 'すべての提携キャンパスを見る' }}
+        {{ __('messages.nav.see_all_partners') }}
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </a>
     </div>
@@ -78,7 +78,7 @@
               <span>★</span>
             @endfor
           </div>
-          <p class="testi-text">"{{ $testi->content }}"</p>
+          <p class="testi-text">"{{ $testi->getTranslation('content', app()->getLocale()) }}"</p>
           <div class="testi-person">
             <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">
               @if($testi->avatar_path)
@@ -89,33 +89,42 @@
             </div>
             <div>
               <div class="testi-name">{{ $testi->name }}</div>
-              <div class="testi-role">{{ $testi->role }}</div>
+              <div class="testi-role">{{ $testi->getTranslation('role', app()->getLocale()) }}</div>
             </div>
           </div>
         </div>
       @empty
         <div class="testi-card reveal reveal-d1">
           <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-          <p class="testi-text">"Dulu saya nol bahasa Jepang. Setelah 6 bulan di Kizuku, saya lulus N4 dan langsung diterima di perusahaan manufaktur di Aichi."</p>
+          <p class="testi-text">"{{ __('messages.home.testi_items.rizki_content') }}"</p>
           <div class="testi-person">
             <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">R</div>
-            <div><div class="testi-name">Rizki Pratama</div><div class="testi-role">Alumni TG · Bekerja di Aichi, Jepang</div></div>
+            <div>
+                <div class="testi-name">Rizki Pratama</div>
+                <div class="testi-role">{{ __('messages.home.testi_items.rizki_role') }}</div>
+            </div>
           </div>
         </div>
         <div class="testi-card reveal reveal-d2">
           <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-          <p class="testi-text">"Program Engineering Kizuku sangat fokus dan relevan. Saya dapat kerja di bidang konstruksi di Osaka hanya 3 bulan setelah pelatihan."</p>
+          <p class="testi-text">"{{ __('messages.home.testi_items.andi_content') }}"</p>
           <div class="testi-person">
             <div class="testi-avatar" style="background:linear-gradient(135deg,var(--blue),var(--cyan))">A</div>
-            <div><div class="testi-name">Andi Setiawan</div><div class="testi-role">Alumni Engineering · Osaka, Jepang</div></div>
+            <div>
+                <div class="testi-name">Andi Setiawan</div>
+                <div class="testi-role">{{ __('messages.home.testi_items.andi_role') }}</div>
+            </div>
           </div>
         </div>
         <div class="testi-card reveal reveal-d3">
           <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-          <p class="testi-text">"Saya returnee yang sempat bingung mau lanjut kemana. Kizuku bantu saya upgrade bahasa dari N4 ke N3 dan matching dengan perusahaan baru yang lebih baik."</p>
+          <p class="testi-text">"{{ __('messages.home.testi_items.siti_content') }}"</p>
           <div class="testi-person">
             <div class="testi-avatar" style="background:linear-gradient(135deg,#1a1a2e,#555)">S</div>
-            <div><div class="testi-name">Siti Nurhaliza</div><div class="testi-role">Alumni Returnee · Tokyo, Jepang</div></div>
+            <div>
+                <div class="testi-name">Siti Nurhaliza</div>
+                <div class="testi-role">{{ __('messages.home.testi_items.siti_role') }}</div>
+            </div>
           </div>
         </div>
       @endforelse

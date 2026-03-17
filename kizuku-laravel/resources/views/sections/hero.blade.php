@@ -16,10 +16,10 @@
           {!! __('messages.home.hero_pill') !!}
         </div>
         <h1 class="hero-h1">
-          {!! nl2br(e($hero->title)) !!}
+          {!! $hero && $hero->getTranslation('title', app()->getLocale(), false) ? nl2br(e($hero->getTranslation('title', app()->getLocale()))) : __('messages.hero.title') !!}
         </h1>
         <p class="hero-sub">
-          {{ $hero->subtitle }}
+          {{ $hero && $hero->getTranslation('subtitle', app()->getLocale(), false) ? $hero->getTranslation('subtitle', app()->getLocale()) : __('messages.hero.subtitle') }}
         </p>
         <div class="hero-btns">
           <a class="btn btn-primary btn-lg" href="{{ $hero->btn_primary_link }}">
@@ -34,12 +34,10 @@
           {!! __('messages.home.hero_pill') !!}
         </div>
         <h1 class="hero-h1">
-          Wujudkan Karier<br>
-          <span class="line-accent">Impian di Jepang</span><br>
-          Bersama Kami
+          {!! __('messages.hero.title') !!}
         </h1>
         <p class="hero-sub">
-          LPK Kizuku International Academy hadir untuk mempersiapkan kamu dengan pelatihan bahasa, budaya, dan skill kerja terbaik menuju Jepang.
+          {{ __('messages.hero.subtitle') }}
         </p>
         <div class="hero-btns">
           <a class="btn btn-primary btn-lg" href="#program">
