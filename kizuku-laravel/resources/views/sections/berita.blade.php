@@ -3,12 +3,12 @@
   <div class="container">
     <div class="sec-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:36px;">
       <div>
-        <div class="sec-tag">📰 Berita Terkini</div>
-        <h2 class="sec-h2" style="margin-bottom:6px;">Update &amp; Informasi<br>Terbaru Kizuku</h2>
-        <p class="sec-p">Tetap update dengan berita, info program, dan kisah sukses alumni kami.</p>
+        <div class="sec-tag">{{ __('messages.home.berita_tag') }}</div>
+        <h2 class="sec-h2" style="margin-bottom:6px;">{!! __('messages.home.berita_h2') !!}</h2>
+        <p class="sec-p">{{ __('messages.home.berita_p') }}</p>
       </div>
       @auth
-        <a class="btn btn-outline" href="{{ route('admin.berita.index') }}" style="flex-shrink:0;">+ Kelola Berita</a>
+        <a class="btn btn-outline" href="{{ route('admin.berita.index') }}" style="flex-shrink:0;">{{ __('messages.nav.home') === 'Beranda' ? '+ Kelola Berita' : '+ ニュース管理' }}</a>
       @endauth
     </div>
 
@@ -46,7 +46,7 @@
           @endforeach
         </div>
       @else
-        <p style="color:var(--muted);text-align:center;padding:40px;">Belum ada berita.</p>
+        <p style="color:var(--muted);text-align:center;padding:40px;">{{ __('messages.home.program_empty') }}</p>
       @endif
     </div>
 

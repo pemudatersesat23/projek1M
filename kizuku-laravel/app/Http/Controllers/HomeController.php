@@ -17,8 +17,11 @@ class HomeController extends Controller
     {
         $beritas = Berita::published()->latest()->take(7)->get();
         $campuses = \App\Models\PartnerCampus::latest()->take(4)->get();
+        $heroSections = \App\Models\HeroSection::where('is_active', true)->latest()->get();
+        $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
+        $featuredPrograms = \App\Models\Program::where('is_featured', true)->where('status', 'aktif')->take(5)->get();
 
-        return view('home', compact('beritas', 'campuses'));
+        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms'));
     }
 
     public function allCampuses()

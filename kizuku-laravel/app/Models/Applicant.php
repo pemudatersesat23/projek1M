@@ -21,11 +21,23 @@ class Applicant extends Model
         'pengalaman',
         'pengalaman_kerja',
         'motivasi',
-        'status_seleksi'
+        'status_seleksi',
+        // New specialized fields
+        'tinggi_badan',
+        'berat_badan',
+        'kondisi_mata',
+        'tato',
+        'merokok',
+        'bidang_ssw',
+        'level_bahasa_jepang',
+        'ipk',
+        'shift_kursus'
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
+        'tato' => 'boolean',
+        'merokok' => 'boolean',
     ];
 
     public function program()

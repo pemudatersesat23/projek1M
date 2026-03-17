@@ -20,14 +20,14 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                 </svg>
-                {{ __('Profil') }}
+                {{ __('messages.auth.profile') }}
             </a>
             @if(auth()->user()->role === 'admin')
             <a href="{{ route('admin.dashboard') }}" class="user-menu-item admin">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                 </svg>
-                {{ __('Dashboard Admin') }}
+                {{ __('messages.auth.dashboard') }}
             </a>
             @endif
             <form method="POST" action="{{ route('logout') }}" class="user-menu-form">
@@ -37,7 +37,7 @@
                         <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
                         <path fill-rule="evenodd" d="M3.293 9.293a1 1 0 011.414 0L9 13.586l4.293-4.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
-                    {{ __('Logout') }}
+                    {{ __('messages.auth.logout') }}
                 </button>
             </form>
         </div>
@@ -56,13 +56,13 @@
             <div class="mob-user-email">{{ Auth::user()->email }}</div>
         </div>
     </div>
-    <a href="{{ route('profile.edit') }}" class="mob-link">⚙️ Profil</a>
+    <a href="{{ route('profile.edit') }}" class="mob-link">⚙️ {{ __('messages.auth.profile') }}</a>
     @if(auth()->user()->role === 'admin')
-    <a href="{{ route('admin.dashboard') }}" class="mob-link admin">🔐 Dashboard Admin</a>
+    <a href="{{ route('admin.dashboard') }}" class="mob-link admin">🔐 {{ __('messages.auth.dashboard') }}</a>
     @endif
     <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button type="submit" class="mob-link logout">🚪 Logout</button>
+        <button type="submit" class="mob-link logout">🚪 {{ __('messages.auth.logout') }}</button>
     </form>
 </div>
 

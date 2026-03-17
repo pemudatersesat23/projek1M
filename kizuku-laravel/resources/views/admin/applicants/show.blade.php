@@ -68,7 +68,7 @@
           </div>
           <div class="p-4 bg-slate-50 rounded-xl">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Pengalaman Kerja</p>
-            <p class="text-slate-700 text-sm whitespace-pre-line">{{ $applicant->pengalaman ?: 'Tidak ada pengalaman kerja dicantumkan.' }}</p>
+            <p class="text-slate-700 text-sm whitespace-pre-line">{{ $applicant->pengalaman_kerja ?: ($applicant->pengalaman ?: 'Tidak ada pengalaman kerja dicantumkan.') }}</p>
           </div>
           <div class="p-4 bg-slate-50 rounded-xl">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Motivasi</p>
@@ -76,6 +76,69 @@
           </div>
         </div>
       </div>
+
+      {{-- Informasi Khusus Recruitment --}}
+      @if($applicant->tinggi_badan || $applicant->bidang_ssw || $applicant->ipk || $applicant->shift_kursus)
+      <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">assignment_ind</span> Informasi Khusus Recruitment
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @if($applicant->tinggi_badan)
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tinggi / Berat Badan</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->tinggi_badan }} cm / {{ $applicant->berat_badan }} kg</p>
+          </div>
+          @endif
+          @if($applicant->kondisi_mata)
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Kondisi Mata</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->kondisi_mata }}</p>
+          </div>
+          @endif
+          @if($applicant->tinggi_badan)
+          <div class="flex gap-4">
+            <div>
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tato</p>
+              <span class="px-2 py-1 {{ $applicant->tato ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }} rounded text-[10px] font-bold uppercase">
+                {{ $applicant->tato ? 'Ada' : 'Tidak Ada' }}
+              </span>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Merokok</p>
+              <span class="px-2 py-1 {{ $applicant->merokok ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }} rounded text-[10px] font-bold uppercase">
+                {{ $applicant->merokok ? 'Ya' : 'Tidak' }}
+              </span>
+            </div>
+          </div>
+          @endif
+          @if($applicant->bidang_ssw)
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Bidang SSW</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->bidang_ssw }}</p>
+          </div>
+          @endif
+          @if($applicant->level_bahasa_jepang)
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Level Bahasa Jepang</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->level_bahasa_jepang }}</p>
+          </div>
+          @endif
+          @if($applicant->ipk)
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">IPK</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->ipk }}</p>
+          </div>
+          @endif
+          @if($applicant->shift_kursus)
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pilihan Shift</p>
+            <p class="text-slate-800 font-bold capitalize">{{ $applicant->shift_kursus }}</p>
+          </div>
+          @endif
+        </div>
+      </div>
+      @endif
 
       {{-- Dokumen --}}
       <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">

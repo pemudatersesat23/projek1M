@@ -10,8 +10,33 @@ use Illuminate\Support\Facades\Route;
 
 // ═══ PUBLIC ROUTES ═══
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'id', 'jp'])) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 Route::get('/kampus-partner', [HomeController::class, 'allCampuses'])->name('kampus-partner.all');
 Route::get('/program/{slug}', [HomeController::class, 'showProgram'])->name('programs.show');
+
+// ═══ STANDALONE PROGRAM PAGES (Alias Routes) ═══
+Route::get('/tokutei-ginou', function() {
+    return app(HomeController::class)->showProgram('tokutei-ginou-tg');
+})->name('pages.tokutei');
+
+Route::get('/engineer-jepang', function() {
+    return app(HomeController::class)->showProgram('engineer-jepang-gijinkoku');
+})->name('pages.engineer');
+
+Route::get('/ex-internship', function() {
+    return app(HomeController::class)->showProgram('engineer-jepang-ex-internship');
+})->name('pages.magang');
+
+Route::get('/kursus-bahasa-jepang', function() {
+    return app(HomeController::class)->showProgram('kursus-bahasa-jepang');
+})->name('pages.kursus');
+
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
 // ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══
@@ -28,6 +53,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     // CRUD Programs & Batches
     Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
     Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
+
+    // CMS Hero & Testimonials
+    Route::resource('hero-sections', \App\Http\Controllers\Admin\HeroSectionController::class);
+    Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
 
     // CRUD Applicants
     Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);

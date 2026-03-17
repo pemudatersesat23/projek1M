@@ -36,6 +36,18 @@ class PendaftaranRequest extends FormRequest
             'motivasi' => 'nullable|string',
             'program_id' => 'required|exists:programs,id',
             'batch_id' => 'required|exists:batches,id',
+            
+            // Specialized Fields
+            'tinggi_badan' => 'nullable|integer|min:100|max:250',
+            'berat_badan' => 'nullable|integer|min:30|max:200',
+            'kondisi_mata' => 'nullable|string|max:255',
+            'tato' => 'nullable|boolean',
+            'merokok' => 'nullable|boolean',
+            'bidang_ssw' => 'nullable|string|max:255',
+            'level_bahasa_jepang' => 'nullable|string|max:255',
+            'ipk' => 'nullable|string|max:20',
+            'shift_kursus' => 'nullable|string|max:255',
+
             // File Validation
             'ktp' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'kk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',

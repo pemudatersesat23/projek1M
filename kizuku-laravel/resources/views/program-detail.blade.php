@@ -312,6 +312,99 @@
     border-color: var(--detail-primary);
   }
 
+  .registration-section {
+    padding: 120px 0;
+    background: #f8fafc;
+    position: relative;
+    overflow: hidden;
+  }
+  .registration-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0,103,163,0.1), transparent);
+  }
+  .form-card {
+    background: white;
+    border-radius: 40px;
+    padding: 60px;
+    box-shadow: 0 40px 100px rgba(0,103,163,0.06);
+    border: 1px solid rgba(0,103,163,0.05);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .form-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .form-title {
+    font-size: 40px;
+    font-weight: 950;
+    color: #0f1c23;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+  .form-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    font-weight: 600;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .form-full {
+    grid-column: span 2;
+  }
+  .input-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--detail-primary);
+    margin-bottom: 12px;
+  }
+  .premium-input {
+    width: 100%;
+    background: #f8fafc;
+    border: 2px solid #f1f5f9;
+    padding: 18px 24px;
+    border-radius: 20px;
+    font-weight: 700;
+    color: #0f1c23;
+    transition: all 0.3s;
+    font-size: 15px;
+  }
+  .premium-input:focus {
+    background: white;
+    border-color: var(--detail-primary);
+    box-shadow: 0 10px 30px rgba(0,103,163,0.08);
+    outline: none;
+  }
+  .premium-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230067a3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 24px center;
+    background-size: 18px;
+  }
+  .upload-zone {
+    padding: 32px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 24px;
+    background: #f8fafc;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .upload-zone:hover {
+    border-color: var(--detail-primary);
+    background: rgba(0,103,163,0.02);
+  }
+
   .reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -333,29 +426,33 @@
     <div class="container">
       <div class="pd-hero-grid">
         <div class="reveal">
-          <div class="pd-tag">✦ Program Pelatihan Eksklusif</div>
+          <div class="pd-tag">{{ __('messages.hero.badge') }}</div>
           <h1 class="pd-h1">{{ $program->nama_program }}</h1>
           <p class="pd-p">{{ $program->deskripsi }}</p>
           <div class="pd-stats">
             <div class="pd-stat-card">
-              <span class="pd-stat-label">Durasi Pelatihan</span>
+              <span class="pd-stat-label">{{ __('messages.program.duration') }}</span>
               <span class="pd-stat-val">{{ $program->durasi }}</span>
             </div>
             <div class="pd-stat-card">
-              <span class="pd-stat-label">Investasi Program</span>
+              <span class="pd-stat-label">{{ __('messages.program.investment') }}</span>
               <span class="pd-stat-val">{{ $program->biaya }}</span>
             </div>
             <div class="pd-stat-card">
-              <span class="pd-stat-label">Status Batch</span>
-              <span class="pd-stat-val" style="color: #059669;">Tersedia</span>
+              <span class="pd-stat-label">{{ __('messages.program.status') }}</span>
+              <span class="pd-stat-val" style="color: #059669;">{{ __('messages.program.available') }}</span>
             </div>
           </div>
         </div>
         <div class="reveal reveal-d2">
           <div style="position: relative;">
             <div style="position: absolute; top: -20px; left: -20px; right: 20px; bottom: 20px; background: var(--detail-primary); opacity: 0.1; border-radius: 40px; transform: rotate(-2deg); z-index: -1;"></div>
-            @if($program->thumbnail_path)
-              <img src="{{ asset($program->thumbnail_path) }}" alt="{{ $program->nama_program }}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:32px; box-shadow:0 30px 60px rgba(0,0,0,0.12); border: 8px solid white;">
+            @if($program->video_url)
+              <div class="video-container" style="border-radius:32px; overflow:hidden; box-shadow:0 30px 60px rgba(0,0,0,0.12); border: 8px solid white;">
+                <iframe width="100%" height="315" src="{{ $program->video_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+            @elseif($program->thumbnail_path)
+              <img src="{{ asset('storage/' . $program->thumbnail_path) }}" alt="{{ $program->nama_program }}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:32px; box-shadow:0 30px 60px rgba(0,0,0,0.12); border: 8px solid white;">
             @else
               <div style="width:100%; aspect-ratio:4/3; background: linear-gradient(135deg, var(--detail-primary) 0%, #004d7a 100%); border-radius:32px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; box-shadow:0 30px 60px rgba(0,0,0,0.12); border: 8px solid white;">
                 <div style="font-size: 64px; font-weight: 900; margin-bottom: 10px; opacity: 0.2;">KIZUKU</div>
@@ -380,12 +477,24 @@
               <p class="focus-text">{{ $program->target_peserta }}</p>
             </div>
             <div class="focus-box">
-              <span class="focus-label">Materi Pelatihan</span>
+              <span class="focus-label">Materi Utama</span>
               <p class="focus-text">{{ $program->materi }}</p>
             </div>
+            @if($program->focus)
+            <div class="focus-box">
+              <span class="focus-label">Fokus Pelatihan</span>
+              <p class="focus-text">{{ $program->focus }}</p>
+            </div>
+            @endif
+            @if($program->output)
+            <div class="focus-box">
+              <span class="focus-label">Output Program</span>
+              <p class="focus-text">{{ $program->output }}</p>
+            </div>
+            @endif
           </div>
 
-          <h3 class="pd-section-h3">Apa yang Kamu Dapatkan?</h3>
+          <h3 class="pd-section-h3">{{ __('messages.program.benefit') }}</h3>
           <div class="pd-benefit-list reveal">
             @php 
               $benefits = array_filter(explode("\n", str_replace(['-', '✓'], '', $program->benefit)));
@@ -398,7 +507,7 @@
             @endforeach
           </div>
 
-          <h3 class="pd-section-h3">Alur Seleksi</h3>
+          <h3 class="pd-section-h3">{{ __('messages.program.selection') }}</h3>
           <div class="selection-timeline reveal">
             @php 
               $steps = array_filter(explode("\n", str_replace(['-', '>'], '', $program->alur_seleksi)));
@@ -414,7 +523,7 @@
           </div>
 
           @if($program->faq)
-          <h3 class="pd-section-h3">FAQ (Sering Ditanyakan)</h3>
+          <h3 class="pd-section-h3">{{ __('messages.program.faq') }}</h3>
           <div class="reveal">
             @foreach($program->faq as $faq)
               <div class="pd-faq-item">
@@ -426,7 +535,7 @@
           @endif
 
           {{-- Batch History --}}
-          <h3 class="pd-section-h3">Riwayat Gelombang</h3>
+          <h3 class="pd-section-h3">{{ __('messages.program.batch_history') }}</h3>
           <div class="reveal" style="margin-bottom:40px;">
             <div class="space-y-4">
               @foreach($batchHistory as $history)
@@ -440,10 +549,10 @@
                   </div>
                   @php
                     $statusColor = match($history->status) {
-                        'dibuka' => ['bg' => '#ecfdf5', 'text' => '#059669', 'label' => 'Dibuka'],
-                        'akan_dibuka' => ['bg' => '#fef3c7', 'text' => '#d97706', 'label' => 'Akan Datang'],
-                        'selesai' => ['bg' => '#f1f5f9', 'text' => '#64748b', 'label' => 'Selesai'],
-                        default => ['bg' => '#f1f5f9', 'text' => '#64748b', 'label' => $history->status]
+                        'dibuka' => ['bg' => '#ecfdf5', 'text' => '#059669', 'label' => __('messages.program.status_labels.dibuka')],
+                        'akan_dibuka' => ['bg' => '#fef3c7', 'text' => '#d97706', 'label' => __('messages.program.status_labels.akan_dibuka')],
+                        'selesai' => ['bg' => '#f1f5f9', 'text' => '#64748b', 'label' => __('messages.program.status_labels.selesai')],
+                        default => ['bg' => '#f1f5f9', 'text' => '#64748b', 'label' => __('messages.program.status_labels.tutup')]
                     };
                   @endphp
                   <span style="padding:6px 16px; border-radius:99px; background:{{ $statusColor['bg'] }}; color:{{ $statusColor['text'] }}; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:1px;">
@@ -455,11 +564,11 @@
           </div>
         </div>
 
-        {{-- Right Content: Batch Card & Form --}}
+        {{-- Right Content: Batch Summary Card --}}
         <div>
           <div class="batch-card reveal reveal-d2">
             @if($activeBatch)
-              <div class="batch-status-badge status-active-badge">PENDAFTARAN DIBUKA</div>
+              <div class="batch-status-badge status-active-badge">{{ __('messages.program.enroll_open') }}</div>
               <span class="batch-name">{{ $activeBatch->nama_batch }}</span>
               
               <div class="batch-dates" style="margin: 32px 0; display: flex; flex-direction: column; gap: 16px;">
@@ -473,126 +582,41 @@
                 </div>
                 @if($activeBatch->kuota)
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#f0fdf4; padding:16px 20px; border-radius:16px; border:1px solid #dcfce7;">
-                  <span style="font-size:12px; font-weight:800; color:#059669; text-transform:uppercase;">Sisa Kuota</span>
-                  <span style="font-weight:900; color:#059669;">{{ $activeBatch->kuota }} Peserta</span>
+                  <span style="font-size:12px; font-weight:800; color:#059669; text-transform:uppercase;">Kuota</span>
+                  <span style="font-weight:900; color:#059669;">{{ $activeBatch->kuota ?? 'Fleksibel' }} Peserta</span>
                 </div>
+                @if($activeBatch->tanggal_estimasi_selesai)
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:16px 20px; border-radius:16px;">
+                  <span style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase;">Estimasi Selesai</span>
+                  <span style="font-weight:800; color:#0f1c23;">{{ $activeBatch->tanggal_estimasi_selesai->format('d M Y') }}</span>
+                </div>
+                @endif
                 @endif
               </div>
               
-              <div class="enroll-form">
-                <h4 style="font-size:20px; font-weight:900; margin-bottom:24px; color:#0f1c23; letter-spacing:-0.5px;">Formulir Pendaftaran</h4>
-                
-                @if(session('success'))
-                  <div style="padding:16px; border-radius:16px; background:#ecfdf5; color:#059669; font-weight:800; font-size:14px; margin-bottom:24px; border:1px solid #dcfce7;">
-                    ✅ {{ session('success') }}
-                  </div>
-                @endif
-
-                <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                  @csrf
-                  <input type="hidden" name="program_id" value="{{ $program->id }}">
-                  <input type="hidden" name="batch_id" value="{{ $activeBatch->id }}">
-                  
-                  <div class="form-group-custom">
-                    <label>Nama Lengkap</label>
-                    <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Sesuai KTP" required>
-                  </div>
-
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="form-group-custom">
-                      <label>Jenis Kelamin</label>
-                      <select name="jenis_kelamin" required>
-                        <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
-                      </select>
-                    </div>
-                    <div class="form-group-custom">
-                      <label>Pendidikan Terakhir</label>
-                      <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" placeholder="SMK / S1 Teknik" required>
-                    </div>
-                  </div>
-
-                  @if(Str::contains(Str::lower($program->nama_program), 'engineer'))
-                  <div class="form-group-custom">
-                    <label>Jurusan & IPK (Program Engineer)</label>
-                    <input type="text" name="jurusan_ipk" value="{{ old('jurusan_ipk') }}" placeholder="S1 Mesin / IPK 3.25">
-                  </div>
-                  @endif
-
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="form-group-custom">
-                      <label>Tempat Lahir</label>
-                      <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" placeholder="Pekalongan" required>
-                    </div>
-                    <div class="form-group-custom">
-                      <label>Tanggal Lahir</label>
-                      <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
-                    </div>
-                  </div>
-
-                  <div class="form-group-custom">
-                    <label>Alamat Lengkap</label>
-                    <textarea name="alamat" rows="2" placeholder="Alamat domisili saat ini" required>{{ old('alamat') }}</textarea>
-                  </div>
-
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="form-group-custom">
-                      <label>WhatsApp</label>
-                      <input type="text" name="phone" value="{{ old('phone') }}" placeholder="08xxxxxxxx" required>
-                    </div>
-                    <div class="form-group-custom">
-                      <label>Email</label>
-                      <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" required>
-                    </div>
-                  </div>
-
-                  <div class="form-group-custom">
-                    <label>Pengalaman Kerja (Jika ada)</label>
-                    <textarea name="pengalaman_kerja" rows="2" placeholder="2 Thn sebagai Mekanik">{{ old('pengalaman_kerja') }}</textarea>
-                  </div>
-
-                  {{-- Document Uploads --}}
-                  <div style="margin-top:32px; padding:28px; background:#f8fafc; border-radius:24px; border:1px solid #f1f5f9;">
-                    <h5 style="font-size:12px; font-weight:900; margin-bottom:20px; color:var(--detail-primary); letter-spacing:1px;">UNGGAH DOKUMEN (MAX 5MB)</h5>
-                    <div class="space-y-5">
-                      @foreach(['ktp'=>'Foto KTP', 'kk'=>'Kartu Keluarga', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah Terakhir'] as $name => $label)
-                      <div class="form-group-custom">
-                        <label style="font-size:11px;">{{ $label }} <span style="color:var(--detail-accent)">*</span></label>
-                        <input type="file" name="{{ $name }}" accept="application/pdf,image/*" required style="padding:10px; background:white; font-size:12px; border-style:dashed;">
-                      </div>
-                      @endforeach
-                      <div class="form-group-custom">
-                        <label style="font-size:11px;">Sertifikat / Pendukung</label>
-                        <input type="file" name="sertifikat" accept="application/pdf,image/*" style="padding:10px; background:white; font-size:12px; border-style:dashed;">
-                      </div>
-                    </div>
-                  </div>
-
-                  @if ($errors->any())
-                    <div style="padding:16px; background:#fef2f2; border:1px solid #fecaca; border-radius:16px; color:#991b1b; font-size:12px;">
-                      <ul class="list-disc pl-4 font-bold">
-                        @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                        @endforeach
-                      </ul>
-                    </div>
-                  @endif
-
-                  <button type="submit" class="btn btn-primary" style="width:100%; padding:18px; border-radius:16px; justify-content:center; display:flex; font-weight:900; font-size:16px; box-shadow: 0 10px 25px rgba(0,103,163,0.2);">
+              <div class="action-buttons">
+                @if($activeBatch->cta_type === 'whatsapp')
+                  <a href="{{ $activeBatch->whatsapp_link ?? 'https://wa.me/6281212345678' }}" target="_blank" class="btn btn-primary" style="width:100%; padding:18px; border-radius:16px; justify-content:center; display:flex; font-weight:900; font-size:16px; background:#25d366; border-color:#25d366; box-shadow: 0 10px 25px rgba(37,211,102,0.2);">
+                    <svg style="width:20px; height:20px; margin-right:10px;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    Daftar di WhatsApp
+                  </a>
+                @else
+                  <a href="#registration-section" class="btn btn-primary" style="width:100%; padding:18px; border-radius:16px; justify-content:center; display:flex; font-weight:900; font-size:16px; box-shadow: 0 10px 25px rgba(0,103,163,0.2);">
                     Daftar Sekarang
-                  </button>
-                </form>
+                  </a>
+                @endif
               </div>
+
             @elseif($nextBatch)
-              <div class="batch-status-badge" style="background:rgba(217, 119, 6, 0.1); color:#d97706;">AKAN DATANG</div>
+              <div class="batch-status-badge" style="background:rgba(217, 119, 6, 0.1); color:#d97706;">{{ __('messages.program.enroll_soon') }}</div>
               <span class="batch-name">{{ $nextBatch->nama_batch }}</span>
-              <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">Pendaftaran untuk batch ini akan dibuka pada {{ $nextBatch->tanggal_buka?->format('d F Y') }}.</p>
-              <a href="https://wa.me/62812XXXXXXXX" class="btn btn-outline" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">Ingatkan Saya di WA</a>
+              <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">{{ __('messages.nav.home') === 'Beranda' ? "Pendaftaran untuk batch ini akan dibuka pada {$nextBatch->tanggal_buka?->format('d F Y')}." : "このバッチの登録は {$nextBatch->tanggal_buka?->format('Y年m月d日')} に開始されます。" }}</p>
+              <a href="https://wa.me/6281212345678" target="_blank" class="btn btn-outline" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">{{ __('messages.nav.kontak') }}</a>
             @else
-              <div class="batch-status-badge" style="background:#f1f5f9; color:#64748b;">BELUM TERSEDIA</div>
-              <span class="batch-name">Jadwal Belum Rilis</span>
-              <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">Saat ini belum ada batch yang dibuka. Silahkan hubungi admin untuk info terbaru.</p>
-              <a href="https://wa.me/62812XXXXXXXX" class="btn btn-primary" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">Tanya Admin WA</a>
+              <div class="batch-status-badge" style="background:#f1f5f9; color:#64748b;">{{ __('messages.program.enroll_closed') }}</div>
+              <span class="batch-name">{{ __('messages.program.no_schedule') }}</span>
+              <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">{{ __('messages.program.no_schedule_p') }}</p>
+              <a href="https://wa.me/6281212345678" target="_blank" class="btn btn-primary" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">{{ __('messages.program.ask_admin') }}</a>
             @endif
           </div>
         </div>
@@ -600,7 +624,199 @@
     </div>
   </main>
 
-  {{-- Reuse existing sections --}}
+  {{-- Registration Form Section (Bottom) --}}
+  @if($activeBatch && $activeBatch->cta_type !== 'whatsapp')
+  <section id="registration-section" class="registration-section reveal">
+    <div class="container">
+      <div class="form-card">
+        <div class="form-header">
+          <h2 class="form-title">{{ __('messages.form.title') }}</h2>
+          <p class="form-subtitle">{{ __('messages.form.subtitle', ['batch' => $activeBatch->nama_batch]) }}</p>
+        </div>
+
+        @if(session('success'))
+          <div style="padding:24px; border-radius:24px; background:#ecfdf5; color:#059669; font-weight:800; font-size:15px; margin-bottom:40px; border:1px solid #dcfce7; text-align:center;">
+            ✅ {{ session('success') }}
+          </div>
+        @endif
+
+        <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" class="form-grid">
+          @csrf
+          <input type="hidden" name="program_id" value="{{ $program->id }}">
+          <input type="hidden" name="batch_id" value="{{ $activeBatch->id }}">
+          
+          {{-- Informasi Dasar --}}
+          <div class="form-group-custom form-full">
+            <span class="input-label"><span class="material-symbols-outlined text-[16px]">person</span> {{ __('messages.form.name') }}</span>
+            <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="Sesuai KTP" required>
+          </div>
+
+          <div class="form-group-custom">
+            <span class="input-label">{{ __('messages.form.gender') }}</span>
+            <select name="jenis_kelamin" class="premium-input premium-select" required>
+              <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>{{ __('messages.nav.home') === 'Beranda' ? 'Laki-laki' : '男性' }}</option>
+              <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>{{ __('messages.nav.home') === 'Beranda' ? 'Perempuan' : '女性' }}</option>
+            </select>
+          </div>
+
+          <div class="form-group-custom">
+            <span class="input-label">{{ __('messages.form.education') }}</span>
+            <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" class="premium-input" placeholder="{{ __('messages.nav.home') === 'Beranda' ? 'SMK / S1 Teknik' : '専門学校 / 大学卒業' }}" required>
+          </div>
+
+          {{-- Dynamic Groups --}}
+          @if(Str::contains(Str::lower($program->nama_program), ['magang', 'tokutei']))
+            <div class="form-full grid grid-cols-2 gap-8 p-8 bg-slate-50 rounded-[32px] border border-slate-100">
+              <div class="col-span-2 flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-primary">straighten</span>
+                <span class="text-[12px] font-black text-primary uppercase tracking-widest">{{ __('messages.form.physical') }}</span>
+              </div>
+              <div class="form-group-custom">
+                <label class="input-label">{{ __('messages.form.height') }} (cm)</label>
+                <input type="number" name="tinggi_badan" value="{{ old('tinggi_badan') }}" class="premium-input" placeholder="165" required>
+              </div>
+              <div class="form-group-custom">
+                <label class="input-label">{{ __('messages.form.weight') }} (kg)</label>
+                <input type="number" name="berat_badan" value="{{ old('berat_badan') }}" class="premium-input" placeholder="60" required>
+              </div>
+              <div class="form-group-custom col-span-2">
+                <label class="input-label">{{ __('messages.form.eyes') }}</label>
+                <input type="text" name="kondisi_mata" value="{{ old('kondisi_mata') }}" class="premium-input" placeholder="Normal / Minus 1.5" required>
+              </div>
+              <div class="col-span-2 flex gap-10">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <div class="relative flex items-center">
+                    <input type="checkbox" name="tato" value="1" {{ old('tato') ? 'checked' : '' }} class="w-6 h-6 rounded-lg text-primary focus:ring-primary/20 transition-all border-slate-300">
+                  </div>
+                  <span class="text-sm font-bold text-slate-600 group-hover:text-primary">{{ __('messages.form.tattoo') }}</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <div class="relative flex items-center">
+                    <input type="checkbox" name="merokok" value="1" {{ old('merokok') ? 'checked' : '' }} class="w-6 h-6 rounded-lg text-primary focus:ring-primary/20 transition-all border-slate-300">
+                  </div>
+                  <span class="text-sm font-bold text-slate-600 group-hover:text-primary">{{ __('messages.form.smoke') }}</span>
+                </label>
+              </div>
+            </div>
+          @endif
+
+          @if(Str::contains(Str::lower($program->nama_program), 'tokutei'))
+            <div class="form-full grid grid-cols-1 gap-8 p-8 bg-blue-50/50 rounded-[32px] border border-blue-100">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-blue-600">verified</span>
+                <span class="text-[12px] font-black text-blue-600 uppercase tracking-widest">{{ __('messages.form.ssw') }}</span>
+              </div>
+              <div class="form-group-custom">
+                <label class="input-label">Bidang SSW</label>
+                <input type="text" name="bidang_ssw" value="{{ old('bidang_ssw') }}" class="premium-input" placeholder="Food Service / Kaigo" required>
+              </div>
+              <div class="form-group-custom">
+                <label class="input-label">Level Bahasa Jepang</label>
+                <input type="text" name="level_bahasa_jepang" value="{{ old('level_bahasa_jepang') }}" class="premium-input" placeholder="N4 / JFT A2" required>
+              </div>
+            </div>
+          @endif
+
+          @if(Str::contains(Str::lower($program->nama_program), 'engineer'))
+            <div class="form-full grid grid-cols-2 gap-8 p-8 bg-emerald-50/30 rounded-[32px] border border-emerald-100">
+              <div class="col-span-2 flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-emerald-600">school</span>
+                <span class="text-[12px] font-black text-emerald-600 uppercase tracking-widest">{{ __('messages.form.academic') }}</span>
+              </div>
+              <div class="form-group-custom">
+                <label class="input-label">IPK Terakhir</label>
+                <input type="text" name="ipk" value="{{ old('ipk') }}" class="premium-input" placeholder="3.50" required>
+              </div>
+              <div class="form-group-custom">
+                <label class="input-label">Jurusan Spesifik</label>
+                <input type="text" name="jurusan_ipk" value="{{ old('jurusan_ipk') }}" class="premium-input" placeholder="S1 Teknik Informatika" required>
+              </div>
+            </div>
+          @endif
+
+          @if(Str::contains(Str::lower($program->nama_program), 'kursus'))
+            <div class="form-full p-8 bg-amber-50/30 rounded-[32px] border border-amber-100">
+              <span class="input-label">{{ __('messages.form.shift') }}</span>
+              <select name="shift_kursus" class="premium-input premium-select" required>
+                <option value="pagi">Pagi (09:00 - 12:00)</option>
+                <option value="siang">Siang (13:00 - 16:00)</option>
+                <option value="malam">Malam (19:00 - 21:00)</option>
+              </select>
+            </div>
+          @endif
+
+          <div class="form-group-custom">
+            <span class="input-label">{{ __('messages.form.pob') }}</span>
+            <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="Pekalongan" required>
+          </div>
+
+          <div class="form-group-custom">
+            <span class="input-label">{{ __('messages.form.dob') }}</span>
+            <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input" required>
+          </div>
+
+          <div class="form-group-custom form-full">
+            <span class="input-label">{{ __('messages.form.address') }}</span>
+            <textarea name="alamat" rows="3" class="premium-input" placeholder="{{ __('messages.nav.home') === 'Beranda' ? 'Alamat domisili saat ini' : '現在の住所' }}" required>{{ old('alamat') }}</textarea>
+          </div>
+
+          <div class="form-group-custom">
+            <span class="input-label">{{ __('messages.form.phone') }}</span>
+            <input type="text" name="phone" value="{{ old('phone') }}" class="premium-input" placeholder="08xxxxxxxx" required>
+          </div>
+
+          <div class="form-group-custom">
+            <span class="input-label">{{ __('messages.form.email') }}</span>
+            <input type="email" name="email" value="{{ old('email') }}" class="premium-input" placeholder="nama@email.com" required>
+          </div>
+
+          <div class="form-group-custom form-full">
+            <span class="input-label">{{ __('messages.form.experience') }}</span>
+            <textarea name="pengalaman_kerja" rows="2" class="premium-input" placeholder="Sebutkan posisi & durasi (Contoh: 2 Thn Mekanik)">{{ old('pengalaman_kerja') }}</textarea>
+          </div>
+
+          {{-- Upload Grid --}}
+          <div class="form-full pt-10 mt-6 border-t border-slate-100">
+            <h5 class="text-[12px] font-black text-slate-400 uppercase tracking-[2px] mb-8 text-center">{{ __('messages.form.upload') }} (Max 5MB)</h5>
+            <div class="grid grid-cols-2 gap-6">
+              @foreach(['ktp'=>'KTP', 'kk'=>'KK', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah'] as $name => $label)
+                <div class="form-group-custom">
+                  <label class="text-[10px] font-extrabold text-slate-500 uppercase ml-2 mb-2 block">{{ $label }} <span class="text-red-500">*</span></label>
+                  <div class="upload-zone">
+                    <input type="file" name="{{ $name }}" class="text-[11px] font-bold text-slate-500" required>
+                  </div>
+                </div>
+              @endforeach
+              <div class="form-group-custom col-span-2">
+                <label class="text-[10px] font-extrabold text-slate-500 uppercase ml-2 mb-2 block">Sertifikat / Tambahan</label>
+                <div class="upload-zone">
+                  <input type="file" name="sertifikat" class="text-[11px] font-bold text-slate-500">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if ($errors->any())
+            <div class="form-full p-6 bg-red-50 border border-red-100 rounded-3xl text-red-600 text-sm font-bold">
+              <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+
+          <div class="form-full pt-8">
+            <button type="submit" class="btn btn-primary w-full py-6 rounded-[24px] text-lg font-black shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              {{ __('messages.nav.home') === 'Beranda' ? 'Kirim Pendaftaran' : '登録を送信' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  @endif
+
   @include('sections.kontak')
 
 @endsection
@@ -617,5 +833,15 @@
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
 </script>
 @endpush
