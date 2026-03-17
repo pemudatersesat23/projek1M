@@ -30,9 +30,18 @@ class PartnerCampusController extends Controller
 
         $imageName = time() . '.' . $request->logo->extension();
         $request->logo->move(public_path('image/partner_campuses'), $imageName);
+        
+        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate();
+        $tr->setSource('id');
+        $tr->setTarget('ja');
+        
+        $nameJp = $tr->translate($request->name);
 
         PartnerCampus::create([
-            'name' => $request->name,
+            'name' => [
+                'id' => $request->name,
+                'jp' => $nameJp,
+            ],
             'logo' => 'image/partner_campuses/' . $imageName,
         ]);
 
@@ -64,7 +73,17 @@ class PartnerCampusController extends Controller
             $partnerCampus->logo = 'image/partner_campuses/' . $imageName;
         }
 
-        $partnerCampus->name = $request->name;
+        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate();
+        $tr->setSource('id');
+        $tr->setTarget('ja');
+        
+        $nameJp = $tr->translate($request->name);
+
+        $partnerCampus->name = [
+            'id' => $request->name,
+            'jp' => $nameJp,
+        ];
+        
         $partnerCampus->save();
 
         return redirect()->route('admin.partner-campus.index')

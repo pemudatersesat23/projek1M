@@ -2,9 +2,9 @@
 <section id="kampus-partner" class="section-pad">
   <div class="container">
     <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
-      <div class="sec-tag" data-id="✦ Mitra Kami" data-jp="✦ パートナー">✦ Mitra Kami</div>
-      <h2 class="sec-h2" data-id="Kampus Partner" data-jp="提携キャンパス">Kampus Partner</h2>
-      <p class="sec-p" style="margin:0 auto;" data-id="Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik." data-jp="私たちは最高の教育を提供するために有名な教育機関と提携しています。">Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik.</p>
+      <div class="sec-tag dynamic-lang" data-id="✦ Mitra Kami" data-jp="✦ パートナー">✦ Mitra Kami</div>
+      <h2 class="sec-h2 dynamic-lang" data-id="Kampus Partner" data-jp="提携キャンパス">Kampus Partner</h2>
+      <p class="sec-p dynamic-lang" style="margin:0 auto;" data-id="Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik." data-jp="私たちは最高の教育を提供するために有名な教育機関と提携しています。">Kami bekerja sama dengan berbagai insitusi pendidikan terkemuka untuk memberikan pendidikan terbaik.</p>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 px-4 md:px-0 max-w-5xl mx-auto">
       @forelse($campuses as $campus)
@@ -12,10 +12,10 @@
           <div class="w-full h-24 flex items-center justify-center p-2 mb-4">
             <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}" class="max-w-full max-h-full object-contain">
           </div>
-          <h4 class="font-semibold text-sm text-slate-800">{{ $campus->name }}</h4>
+          <h4 class="font-semibold text-sm text-slate-800 dynamic-lang" data-id="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" data-jp="{{ $campus->getTranslation('name', 'jp', false) ?: $campus->name }}">{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}</h4>
         </div>
       @empty
-        <div class="col-span-full text-center text-slate-500 py-8" data-id="Belum ada kampus partner." data-jp="提携キャンパスはまだありません。">
+        <div class="col-span-full text-center text-slate-500 py-8 dynamic-lang" data-id="Belum ada kampus partner." data-jp="提携キャンパスはまだありません。">
           Belum ada kampus partner.
         </div>
       @endforelse
@@ -23,7 +23,7 @@
     
     @if(\App\Models\PartnerCampus::count() > 4)
     <div class="text-center mt-10 reveal">
-      <a href="{{ route('kampus-partner.all') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm transition-colors" data-id="Lihat Semua Kampus Partner" data-jp="すべての提携キャンパスを見る">
+      <a href="{{ route('kampus-partner.all') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm transition-colors dynamic-lang" data-id="Lihat Semua Kampus Partner" data-jp="すべての提携キャンパスを見る">
         Lihat Semua Kampus Partner
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </a>

@@ -18,6 +18,7 @@
         <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Nama Kampus *</label>
         <input type="text" name="name" placeholder="Contoh: Universitas Tokyo..." required value="{{ old('name') }}"
                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+        <p class="text-xs text-slate-400 mt-2">Nama akan diterjemahkan ke bahasa Jepang secara otomatis.</p>
         @error('name') <span class="text-xs text-red-500 mt-1">{{ $message }}</span> @enderror
       </div>
 

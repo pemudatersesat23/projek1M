@@ -585,5 +585,17 @@ document.addEventListener('DOMContentLoaded', function () {
         var fbPs = document.querySelectorAll('.footer-bottom p');
         if (fbPs[0]) fbPs[0].innerHTML = '&copy; ' + new Date().getFullYear() + ' LPK Kizuku International Academy. ' + t.ft_copy;
         if (fbPs[1]) fbPs[1].textContent = t.ft_made;
+
+        /* ── Dynamic Lang (Database Content) ── */
+        document.querySelectorAll('.dynamic-lang').forEach(function (el) {
+            var text = el.getAttribute('data-' + lang);
+            if (text) {
+                if (el.tagName.toLowerCase() === 'input' || el.tagName.toLowerCase() === 'textarea') {
+                    el.placeholder = text;
+                } else {
+                    el.innerHTML = text;
+                }
+            }
+        });
     }
 });
