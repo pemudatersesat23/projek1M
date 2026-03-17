@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Translatable\HasTranslations;
+// use Spatie\Translatable\HasTranslations;
 
 class PartnerCampus extends Model
 {
-    use HasTranslations;
-
+    // use HasTranslations;
+    
     protected $fillable = ['name', 'logo'];
     
-    public $translatable = ['name'];
+    // public $translatable = ['name'];
 }
