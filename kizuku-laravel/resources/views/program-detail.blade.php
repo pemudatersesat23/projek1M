@@ -179,12 +179,14 @@
   }
   .pd-check {
     width: 24px; height: 24px;
+    min-width: 24px; height: 24px;
     background: #10b981;
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center; justify-content: center;
-    font-size: 12px;
+    font-size: 16px;
+    flex-shrink: 0;
   }
   
   /* Timeline Style */
@@ -577,7 +579,9 @@
             @endphp
             @foreach($benefits as $b)
               <div class="pd-benefit-item">
-                <span class="pd-check">✓</span>
+                <div class="pd-check">
+                  <span class="material-symbols-outlined" style="font-size: 16px; font-weight: 800;">check</span>
+                </div>
                 {{ trim($b) }}
               </div>
             @endforeach
