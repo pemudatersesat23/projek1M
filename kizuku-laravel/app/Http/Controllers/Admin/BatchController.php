@@ -33,12 +33,15 @@ class BatchController extends Controller
             'tanggal_tutup' => 'nullable|date',
             'tanggal_mulai' => 'nullable|date',
             'tanggal_selesai' => 'nullable|date',
+            'tanggal_estimasi_selesai' => 'nullable|date',
             'kuota' => 'nullable|integer',
             'link_form' => 'nullable|url',
+            'cta_type' => 'required|in:internal_form,whatsapp',
+            'whatsapp_link' => 'nullable|url',
         ]);
 
         Batch::create($request->all());
-
+        
         return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil ditambahkan.');
     }
 
@@ -63,8 +66,11 @@ class BatchController extends Controller
             'tanggal_tutup' => 'nullable|date',
             'tanggal_mulai' => 'nullable|date',
             'tanggal_selesai' => 'nullable|date',
+            'tanggal_estimasi_selesai' => 'nullable|date',
             'kuota' => 'nullable|integer',
             'link_form' => 'nullable|url',
+            'cta_type' => 'required|in:internal_form,whatsapp',
+            'whatsapp_link' => 'nullable|url',
         ]);
 
         $batch->update($request->all());

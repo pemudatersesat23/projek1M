@@ -14,8 +14,11 @@ class Batch extends Model
         'tanggal_tutup',
         'tanggal_mulai',
         'tanggal_selesai',
+        'tanggal_estimasi_selesai',
         'kuota',
-        'link_form'
+        'link_form',
+        'cta_type',
+        'whatsapp_link'
     ];
 
     protected $casts = [
@@ -23,6 +26,7 @@ class Batch extends Model
         'tanggal_tutup' => 'date',
         'tanggal_mulai' => 'date',
         'tanggal_selesai' => 'date',
+        'tanggal_estimasi_selesai' => 'date',
     ];
 
     public function program()

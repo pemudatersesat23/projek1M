@@ -2,13 +2,13 @@
 <section id="program" class="section-pad">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="sec-tag">✦ Program Kami</div>
-      <h2 class="sec-h2">Pilih Jalur yang Tepat<br>Untuk Kariermu</h2>
-      <p class="sec-p">Dari pemula hingga profesional, kami siapkan jalur pelatihan terstruktur yang mengantarkan kamu ke Jepang.</p>
+      <div class="sec-tag">{{ __('messages.home.program_tag') }}</div>
+      <h2 class="sec-h2">{!! __('messages.home.program_h2') !!}</h2>
+      <p class="sec-p">{{ __('messages.home.program_p') }}</p>
     </div>
     <div class="prog-grid">
       @php
-        $programs = \App\Models\Program::where('status', 'aktif')->with(['batches' => function($q) {
+        $programs = $featuredPrograms ?? \App\Models\Program::where('status', 'aktif')->with(['batches' => function($q) {
           $q->whereIn('status', ['dibuka', 'akan_dibuka']);
         }])->get();
         
@@ -23,7 +23,8 @@
         <p>{{ Str::limit($p->deskripsi, 120) }}</p>
         <ul class="feat-list">
           @php 
-            $benefits = array_filter(explode("\n", str_replace('-', '', $p->benefit)));
+            $rawBenefit = $p->benefit; // Automatically translated by HasTranslations
+            $benefits = array_filter(explode("\n", str_replace('-', '', $rawBenefit)));
           @endphp
           @foreach(array_slice($benefits, 0, 4) as $b)
             <li>{{ trim($b) }}</li>
@@ -36,14 +37,14 @@
           @endphp
 
           @if($activeBatch)
-            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">Daftar {{ $activeBatch->nama_batch }}</a>
-            <span class="prog-note">⚡ Batch dibuka</span>
+            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.nav.home') === 'Beranda' ? 'Daftar' : '登録' }} {{ $activeBatch->nama_batch }}</a>
+            <span class="prog-note">⚡ {{ __('messages.nav.home') === 'Beranda' ? 'Batch dibuka' : 'バッチ募集中' }}</span>
           @elseif($upcomingBatch)
-            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">Lihat Jadwal</a>
-            <span class="prog-note">📅 Segera: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>
+            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.nav.home') === 'Beranda' ? 'Lihat Jadwal' : 'スケジュールを見る' }}</a>
+            <span class="prog-note">📅 {{ __('messages.nav.home') === 'Beranda' ? 'Segera' : 'まもなく' }}: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>
           @else
-            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">Detail</a>
-            <span class="prog-note">✦ Info pendaftaran</span>
+            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.nav.home') === 'Beranda' ? 'Detail' : '詳細' }}</a>
+            <span class="prog-note">✦ {{ __('messages.nav.home') === 'Beranda' ? 'Info pendaftaran' : '登録情報' }}</span>
           @endif
         </div>
       </article>
@@ -51,7 +52,7 @@
 
       @if($programs->isEmpty())
         <div class="reveal" style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 24px; border: 1px dashed #cbd5e1;">
-            <p class="text-slate-500">Belum ada program yang aktif saat ini.</p>
+            <p class="text-slate-500">{{ __('messages.home.program_empty') }}</p>
         </div>
       @endif
     </div>

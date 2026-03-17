@@ -5,8 +5,8 @@
     <div style="max-width: 600px; margin: 0 auto;">
         <!-- Page Header -->
         <div style="margin-bottom: 40px;">
-            <h1 style="font-size: 32px; font-weight: 700; color: #111; margin: 0 0 8px 0;">⚙️ Pengaturan Profil</h1>
-            <p style="font-size: 16px; color: #666; margin: 0;">Kelola informasi akun Anda</p>
+            <h1 style="font-size: 32px; font-weight: 700; color: #111; margin: 0 0 8px 0;">⚙️ {{ __('messages.dashboard.settings') }}</h1>
+            <p style="font-size: 16px; color: #666; margin: 0;">{{ __('messages.dashboard.profile_desc') }}</p>
         </div>
 
         <!-- Profile Form Card -->

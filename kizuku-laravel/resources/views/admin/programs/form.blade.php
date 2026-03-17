@@ -38,6 +38,10 @@
               <input type="text" name="biaya" value="{{ old('biaya', $program->biaya ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Rp 5.000.000">
             </div>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Video URL (YouTube Embed)</label>
+            <input type="url" name="video_url" value="{{ old('video_url', $program->video_url ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="https://www.youtube.com/embed/...">
+          </div>
         </div>
       </div>
 
@@ -50,6 +54,16 @@
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Target Peserta</label>
             <textarea name="target_peserta" rows="2" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('target_peserta', $program->target_peserta ?? '') }}</textarea>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Fokus Pelatihan</label>
+              <textarea name="focus" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Bahasa Jepang, Skill Kerja...">{{ old('focus', $program->focus ?? '') }}</textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Output Program</label>
+              <textarea name="output" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Siap kerja ke Jepang...">{{ old('output', $program->output ?? '') }}</textarea>
+            </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Benefit Program</label>
@@ -100,6 +114,10 @@
               <option value="aktif" {{ old('status', $program->status ?? '') === 'aktif' ? 'selected' : '' }}>Aktif (Tampil)</option>
               <option value="nonaktif" {{ old('status', $program->status ?? '') === 'nonaktif' ? 'selected' : '' }}>Nonaktif (Sembunyikan)</option>
             </select>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+            <input type="checkbox" name="is_featured" value="1" id="is_featured" {{ old('is_featured', $program->is_featured ?? false) ? 'checked' : '' }} class="w-5 h-5 rounded text-primary focus:ring-primary/20 border-slate-300">
+            <label for="is_featured" class="text-sm font-bold text-slate-700">Tampilkan di Beranda</label>
           </div>
           <div class="pt-4">
             <button type="submit" class="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2">

@@ -4,12 +4,12 @@
 @section('admin-content')
   <div class="flex items-center justify-between mb-8">
     <div>
-      <h3 class="text-slate-800 font-bold text-2xl">Gelombang Pendaftaran</h3>
-      <p class="text-slate-500 text-sm">Atur periode dan kuota pendaftaran batch program</p>
+      <h3 class="text-slate-800 font-bold text-2xl">{{ __('messages.nav.home') === 'Beranda' ? 'Gelombang Pendaftaran' : '登録バッチ' }}</h3>
+      <p class="text-slate-500 text-sm">{{ __('messages.nav.home') === 'Beranda' ? 'Atur periode dan kuota pendaftaran batch program' : 'プログラムバッチの期間と枠数を設定します' }}</p>
     </div>
     <a href="{{ route('admin.batches.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
       <span class="material-symbols-outlined text-lg">add</span>
-      Buka Batch Baru
+      {{ __('messages.nav.home') === 'Beranda' ? 'Buka Batch Baru' : '新しいバッチを開く' }}
     </a>
   </div>
 
@@ -18,19 +18,21 @@
       <table class="w-full text-left">
         <thead class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider">
           <tr>
-            <th class="px-6 py-4">Nama Batch</th>
-            <th class="px-6 py-4">Program</th>
-            <th class="px-6 py-4">Periode Daftar</th>
-            <th class="px-6 py-4">Mulai Kelas</th>
+            <th class="px-6 py-4">{{ __('messages.nav.home') === 'Beranda' ? 'Nama Batch' : 'バッチ名' }}</th>
+            <th class="px-6 py-4">{{ __('messages.nav.program') }}</th>
+            <th class="px-6 py-4">{{ __('messages.nav.home') === 'Beranda' ? 'Periode Daftar' : '登録期間' }}</th>
+            <th class="px-6 py-4">{{ __('messages.nav.home') === 'Beranda' ? 'Mulai Kelas' : '開講日' }}</th>
             <th class="px-6 py-4">Status</th>
-            <th class="px-6 py-4 text-right">Aksi</th>
+            <th class="px-6 py-4 text-right">{{ __('messages.auth.admin_panel') === 'Panel Admin' ? 'Aksi' : 'アクション' }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
           @forelse($batches as $batch)
               <tr class="hover:bg-slate-50/50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">{{ $batch->nama_batch }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ $batch->program->nama_program }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                  {{ $batch->program->getTranslation('nama_program', app()->getLocale()) ?: $batch->program->nama_program }}
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                   {{ $batch->tanggal_buka?->format('d/m/Y') }} - {{ $batch->tanggal_tutup?->format('d/m/Y') }}
                 </td>

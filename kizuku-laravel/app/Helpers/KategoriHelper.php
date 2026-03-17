@@ -6,12 +6,6 @@ class KategoriHelper
 {
     public static function label(string $kategori): string
     {
-        return match ($kategori) {
-            'kat-info'   => 'Info Program',
-            'kat-alumni' => 'Alumni',
-            'kat-promo'  => 'Promo',
-            'kat-tips'   => 'Tips',
-            default      => $kategori,
-        };
+        return __("messages.home.categories.{$kategori}") ?: $kategori;
     }
 }

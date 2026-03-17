@@ -17,8 +17,11 @@ class HomeController extends Controller
     {
         $beritas = Berita::published()->latest()->take(7)->get();
         $campuses = \App\Models\PartnerCampus::latest()->take(4)->get();
+        $heroSections = \App\Models\HeroSection::where('is_active', true)->latest()->get();
+        $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
+        $featuredPrograms = \App\Models\Program::where('is_featured', true)->where('status', 'aktif')->take(5)->get();
 
-        return view('home', compact('beritas', 'campuses'));
+        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms'));
     }
 
     public function allCampuses()
@@ -70,10 +73,10 @@ class HomeController extends Controller
             }
 
             \Log::info('Redirecting back');
-            return redirect()->back()->with('success', 'Pendaftaran berhasil! Kami akan mereview data kamu segera.');
+            return redirect()->back()->with('success', __('messages.form.registration_success'));
         } catch (\Exception $e) {
             \Log::error('Pendaftaran error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withErrors('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
+            return redirect()->back()->withErrors(__('messages.form.error_occurred') ?? 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
         }
     }
 }

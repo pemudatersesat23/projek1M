@@ -32,11 +32,16 @@ class ProgramController extends Controller
             'alur_seleksi' => 'nullable|string',
             'biaya' => 'nullable|string',
             'faq' => 'nullable|array',
+            'focus' => 'nullable|string',
+            'output' => 'nullable|string',
+            'video_url' => 'nullable|string',
             'status' => 'required|in:aktif,nonaktif',
+            'is_featured' => 'nullable|boolean',
         ]);
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->nama_program);
+        $data['is_featured'] = $request->has('is_featured');
 
         Program::create($data);
 
@@ -64,11 +69,16 @@ class ProgramController extends Controller
             'alur_seleksi' => 'nullable|string',
             'biaya' => 'nullable|string',
             'faq' => 'nullable|array',
+            'focus' => 'nullable|string',
+            'output' => 'nullable|string',
+            'video_url' => 'nullable|string',
             'status' => 'required|in:aktif,nonaktif',
+            'is_featured' => 'nullable|boolean',
         ]);
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->nama_program);
+        $data['is_featured'] = $request->has('is_featured');
 
         $program->update($data);
 

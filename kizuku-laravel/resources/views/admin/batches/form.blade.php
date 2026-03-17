@@ -39,12 +39,25 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Kuota Peserta</label>
-              <input type="number" name="kuota" value="{{ old('kuota', $batch->kuota ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: 30">
+              <input type="number" name="kuota" value="{{ old('kuota', $batch->kuota ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: 25">
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Link Form Eksternal (Opsional)</label>
-              <input type="url" name="link_form" value="{{ old('link_form', $batch->link_form ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="https://forms.gle/...">
+              <label class="block text-sm font-medium text-slate-700 mb-1">Tipe Pendaftaran <span class="text-accent-red">*</span></label>
+              <select name="cta_type" id="cta_type" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+                <option value="internal_form" {{ old('cta_type', $batch->cta_type ?? '') === 'internal_form' ? 'selected' : '' }}>Formulir Website</option>
+                <option value="whatsapp" {{ old('cta_type', $batch->cta_type ?? '') === 'whatsapp' ? 'selected' : '' }}>WhatsApp Langsung</option>
+              </select>
             </div>
+          </div>
+
+          <div id="cta_internal_container" class="{{ old('cta_type', $batch->cta_type ?? 'internal_form') === 'internal_form' ? '' : 'hidden' }}">
+            <label class="block text-sm font-medium text-slate-700 mb-1">Link Form Eksternal (Optional)</label>
+            <input type="url" name="link_form" value="{{ old('link_form', $batch->link_form ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="https://forms.gle/...">
+          </div>
+
+          <div id="cta_whatsapp_container" class="{{ old('cta_type', $batch->cta_type ?? 'internal_form') === 'whatsapp' ? '' : 'hidden' }}">
+            <label class="block text-sm font-medium text-slate-700 mb-1">Link WhatsApp Pendaftaran</label>
+            <input type="url" name="whatsapp_link" value="{{ old('whatsapp_link', $batch->whatsapp_link ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="https://wa.me/...">
           </div>
         </div>
       </div>
@@ -71,14 +84,18 @@
 
           <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Estimasi Kelas</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Mulai Kelas</label>
+                <label class="block text-xs font-medium text-slate-500 mb-1">Mulai Kelas</label>
                 <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai', $batch->tanggal_mulai?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               </div>
               <div>
-                <label class="block text-xs font-medium text-slate-500 mb-1">Estimasi Selesai</label>
+                <label class="block text-xs font-medium text-slate-500 mb-1">Selesai Kelas</label>
                 <input type="date" name="tanggal_selesai" value="{{ old('tanggal_selesai', $batch->tanggal_selesai?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 mb-1">Estimasi Selesai</label>
+                <input type="date" name="tanggal_estimasi_selesai" value="{{ old('tanggal_estimasi_selesai', $batch->tanggal_estimasi_selesai?->format('Y-m-d') ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               </div>
             </div>
           </div>
@@ -111,4 +128,18 @@
       </div>
     </div>
   </form>
+  <script>
+    document.getElementById('cta_type').addEventListener('change', function() {
+      const internal = document.getElementById('cta_internal_container');
+      const whatsapp = document.getElementById('cta_whatsapp_container');
+      
+      if (this.value === 'internal_form') {
+        internal.classList.remove('hidden');
+        whatsapp.classList.add('hidden');
+      } else {
+        internal.classList.add('hidden');
+        whatsapp.classList.remove('hidden');
+      }
+    });
+  </script>
 @endsection
