@@ -393,16 +393,92 @@
     background-size: 18px;
   }
   .upload-zone {
-    padding: 32px;
+    position: relative;
+    padding: 40px 24px;
     border: 2px dashed #e2e8f0;
-    border-radius: 24px;
+    border-radius: 32px;
     background: #f8fafc;
     text-align: center;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
   }
   .upload-zone:hover {
     border-color: var(--detail-primary);
-    background: rgba(0,103,163,0.02);
+    background: white;
+    box-shadow: 0 20px 40px rgba(0,103,163,0.08);
+    transform: translateY(-2px);
+  }
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .upload-icon {
+    width: 64px;
+    height: 64px;
+    background: white;
+    color: var(--detail-primary);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+    transition: all 0.3s;
+    border: 1px solid #f1f5f9;
+  }
+  .upload-zone:hover .upload-icon {
+    background: var(--detail-primary);
+    color: white;
+    transform: scale(1.1) rotate(5deg);
+  }
+  .upload-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: #334155;
+    transition: all 0.3s;
+  }
+  .file-name-display {
+    padding: 8px 16px;
+    background: #f1f5f9;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--detail-primary);
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .file-selected {
+    border-style: solid;
+    border-color: #10b981;
+    background: #f0fdf4;
+  }
+  .file-selected .upload-icon {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+  }
+  .file-selected .file-name-display {
+    display: block;
+  }
+  .file-selected .upload-text {
+    color: #059669;
   }
 
   .reveal {
@@ -785,15 +861,25 @@
               @foreach(['ktp'=>'KTP', 'kk'=>'KK', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah'] as $name => $label)
                 <div class="form-group-custom">
                   <label class="text-[10px] font-extrabold text-slate-500 uppercase ml-2 mb-2 block">{{ $label }} <span class="text-red-500">*</span></label>
-                  <div class="upload-zone">
-                    <input type="file" name="{{ $name }}" class="text-[11px] font-bold text-slate-500" required>
+                  <div class="upload-zone" id="zone-{{ $name }}">
+                    <input type="file" name="{{ $name }}" onchange="updateFileName(this, 'zone-{{ $name }}')" required>
+                    <div class="upload-icon">
+                      <span class="material-symbols-outlined">cloud_upload</span>
+                    </div>
+                    <div class="upload-text">{{ __('messages.form.upload_placeholder') }} {{ $label }}</div>
+                    <div class="file-name-display"></div>
                   </div>
                 </div>
               @endforeach
               <div class="form-group-custom col-span-2">
                 <label class="text-[10px] font-extrabold text-slate-500 uppercase ml-2 mb-2 block">Sertifikat / Tambahan</label>
-                <div class="upload-zone">
-                  <input type="file" name="sertifikat" class="text-[11px] font-bold text-slate-500">
+                <div class="upload-zone" id="zone-sertifikat">
+                  <input type="file" name="sertifikat" onchange="updateFileName(this, 'zone-sertifikat')">
+                  <div class="upload-icon">
+                    <span class="material-symbols-outlined">history_edu</span>
+                  </div>
+                  <div class="upload-text">{{ __('messages.form.upload_placeholder') }} Sertifikat</div>
+                  <div class="file-name-display"></div>
                 </div>
               </div>
             </div>
@@ -846,5 +932,25 @@
       });
     });
   });
+
+  // File Upload Preview
+  function updateFileName(input, zoneId) {
+    const zone = document.getElementById(zoneId);
+    const fileNameDisplay = zone.querySelector('.file-name-display');
+    const uploadText = zone.querySelector('.upload-text');
+    const selectedText = "{{ __('messages.form.file_selected') }}";
+    const placeholderText = "{{ __('messages.form.upload_placeholder') }}";
+    
+    if (input.files && input.files[0]) {
+      const fileName = input.files[0].name;
+      fileNameDisplay.textContent = fileName;
+      zone.classList.add('file-selected');
+      uploadText.textContent = selectedText;
+    } else {
+      zone.classList.remove('file-selected');
+      // Extract original label from context if needed, but simple revert is fine
+      uploadText.textContent = placeholderText;
+    }
+  }
 </script>
 @endpush
