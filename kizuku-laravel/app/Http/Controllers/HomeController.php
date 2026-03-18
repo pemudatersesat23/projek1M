@@ -20,8 +20,9 @@ class HomeController extends Controller
         $heroSections = \App\Models\HeroSection::where('is_active', true)->latest()->get();
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
         $featuredPrograms = \App\Models\Program::where('is_featured', true)->where('status', 'aktif')->take(5)->get();
+        $fasilitas = \App\Models\Fasilitas::orderBy('urutan')->get();
 
-        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms'));
+        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms', 'fasilitas'));
     }
 
     public function allCampuses()

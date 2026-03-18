@@ -56,6 +56,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     // CRUD Programs & Batches
     Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
     Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
+    Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class);
 
     // CMS Hero & Testimonials
     Route::resource('hero-sections', \App\Http\Controllers\Admin\HeroSectionController::class);

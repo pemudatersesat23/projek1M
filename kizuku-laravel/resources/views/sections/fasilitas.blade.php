@@ -20,29 +20,29 @@
 
       <!-- Carousel -->
       <div class="fasilitas-carousel" id="fasilitas-carousel">
-        @php
-            $fasilitas = [
-                ['title' => 'Ruang Kelas Modern', 'img' => 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Perpustakaan Lengkap', 'img' => 'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Laboratorium Komputer', 'img' => 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Area Diskusi', 'img' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Kantin Sehat', 'img' => 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Ruang Olahraga', 'img' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Asrama Mahasiswa', 'img' => 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=800'],
-                ['title' => 'Auditorium Utama', 'img' => 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=800'],
-            ];
-        @endphp
-
-        @foreach($fasilitas as $item)
+        @if($fasilitas->count() > 0)
+          @foreach($fasilitas as $item)
           <div class="fasilitas-item">
             <div class="fasilitas-img-wrap">
-              <img src="{{ $item['img'] }}" alt="{{ $item['title'] }}">
+              @if($item->image)
+                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->nama }}">
+              @else
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f1f5f9;">
+                  <span class="material-symbols-outlined" style="font-size:40px;color:#94a3b8;">image</span>
+                </div>
+              @endif
             </div>
             <div class="fasilitas-info">
-              <h4 style="margin:0;font-size:16px;font-weight:600;color:#1e293b;">{{ $item['title'] }}</h4>
+              <h4 style="margin:0;font-size:16px;font-weight:600;color:#1e293b;">{{ $item->nama }}</h4>
             </div>
           </div>
-        @endforeach
+          @endforeach
+        @else
+          <div style="width:100%;padding:60px 0;text-align:center;color:#94a3b8;font-size:15px;">
+            <span class="material-symbols-outlined" style="font-size:40px;display:block;margin-bottom:10px;">apartment</span>
+            Belum ada fasilitas yang ditambahkan.
+          </div>
+        @endif
       </div>
     </div>
   </div>
