@@ -17,7 +17,13 @@
         {{-- Featured berita --}}
         @php $featured = $beritas->first(); @endphp
         <div class="berita-card b-featured">
-          <div class="berita-img-placeholder mix-bg"><span style="position:relative;z-index:1;">{{ $featured->emoji }}</span></div>
+          <div class="berita-img-placeholder mix-bg">
+            @if($featured->gambar)
+              <img src="{{ asset('storage/' . $featured->gambar) }}" alt="{{ $featured->judul }}">
+            @else
+              <span style="position:relative;z-index:1;">{{ $featured->emoji }}</span>
+            @endif
+          </div>
           <div class="berita-body">
             <div class="berita-meta">
               <span class="b-kategori {{ $featured->kategori }}">{{ \App\Helpers\KategoriHelper::label($featured->kategori) }}</span>
@@ -33,7 +39,11 @@
           @foreach($beritas->skip(1)->take(3) as $berita)
             <div class="berita-card b-small">
               <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}" style="aspect-ratio:16/5;font-size:24px;">
-                <span style="position:relative;z-index:1;">{{ $berita->emoji }}</span>
+                @if($berita->gambar)
+                  <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}">
+                @else
+                  <span style="position:relative;z-index:1;">{{ $berita->emoji }}</span>
+                @endif
               </div>
               <div class="berita-body">
                 <div class="berita-meta">
@@ -56,7 +66,11 @@
         @foreach($beritas->skip(4)->take(3) as $berita)
           <div class="berita-card">
             <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-info'=>'','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}">
-              <span style="position:relative;z-index:1;">{{ $berita->emoji }}</span>
+              @if($berita->gambar)
+                <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}">
+              @else
+                <span style="position:relative;z-index:1;">{{ $berita->emoji }}</span>
+              @endif
             </div>
             <div class="berita-body">
               <div class="berita-meta">

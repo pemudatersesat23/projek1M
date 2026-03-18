@@ -25,7 +25,7 @@
       </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.berita.store') }}" class="p-6">
+    <form method="POST" action="{{ route('admin.berita.store') }}" enctype="multipart/form-data" class="p-6">
       @csrf
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
         <div class="md:col-span-2">
@@ -43,8 +43,8 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Emoji / Ikon</label>
-          <input type="text" name="emoji" placeholder="📢" maxlength="4" value="{{ old('emoji', '📢') }}"
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Upload Gambar</label>
+          <input type="file" name="gambar" accept="image/*"
                  class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
         </div>
         <div class="md:col-span-2">
@@ -74,7 +74,6 @@
 
   {{-- Berita List --}}
   @php
-  @php
     $kategoriLabel = [
       'kat-info' => ['label' => __("messages.home.categories.kat-info"), 'class' => 'bg-primary/10 text-primary'],
       'kat-alumni' => ['label' => __("messages.home.categories.kat-alumni"), 'class' => 'bg-emerald-100 text-emerald-700'],
@@ -82,14 +81,17 @@
       'kat-tips' => ['label' => __("messages.home.categories.kat-tips"), 'class' => 'bg-amber-100 text-amber-700'],
     ];
   @endphp
-  @endphp
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     @forelse($beritas as $n)
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow">
       <div class="flex gap-4">
-        <div class="text-3xl flex-shrink-0 w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center">
-          {{ $n->emoji }}
+        <div class="flex-shrink-0 w-12 h-12 bg-slate-50 rounded-xl overflow-hidden flex items-center justify-center border border-slate-100">
+          @if($n->gambar)
+            <img src="{{ asset('storage/' . $n->gambar) }}" alt="{{ $n->judul }}" class="w-full h-full object-cover">
+          @else
+            <span class="material-symbols-outlined text-slate-400">image</span>
+          @endif
         </div>
         <div class="flex-1 min-w-0">
           <h5 class="font-bold text-sm text-slate-800 mb-1 truncate">{{ $n->getTranslation('judul', app()->getLocale()) ?: $n->judul }}</h5>

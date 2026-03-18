@@ -10,7 +10,7 @@ class Berita extends Model
     use HasTranslations;
 
     protected $fillable = [
-        'judul', 'kategori', 'emoji', 'isi', 'status_publish',
+        'judul', 'kategori', 'emoji', 'gambar', 'isi', 'status_publish',
     ];
 
     public $translatable = ['judul', 'isi'];

@@ -28,7 +28,7 @@
       </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.berita.update', $berita) }}" class="p-6">
+    <form method="POST" action="{{ route('admin.berita.update', $berita) }}" enctype="multipart/form-data" class="p-6">
       @csrf
       @method('PUT')
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
@@ -47,9 +47,17 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Emoji / Ikon</label>
-          <input type="text" name="emoji" placeholder="📢" maxlength="4" value="{{ old('emoji', $berita->emoji) }}"
-                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Upload Gambar (Opsional)</label>
+          <div class="flex items-center gap-4">
+            @if($berita->gambar)
+              <div class="w-12 h-12 rounded-lg border border-slate-200 overflow-hidden flex-shrink-0">
+                <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}" class="w-full h-full object-cover">
+              </div>
+            @endif
+            <input type="file" name="gambar" accept="image/*"
+                   class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">Kosongkan jika tidak ingin mengubah gambar.</p>
         </div>
         <div class="md:col-span-2">
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Isi Berita</label>

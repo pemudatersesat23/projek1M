@@ -45,7 +45,9 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // CRUD Berita
-    Route::resource('berita', \App\Http\Controllers\BeritaController::class);
+    Route::resource('berita', \App\Http\Controllers\BeritaController::class)->parameters([
+        'berita' => 'berita'
+    ]);
 
     // CRUD Partner Campus
     Route::resource('partner-campus', \App\Http\Controllers\PartnerCampusController::class);

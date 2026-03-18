@@ -23,6 +23,31 @@
       </div>
 
       <div class="mb-5">
+        <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Deskripsi Kampus *</label>
+        <textarea name="description" rows="3" placeholder="Deskripsi singkat mengenai kampus ini..." required
+                  class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">{{ old('description') }}</textarea>
+        <p class="text-xs text-slate-400 mt-2">Maksimal 3-4 baris. Deskripsi akan diterjemahkan ke bahasa Jepang secara otomatis.</p>
+        @error('description') <span class="text-xs text-red-500 mt-1">{{ $message }}</span> @enderror
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Logo Kampus *</label>
+            <input type="file" name="logo" required accept="image/*"
+                   class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+            <p class="text-xs text-slate-400 mt-2"><b>Harus Rasio 1:1</b> (Kotak, misal: 400x400px). Format: JPG, PNG. Max: 2MB.</p>
+            @error('logo') <span class="text-xs text-red-500 mt-1">{{ $message }}</span> @enderror
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Gambar Banner *</label>
+            <input type="file" name="banner" required accept="image/*"
+                   class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+            <p class="text-xs text-slate-400 mt-2"><b>Harus Rasio 16:9</b> (Landscape, misal: 800x450px). Format: JPG, PNG. Max: 2MB.</p>
+            @error('banner') <span class="text-xs text-red-500 mt-1">{{ $message }}</span> @enderror
+          </div>
+      </div>
+
+      <div class="mb-5">
         <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Logo Kampus *</label>
         <input type="file" name="logo" required accept="image/*"
                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">

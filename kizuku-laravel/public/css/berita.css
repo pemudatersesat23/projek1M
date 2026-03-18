@@ -47,6 +47,17 @@
     overflow: hidden;
 }
 
+/* Uploaded image inside placeholder shows full image */
+.berita-img-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
 .berita-img-placeholder.red-bg {
     background: linear-gradient(135deg, var(--red), #ff5e58);
 }

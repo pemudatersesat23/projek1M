@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <nav class="flex-1 mt-4 px-3 space-y-1">
+      <nav class="flex-1 mt-4 px-3 space-y-1 overflow-y-auto min-h-0 pb-4">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">dashboard</span>
           <span class="font-medium text-sm">Dashboard</span>
