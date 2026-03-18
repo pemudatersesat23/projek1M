@@ -79,13 +79,15 @@
           <a href="{{ route('admin.fasilitas.edit', $item) }}" class="flex-1 text-center px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors flex items-center justify-center gap-1">
             <span class="material-symbols-outlined text-sm">edit</span> Edit
           </a>
-          <form method="POST" action="{{ route('admin.fasilitas.destroy', $item) }}" class="flex-1" onsubmit="return confirm('Hapus fasilitas ini?')">
-            @csrf @method('DELETE')
-            <button type="submit" class="w-full px-3 py-1.5 border border-red-200 text-accent-red rounded-lg text-xs font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-1">
-              <span class="material-symbols-outlined text-sm">delete</span> Hapus
-            </button>
-          </form>
+          <button type="button"
+                  onclick="if(confirm('Hapus fasilitas ini?')) document.getElementById('del-{{ $item->id }}').submit();"
+                  class="flex-1 px-3 py-1.5 border border-red-200 text-accent-red rounded-lg text-xs font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-sm">delete</span> Hapus
+          </button>
         </div>
+        <form id="del-{{ $item->id }}" method="POST" action="{{ route('admin.fasilitas.destroy', $item) }}">
+          @csrf @method('DELETE')
+        </form>
       </div>
     </div>
     @empty
