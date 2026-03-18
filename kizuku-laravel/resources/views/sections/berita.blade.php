@@ -16,6 +16,7 @@
       @if($beritas->count() > 0)
         {{-- Featured berita --}}
         @php $featured = $beritas->first(); @endphp
+<<<<<<< HEAD
         <div class="berita-card b-featured" style="cursor:pointer;" onclick="window.location='{{ route('berita.show', $featured->id) }}'">
           @if($featured->image)
             <div class="berita-img-placeholder mix-bg" style="padding:0; overflow:hidden;">
@@ -24,6 +25,16 @@
           @else
             <div class="berita-img-placeholder mix-bg"><span style="position:relative;z-index:1; font-size:32px;" class="material-symbols-outlined">image</span></div>
           @endif
+=======
+        <div class="berita-card b-featured">
+          <div class="berita-img-placeholder mix-bg">
+            @if($featured->gambar)
+              <img src="{{ asset('storage/' . $featured->gambar) }}" alt="{{ $featured->judul }}">
+            @else
+              <span style="position:relative;z-index:1;">{{ $featured->emoji }}</span>
+            @endif
+          </div>
+>>>>>>> c1ac75645fc240b17f13b9836c2fe8124120ef96
           <div class="berita-body">
             <div class="berita-meta">
               <span class="b-kategori {{ $featured->kategori }}">{{ \App\Helpers\KategoriHelper::label($featured->kategori) }}</span>
@@ -41,6 +52,7 @@
         {{-- Side berita --}}
         <div class="berita-small-grid">
           @foreach($beritas->skip(1)->take(3) as $berita)
+<<<<<<< HEAD
             <div class="berita-card b-small" style="cursor:pointer;" onclick="window.location='{{ route('berita.show', $berita->id) }}'">
               @if($berita->image)
                 <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}" style="aspect-ratio:16/5; padding:0; overflow:hidden;">
@@ -51,6 +63,16 @@
                   <span style="position:relative;z-index:1;" class="material-symbols-outlined">image</span>
                 </div>
               @endif
+=======
+            <div class="berita-card b-small">
+              <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}" style="aspect-ratio:16/5;font-size:24px;">
+                @if($berita->gambar)
+                  <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}">
+                @else
+                  <span style="position:relative;z-index:1;">{{ $berita->emoji }}</span>
+                @endif
+              </div>
+>>>>>>> c1ac75645fc240b17f13b9836c2fe8124120ef96
               <div class="berita-body">
                 <div class="berita-meta">
                   <span class="b-kategori {{ $berita->kategori }}">{{ \App\Helpers\KategoriHelper::label($berita->kategori) }}</span>
@@ -72,6 +94,7 @@
     @if($beritas->count() > 4)
       <div class="berita-grid-row reveal" style="margin-top:18px;">
         @foreach($beritas->skip(4)->take(3) as $berita)
+<<<<<<< HEAD
           <div class="berita-card" style="cursor:pointer;" onclick="window.location='{{ route('berita.show', $berita->id) }}'">
             @if($berita->image)
               <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-info'=>'','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}" style="padding:0; overflow:hidden;">
@@ -82,6 +105,16 @@
                 <span style="position:relative;z-index:1; font-size:32px;" class="material-symbols-outlined">image</span>
               </div>
             @endif
+=======
+          <div class="berita-card">
+            <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-info'=>'','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}">
+              @if($berita->gambar)
+                <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}">
+              @else
+                <span style="position:relative;z-index:1;">{{ $berita->emoji }}</span>
+              @endif
+            </div>
+>>>>>>> c1ac75645fc240b17f13b9836c2fe8124120ef96
             <div class="berita-body">
               <div class="berita-meta">
                 <span class="b-kategori {{ $berita->kategori }}">{{ \App\Helpers\KategoriHelper::label($berita->kategori) }}</span>

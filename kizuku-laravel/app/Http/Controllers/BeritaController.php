@@ -87,7 +87,7 @@ class BeritaController extends Controller
             Storage::disk('public')->delete($berita->image);
         }
         $berita->delete();
-        
+
         return redirect()->route('admin.berita.index')
                          ->with('success', 'Berita berhasil dihapus!');
     }

@@ -79,7 +79,6 @@
   </div>
 
   {{-- Berita List --}}
-  {{-- Berita List --}}
   @php
     $kategoriLabel = [
       'kat-info' => ['label' => __("messages.home.categories.kat-info"), 'class' => 'bg-primary/10 text-primary'],
@@ -88,7 +87,6 @@
       'kat-tips' => ['label' => __("messages.home.categories.kat-tips"), 'class' => 'bg-amber-100 text-amber-700'],
     ];
   @endphp
-
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     @forelse($beritas as $n)

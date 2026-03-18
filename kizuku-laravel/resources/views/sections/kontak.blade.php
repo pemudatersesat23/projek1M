@@ -16,53 +16,28 @@
         </div>
       </div>
 
-      <div class="form-card reveal reveal-d2">
-        <h3>{{ __('messages.home.kontak_form_title') }}</h3>
-        <p class="fc-sub">{{ __('messages.home.kontak_form_sub') }}</p>
-
-        @if(session('success'))
-          <div style="padding:12px 16px;border-radius:12px;background:rgba(16,185,129,.12);color:#059669;font-weight:700;font-size:13.5px;margin-bottom:16px;">
-            ✅ {{ session('success') }}
-          </div>
-        @endif
-
-        <form action="{{ route('pendaftaran.store') }}" method="POST">
-          @csrf
-          <div class="form-row">
-            <div class="form-row two">
-              <div class="field">
-                <label>{{ __('messages.form.name') }}</label>
-                <input type="text" name="nama" placeholder="{{ __('messages.nav.home') === 'Beranda' ? 'Nama kamu' : 'お名前' }}" required value="{{ old('nama') }}">
-              </div>
-              <div class="field">
-                <label>{{ __('messages.form.phone') }}</label>
-                <input type="text" name="wa" placeholder="08xx-xxxx-xxxx" required value="{{ old('wa') }}">
-              </div>
-            </div>
-            <div class="field">
-              <label>{{ __('messages.form.email') }}</label>
-              <input type="email" name="email" placeholder="{{ __('messages.nav.home') === 'Beranda' ? 'nama@email.com' : 'name@email.com' }}" value="{{ old('email') }}">
-            </div>
-            <div class="field">
-              <label>{{ __('messages.nav.program') }}</label>
-              <select name="program">
-                <option value="">{{ __('messages.home.kontak_form_program_ph') }}</option>
-                <option {{ old('program')=='Tokutei Ginou (TG / SSW)' ? 'selected' : '' }}>Tokutei Ginou (TG / SSW)</option>
-                <option {{ old('program')=='Engineering' ? 'selected' : '' }}>Engineering</option>
-                <option {{ old('program')=='Kelas Bahasa Jepang' ? 'selected' : '' }}>Kelas Bahasa Jepang</option>
-                <option {{ old('program')=='Returnee / Ex Jepang' ? 'selected' : '' }}>Returnee / Ex Jepang</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>{{ __('messages.nav.home') === 'Beranda' ? 'Pesan / Pertanyaan' : 'メッセージ / ご質問' }}</label>
-              <textarea name="catatan" placeholder="{{ __('messages.nav.home') === 'Beranda' ? 'Tuliskan pertanyaan atau informasi tambahan kamu di sini...' : 'ご質問や追加情報をこちらにお書きください...' }}">{{ old('catatan') }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary form-submit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              {{ __('messages.home.kontak_form_submit') }}
-            </button>
-          </div>
-        </form>
+      <div class="form-card reveal reveal-d2" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="padding: 24px 28px 16px; border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <h3 style="margin:0 0 4px;">{{ __('messages.nav.home') === 'Beranda' ? '📍 Lokasi Kami' : '📍 私たちの場所' }}</h3>
+          <p class="fc-sub" style="margin:0;">{{ __('messages.nav.home') === 'Beranda' ? 'Kunjungi kantor LPK Kizuku International Academy langsung.' : 'LPK Kizuku International Academyのオフィスに直接お越しください。' }}</p>
+        </div>
+        <div style="flex:1; min-height: 360px; position: relative;">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.0!2d106.8!3d-6.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zLTbCsDEyJzAwLjAiUyAxMDbCsDQ4JzAwLjAiRQ!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid&q=LPK+Kizuku+International+Academy"
+            width="100%"
+            height="100%"
+            style="border:0; display:block; min-height:360px;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Lokasi LPK Kizuku International Academy"
+          ></iframe>
+        </div>
+        <div style="padding: 16px 28px; border-top: 1px solid rgba(0,0,0,0.06);">
+          <a href="https://maps.app.goo.gl/kizuku" target="_blank" class="btn btn-primary" style="width:100%; text-align:center; display:block;">
+            🗺️ {{ __('messages.nav.home') === 'Beranda' ? 'Buka di Google Maps' : 'Google Mapsで開く' }}
+          </a>
+        </div>
       </div>
     </div>
   </div>
