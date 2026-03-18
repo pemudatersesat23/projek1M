@@ -46,6 +46,11 @@ class HomeController extends Controller
         return view('program-detail', compact('program', 'activeBatch', 'nextBatch', 'batchHistory'));
     }
 
+    public function showBerita(Berita $berita)
+    {
+        return view('berita-detail', compact('berita'));
+    }
+
     public function storePendaftaran(\App\Http\Requests\PendaftaranRequest $request, \App\Services\FileUploadService $uploadService)
     {
         \Log::info('Pendaftaran submission started', $request->safe()->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));

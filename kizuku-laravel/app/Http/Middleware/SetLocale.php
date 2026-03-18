@@ -15,7 +15,9 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (session()->has('locale')) {
+        if ($request->is('dashboard-admin') || $request->is('dashboard-admin/*')) {
+            app()->setLocale('id');
+        } elseif (session()->has('locale')) {
             app()->setLocale(session('locale'));
         }
 

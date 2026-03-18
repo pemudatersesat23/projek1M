@@ -9,7 +9,7 @@
     </div>
     <a href="{{ route('admin.programs.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
       <span class="material-symbols-outlined text-lg">add</span>
-      {{ __('messages.home.home_btn_primary') === 'Mulai Sekarang' ? 'Tambah Program' : 'プログラムを追加' }}
+      Tambah Program
     </a>
   </div>
 
@@ -23,7 +23,7 @@
             <th class="px-6 py-4">{{ __('messages.program.investment') }}</th>
             <th class="px-6 py-4">Status</th>
             <th class="px-6 py-4">Batch Aktif</th>
-            <th class="px-6 py-4 text-right">{{ __('messages.auth.admin_panel') === 'Panel Admin' ? 'Aksi' : 'アクション' }}</th>
+            <th class="px-6 py-4 text-right">Aksi</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">

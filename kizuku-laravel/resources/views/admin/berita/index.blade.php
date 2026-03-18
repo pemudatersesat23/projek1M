@@ -25,7 +25,7 @@
       </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.berita.store') }}" class="p-6">
+    <form method="POST" action="{{ route('admin.berita.store') }}" class="p-6" enctype="multipart/form-data">
       @csrf
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
         <div class="md:col-span-2">
@@ -43,9 +43,15 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Emoji / Ikon</label>
-          <input type="text" name="emoji" placeholder="📢" maxlength="4" value="{{ old('emoji', '📢') }}"
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Lokasi</label>
+          <input type="text" name="lokasi" placeholder="Lokasi (opsional)" value="{{ old('lokasi') }}"
                  class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Foto Berita</label>
+          <input type="file" name="image" accept="image/*"
+                 class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+          <p class="text-[11px] text-slate-500 mt-1">Format: JPG, PNG, GIF (Maks 5MB)</p>
         </div>
         <div class="md:col-span-2">
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Isi Berita</label>
@@ -73,7 +79,7 @@
   </div>
 
   {{-- Berita List --}}
-  @php
+  {{-- Berita List --}}
   @php
     $kategoriLabel = [
       'kat-info' => ['label' => __("messages.home.categories.kat-info"), 'class' => 'bg-primary/10 text-primary'],
@@ -82,18 +88,24 @@
       'kat-tips' => ['label' => __("messages.home.categories.kat-tips"), 'class' => 'bg-amber-100 text-amber-700'],
     ];
   @endphp
-  @endphp
+
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     @forelse($beritas as $n)
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow">
       <div class="flex gap-4">
-        <div class="text-3xl flex-shrink-0 w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center">
-          {{ $n->emoji }}
+        <div class="flex-shrink-0 w-24 h-24 bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+          @if($n->image)
+            <img src="{{ asset('storage/' . $n->image) }}" alt="Foto" class="w-full h-full object-cover">
+          @else
+            <div class="w-full h-full flex items-center justify-center text-slate-400">
+              <span class="material-symbols-outlined text-3xl">image</span>
+            </div>
+          @endif
         </div>
         <div class="flex-1 min-w-0">
           <h5 class="font-bold text-sm text-slate-800 mb-1 truncate">{{ $n->getTranslation('judul', app()->getLocale()) ?: $n->judul }}</h5>
-          <p class="text-xs text-slate-500 line-clamp-2 mb-3">{{ $n->getTranslation('isi', app()->getLocale()) ?: $n->isi }}</p>
+          <p class="text-xs text-slate-500 line-clamp-2 mb-3">{!! Str::limit(strip_tags($n->getTranslation('isi', app()->getLocale()) ?: $n->isi), 120) !!}</p>
 
           <div class="flex flex-wrap items-center gap-2">
             @php $kat = $kategoriLabel[$n->kategori] ?? ['label' => 'Info', 'class' => 'bg-slate-100 text-slate-600']; @endphp
@@ -110,9 +122,17 @@
             @endif
 
             <span class="text-[11px] text-slate-400">{{ $n->created_at->format('d/m/Y') }}</span>
+            @if($n->lokasi)
+              <span class="text-[11px] text-slate-400 flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-[12px]">location_on</span> {{ $n->lokasi }}
+              </span>
+            @endif
           </div>
 
           <div class="flex items-center gap-2 mt-3">
+            <a href="{{ route('admin.berita.show', $n) }}" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-medium hover:bg-slate-700 transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">visibility</span> Selengkapnya
+            </a>
             <a href="{{ route('admin.berita.edit', $n) }}" class="px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">edit</span> Edit
             </a>
