@@ -31,8 +31,8 @@
               <div class="berita-item">
                 <div class="berita-card" style="height: 100%; margin: 0; box-shadow: none; display: flex; flex-direction: column; cursor: pointer;" onclick="window.location='{{ route('berita.show', $berita->id) }}'">
                   <div class="berita-img-placeholder {{ ['kat-alumni'=>'red-bg','kat-info'=>'','kat-promo'=>'dark-bg'][$berita->kategori] ?? '' }}" style="height: 200px; width: 100%; position: relative; overflow: hidden; flex-shrink: 0;">
-                    @if($berita->gambar)
-                      <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @if($berita->image)
+                      <img src="{{ asset('storage/' . $berita->image) }}" alt="{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
                       <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1; font-size:3rem;">{{ $berita->emoji }}</span>
                     @endif
@@ -44,7 +44,7 @@
                     </div>
                     <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}</h4>
                     <p style="margin: 0; font-size: 14px; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{{ $berita->getTranslation('isi', app()->getLocale()) ?: $berita->isi }}</p>
-                    <a href="{{ route('berita.show', $berita->id) }}" style="display:inline-block; margin-top:auto; padding-top:10px; font-weight:bold; color:var(--primary); font-size:13px;">Baca Selengkapnya &rarr;</a>
+                    <a href="{{ route('berita.show', $berita->id) }}" style="display:inline-block; margin-top:auto; padding-top:10px; font-weight:bold; color:var(--primary); font-size:13px;">{{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? '続きを読む' : 'Baca Selengkapnya' }} &rarr;</a>
                   </div>
                 </div>
               </div>

@@ -13,9 +13,9 @@
         </nav>
 
         <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            @if($berita->gambar)
+            @if($berita->image)
                 <div class="berita-detail-img" style="width: 100%; max-height: 500px; overflow: hidden;">
-                    <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}" style="width: 100%; height: auto; object-fit: cover;">
+                    <img src="{{ asset('storage/' . $berita->image) }}" alt="{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}" style="width: 100%; height: auto; object-fit: cover;">
                 </div>
             @else
                 <div style="height: 200px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center; font-size: 64px;">
@@ -45,13 +45,13 @@
 
         @if(isset($recentNews) && $recentNews->count() > 0)
             <div style="margin-top: 60px;">
-                <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 24px;">{{ __('messages.nav.home') === 'Beranda' ? 'Berita Terbaru Lainnya' : '最新ニュース' }}</h3>
+                <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 24px;">{{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? '最新ニュース' : 'Berita Terbaru Lainnya' }}</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
                     @foreach($recentNews as $rn)
                         <a href="{{ route('berita.show', $rn) }}" style="display: flex; gap: 16px; background: white; padding: 16px; rounded-xl; border: 1px solid #e2e8f0; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--primary)';this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'">
                             <div style="width: 80px; height: 80px; border-radius: 10px; background: #f1f5f9; overflow: hidden; flex-shrink: 0;">
-                                @if($rn->gambar)
-                                    <img src="{{ asset('storage/' . $rn->gambar) }}" alt="{{ $rn->getTranslation('judul', app()->getLocale()) ?: $rn->judul }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                @if($rn->image)
+                                    <img src="{{ asset('storage/' . $rn->image) }}" alt="{{ $rn->getTranslation('judul', app()->getLocale()) ?: $rn->judul }}" style="width: 100%; height: 100%; object-fit: cover;">
                                 @else
                                     <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px;">{{ $rn->emoji }}</div>
                                 @endif
@@ -70,7 +70,7 @@
         
         <div style="margin-top: 40px; text-align: center;">
             <a href="{{ url('/') }}#berita" class="btn btn-outline" style="border-radius: 99px; padding: 12px 32px;">
-                {{ __('messages.nav.home') === 'Beranda' ? 'Kembali ke Beranda' : 'ホームに戻る' }}
+                {{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? 'ホームに戻る' : 'Kembali ke Beranda' }}
             </a>
         </div>
     </div>
