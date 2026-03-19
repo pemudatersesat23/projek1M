@@ -133,6 +133,7 @@ return [
         'trust_sub' => 'di berbagai perusahaan Jepang',
         'mc_title' => 'Program Tersedia',
         'program_tag' => '✦ Program Kami',
+        'program_h2' => 'Pilih Jalur yang Tepat<br>Untuk Kariermu',
         'program_p' => 'Dari pemula hingga profesional, kami siapkan jalur pelatihan terstruktur yang mengantarkan kamu ke Jepang.',
         'program_empty' => 'Belum ada program yang aktif saat ini.',
         'fasilitas_tag' => '✦ FASILITAS',
