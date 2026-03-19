@@ -1,9 +1,9 @@
 <!-- ═══ PROGRAM ═══ -->
 <section id="program" class="section-pad">
-  <div class="container">
+  <div class="container" style="position: relative; z-index: 2;">
     <div class="sec-head reveal">
-      <div class="sec-tag">{{ __('messages.home.program_tag') }}</div>
-      <h2 class="sec-h2">{!! __('messages.home.program_h2') !!}</h2>
+      <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.program_tag') }}</div>
+      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.program_h2') !!}</h2>
       <p class="sec-p">{{ __('messages.home.program_p') }}</p>
     </div>
     <div class="prog-grid">
@@ -57,4 +57,8 @@
       @endif
     </div>
   </div>
+
+  <!-- Decorative Background Blobs -->
+  <div style="position: absolute; top: 10%; left: -5%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(225, 6, 0, 0.03), transparent 70%); filter: blur(40px); pointer-events: none; z-index: 1; animation: float 12s infinite ease-in-out;"></div>
+  <div style="position: absolute; bottom: 10%; right: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(15, 76, 129, 0.04), transparent 70%); filter: blur(50px); pointer-events: none; z-index: 1; animation: float 15s infinite ease-in-out reverse;"></div>
 </section>

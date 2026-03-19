@@ -1,9 +1,13 @@
 <!-- ═══ KAMPUS PARTNER ═══ -->
 <section id="kampus-partner" class="section-pad">
-  <div class="container">
-    <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
-      <div class="sec-tag">{{ __('messages.home.partner_tag') }}</div>
-      <h2 class="sec-h2">{{ __('messages.home.partner_h2') }}</h2>
+  <!-- Decorative Background Blobs -->
+  <div style="position: absolute; top: 5%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(15, 76, 129, 0.05), transparent 70%); filter: blur(60px); pointer-events: none; z-index: 1; animation: float 20s infinite ease-in-out;"></div>
+  <div style="position: absolute; bottom: 5%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(225, 6, 0, 0.03), transparent 70%); filter: blur(50px); pointer-events: none; z-index: 1; animation: float 15s infinite ease-in-out reverse;"></div>
+
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="sec-head reveal" style="text-align:center;max-width:600px;margin:0 auto 50px;">
+      <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.partner_tag') }}</div>
+      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ __('messages.home.partner_h2') }}</h2>
       <p class="sec-p" style="margin:0 auto;">{{ __('messages.home.partner_p') }}</p>
     </div>
     <div class="kampus-grid reveal">

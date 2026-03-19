@@ -36,10 +36,10 @@
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Kategori</label>
           <select name="kategori" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary cursor-pointer outline-none">
-            <option value="kat-info" {{ old('kategori')=='kat-info' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-info") }}</option>
-            <option value="kat-alumni" {{ old('kategori')=='kat-alumni' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-alumni") }}</option>
-            <option value="kat-promo" {{ old('kategori')=='kat-promo' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-promo") }}</option>
-            <option value="kat-tips" {{ old('kategori')=='kat-tips' ? 'selected' : '' }}>{{ __("messages.home.categories.kat-tips") }}</option>
+            <option value="kat-info" {{ old('kategori')=='kat-info' ? 'selected' : '' }}>{{ __('messages.home.categories.kat-info') }}</option>
+            <option value="kat-alumni" {{ old('kategori')=='kat-alumni' ? 'selected' : '' }}>{{ __('messages.home.categories.kat-alumni') }}</option>
+            <option value="kat-promo" {{ old('kategori')=='kat-promo' ? 'selected' : '' }}>{{ __('messages.home.categories.kat-promo') }}</option>
+            <option value="kat-tips" {{ old('kategori')=='kat-tips' ? 'selected' : '' }}>{{ __('messages.home.categories.kat-tips') }}</option>
           </select>
         </div>
         <div>
@@ -81,10 +81,10 @@
   {{-- Berita List --}}
   @php
     $kategoriLabel = [
-      'kat-info' => ['label' => __("messages.home.categories.kat-info"), 'class' => 'bg-primary/10 text-primary'],
-      'kat-alumni' => ['label' => __("messages.home.categories.kat-alumni"), 'class' => 'bg-emerald-100 text-emerald-700'],
-      'kat-promo' => ['label' => __("messages.home.categories.kat-promo"), 'class' => 'bg-accent-red/10 text-accent-red'],
-      'kat-tips' => ['label' => __("messages.home.categories.kat-tips"), 'class' => 'bg-amber-100 text-amber-700'],
+      'kat-info' => ['label' => __('messages.home.categories.kat-info'), 'class' => 'bg-primary/10 text-primary'],
+      'kat-alumni' => ['label' => __('messages.home.categories.kat-alumni'), 'class' => 'bg-emerald-100 text-emerald-700'],
+      'kat-promo' => ['label' => __('messages.home.categories.kat-promo'), 'class' => 'bg-accent-red/10 text-accent-red'],
+      'kat-tips' => ['label' => __('messages.home.categories.kat-tips'), 'class' => 'bg-amber-100 text-amber-700'],
     ];
   @endphp
 
