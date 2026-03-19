@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
 // ═══ PUBLIC ROUTES ═══
@@ -74,6 +75,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     // Export
     Route::get('/export', [ExportController::class, 'index'])->name('export');
     Route::get('/export/download', [ExportController::class, 'download'])->name('export.download');
+
+    // Site Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 // ═══ BREEZE AUTH ROUTES ═══

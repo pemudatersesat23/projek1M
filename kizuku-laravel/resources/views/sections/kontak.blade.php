@@ -6,13 +6,13 @@
         <div class="sec-tag">{{ __('messages.home.kontak_tag') }}</div>
         <h2 class="sec-h2">{!! __('messages.home.kontak_h2') !!}</h2>
         <p>{{ __('messages.home.kontak_p') }}</p>
-        <div class="kontak-item"><div class="k-icon">📍</div><div><div class="k-label">{{ __('messages.home.kontak_labels.address') }}</div><div class="k-val">Jl. Contoh No. 123, Kota Anda, Indonesia</div></div></div>
-        <div class="kontak-item"><div class="k-icon">📱</div><div><div class="k-label">{{ __('messages.home.kontak_labels.phone') }}</div><div class="k-val">+62 812-XXXX-XXXX</div></div></div>
-        <div class="kontak-item"><div class="k-icon">📧</div><div><div class="k-label">{{ __('messages.home.kontak_labels.email') }}</div><div class="k-val">info@kizuku-academy.com</div></div></div>
+        <div class="kontak-item"><div class="k-icon">📍</div><div><div class="k-label">{{ __('messages.home.kontak_labels.address') }}</div><div class="k-val">{{ \App\Models\Setting::get('office_address', 'Jl. Contoh No. 123, Kota Anda, Indonesia') }}</div></div></div>
+        <div class="kontak-item"><div class="k-icon">📱</div><div><div class="k-label">{{ __('messages.home.kontak_labels.phone') }}</div><div class="k-val">+{{ \App\Models\Setting::get('whatsapp_number', '6281217549529') }}</div></div></div>
+        <div class="kontak-item"><div class="k-icon">📧</div><div><div class="k-label">{{ __('messages.home.kontak_labels.email') }}</div><div class="k-val">{{ \App\Models\Setting::get('admin_email', 'info@kizuku-academy.com') }}</div></div></div>
         <div class="kontak-item"><div class="k-icon">⏰</div><div><div class="k-label">{{ __('messages.home.kontak_labels.hours') }}</div><div class="k-val">{{ __('messages.nav.home') === 'Beranda' ? 'Senin – Sabtu, 08.00 – 17.00 WIB' : '月曜日〜土曜日、08:00〜17:00 WIB' }}</div></div></div>
         <div style="margin-top:24px;">
-          <a class="btn btn-primary" href="https://wa.me/62812XXXXXXXX" target="_blank" style="margin-right:10px;">{{ __('messages.home.kontak_btn_wa') }}</a>
-          <a class="btn btn-outline" href="mailto:info@kizuku-academy.com">{{ __('messages.home.kontak_btn_email') }}</a>
+          <a class="btn btn-primary" href="https://wa.me/{{ \App\Models\Setting::get('whatsapp_number', '6281217549529') }}" target="_blank" style="margin-right:10px;">{{ __('messages.home.kontak_btn_wa') }}</a>
+          <a class="btn btn-outline" href="mailto:{{ \App\Models\Setting::get('admin_email', 'info@kizuku-academy.com') }}">{{ __('messages.home.kontak_btn_email') }}</a>
         </div>
       </div>
 
