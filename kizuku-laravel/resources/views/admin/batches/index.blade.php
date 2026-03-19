@@ -23,6 +23,7 @@
             <th class="px-6 py-4">{{ __('messages.nav.home') === 'Beranda' ? 'Periode Daftar' : '登録期間' }}</th>
             <th class="px-6 py-4">{{ __('messages.nav.home') === 'Beranda' ? 'Mulai Kelas' : '開講日' }}</th>
             <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">{{ __('messages.nav.home') === 'Beranda' ? 'Pendaftar / Kuota' : '応募者 / 定員' }}</th>
             <th class="px-6 py-4 text-right">{{ __('messages.auth.admin_panel') === 'Panel Admin' ? 'Aksi' : 'アクション' }}</th>
           </tr>
         </thead>
@@ -35,6 +36,9 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                   {{ $batch->tanggal_buka?->format('d/m/Y') }} - {{ $batch->tanggal_tutup?->format('d/m/Y') }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                  {{ $batch->tanggal_mulai?->format('d/m/Y') ?? '-' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="px-2 py-1 text-xs font-bold rounded-full 

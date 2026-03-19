@@ -19,6 +19,7 @@ Route::get('/lang/{locale}', function ($locale) {
 
 Route::get('/kampus-partner', [HomeController::class, 'allCampuses'])->name('kampus-partner.all');
 Route::get('/program/{slug}', [HomeController::class, 'showProgram'])->name('programs.show');
+Route::get('/berita/{berita}', [HomeController::class, 'showBerita'])->name('berita.show');
 
 // ═══ STANDALONE PROGRAM PAGES (Alias Routes) ═══
 Route::get('/tokutei-ginou', function() {

@@ -8,7 +8,7 @@
     </div>
     <div class="prog-grid">
       @php
-        $programs = $featuredPrograms ?? \App\Models\Program::where('status', 'aktif')->with(['batches' => function($q) {
+        $programs = (isset($featuredPrograms) && $featuredPrograms->isNotEmpty()) ? $featuredPrograms : \App\Models\Program::where('status', 'aktif')->with(['batches' => function($q) {
           $q->whereIn('status', ['dibuka', 'akan_dibuka']);
         }])->get();
         

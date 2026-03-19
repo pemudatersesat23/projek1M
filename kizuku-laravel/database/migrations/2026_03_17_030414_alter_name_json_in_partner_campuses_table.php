@@ -13,7 +13,9 @@ return new class extends Migration
     {
         // Clear existing non-json data to prevent cast error
         \Illuminate\Support\Facades\DB::table('partner_campuses')->truncate();
-        \Illuminate\Support\Facades\DB::statement('ALTER TABLE partner_campuses MODIFY name JSON');
+        if (\Illuminate\Support\Facades\DB::connection()->getDriverName() !== 'sqlite') {
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE partner_campuses MODIFY name JSON');
+        }
     }
 
     /**

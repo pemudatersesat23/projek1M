@@ -19,7 +19,9 @@ class HomeController extends Controller
         $campuses = \App\Models\PartnerCampus::latest()->take(4)->get();
         $heroSections = \App\Models\HeroSection::where('is_active', true)->latest()->get();
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
-        $featuredPrograms = \App\Models\Program::where('is_featured', true)->where('status', 'aktif')->take(5)->get();
+        $featuredPrograms = \App\Models\Program::with(['batches' => function($q) {
+            $q->whereIn('status', ['dibuka', 'akan_dibuka']);
+        }])->where('is_featured', true)->where('status', 'aktif')->take(5)->get();
 
         return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms'));
     }
@@ -78,5 +80,12 @@ class HomeController extends Controller
             \Log::error('Pendaftaran error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return redirect()->back()->withErrors(__('messages.form.error_occurred') ?? 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
         }
+    }
+
+    public function showBerita(Berita $berita)
+    {
+        // Get recent news for sidebar/footer of detail page
+        $recentNews = Berita::published()->where('id', '!=', $berita->id)->latest()->take(5)->get();
+        return view('berita-detail', compact('berita', 'recentNews'));
     }
 }
