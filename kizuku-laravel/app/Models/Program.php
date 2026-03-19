@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use App\Traits\AutoTranslate;
 
 class Program extends Model
 {
-    use HasTranslations;
+    use HasTranslations, AutoTranslate;
 
     protected $fillable = [
         'nama_program',

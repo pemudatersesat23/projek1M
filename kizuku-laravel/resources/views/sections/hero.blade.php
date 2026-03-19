@@ -66,10 +66,10 @@
           </div>
         </div>
         <div class="mc-prog-list">
-          <div class="mc-prog"><span class="mc-dot" style="background:var(--red)"></span>Tokutei Ginou (TG)<span class="count">Open</span></div>
-          <div class="mc-prog"><span class="mc-dot" style="background:var(--blue)"></span>Engineering<span class="count">Open</span></div>
-          <div class="mc-prog"><span class="mc-dot" style="background:#111"></span>Kelas Bahasa Jepang<span class="count">Open</span></div>
-          <div class="mc-prog"><span class="mc-dot" style="background:linear-gradient(135deg,var(--red),var(--cyan))"></span>Returnee / Ex Jepang<span class="count">Open</span></div>
+          <div class="mc-prog"><span class="mc-dot" style="background:var(--red)"></span>{{ __('messages.home.mc_progs.tg') }}<span class="count">{{ __('messages.home.mc_progs.open') }}</span></div>
+          <div class="mc-prog"><span class="mc-dot" style="background:var(--blue)"></span>{{ __('messages.home.mc_progs.eng') }}<span class="count">{{ __('messages.home.mc_progs.open') }}</span></div>
+          <div class="mc-prog"><span class="mc-dot" style="background:#111"></span>{{ __('messages.home.mc_progs.lang') }}<span class="count">{{ __('messages.home.mc_progs.open') }}</span></div>
+          <div class="mc-prog"><span class="mc-dot" style="background:linear-gradient(135deg,var(--red),var(--cyan))"></span>{{ __('messages.home.mc_progs.ret') }}<span class="count">{{ __('messages.home.mc_progs.open') }}</span></div>
         </div>
       </div>
       <div class="hero-card hero-badge-1">
@@ -85,8 +85,8 @@
       <div class="jp-flag">
         <span class="flag">🇯🇵</span>
         <div>
-          <div style="font-size:13px;font-weight:800;">{{ __('messages.nav.home') === 'Beranda' ? 'Berangkat ke Jepang' : '日本へ出発' }}</div>
-          <div style="font-size:11px;color:var(--muted);">{{ __('messages.nav.home') === 'Beranda' ? 'Program resmi SSW/TG' : '公式SSW/TGプログラム' }}</div>
+          <div style="font-size:13px;font-weight:800;">{{ __('messages.home.hero_labels.go_japan') }}</div>
+          <div style="font-size:11px;color:var(--muted);">{{ __('messages.home.hero_labels.official_program') }}</div>
         </div>
       </div>
     </div>

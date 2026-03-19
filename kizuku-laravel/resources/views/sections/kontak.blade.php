@@ -18,7 +18,7 @@
 
       <div class="form-card reveal reveal-d2" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
         <div style="padding: 24px 28px 16px; border-bottom: 1px solid rgba(0,0,0,0.06);">
-          <h3 style="margin:0 0 4px;">{{ __('messages.nav.home') === 'Beranda' ? '📍 Lokasi Kami' : '📍 私たちの場所' }}</h3>
+          <h3 style="margin:0 0 4px;">{{ __('messages.home.kontak_loc_h3') }}</h3>
           <p class="fc-sub" style="margin:0;">{{ __('messages.nav.home') === 'Beranda' ? 'Kunjungi kantor LPK Kizuku International Academy langsung.' : 'LPK Kizuku International Academyのオフィスに直接お越しください。' }}</p>
         </div>
         <div style="flex:1; min-height: 360px; position: relative;">

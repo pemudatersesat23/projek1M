@@ -18,9 +18,9 @@
       @foreach($programs as $index => $p)
       <article class="prog-card {{ $cardClasses[$index % 4] }} reveal reveal-d{{ ($index % 4) + 1 }}">
         <div class="prog-glow" aria-hidden="true"></div>
-        <div class="prog-badge"><span class="bdot"></span>{{ $p->nama_program }}</div>
-        <h3>{{ $p->nama_program }}</h3>
-        <p>{{ Str::limit($p->deskripsi, 120) }}</p>
+        <div class="prog-badge"><span class="bdot"></span><span class="dynamic-lang" data-id="{{ $p->getTranslation('nama_program', 'id') }}" data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">{{ $p->nama_program }}</span></div>
+        <h3 class="dynamic-lang" data-id="{{ $p->getTranslation('nama_program', 'id') }}" data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">{{ $p->nama_program }}</h3>
+        <p class="dynamic-lang" data-id="{{ Str::limit($p->getTranslation('deskripsi', 'id'), 120) }}" data-jp="{{ Str::limit($p->getTranslation('deskripsi', 'jp'), 120) }}">{{ Str::limit($p->deskripsi, 120) }}</p>
         <ul class="feat-list">
           @php 
             $rawBenefit = $p->benefit; // Automatically translated by HasTranslations
@@ -37,14 +37,14 @@
           @endphp
 
           @if($activeBatch)
-            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.nav.home') === 'Beranda' ? 'Daftar' : '登録' }} {{ $activeBatch->nama_batch }}</a>
-            <span class="prog-note">⚡ {{ __('messages.nav.home') === 'Beranda' ? 'Batch dibuka' : 'バッチ募集中' }}</span>
+            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.enroll') }} {{ $activeBatch->nama_batch }}</a>
+            <span class="prog-note">⚡ {{ __('messages.program.batch_open') }}</span>
           @elseif($upcomingBatch)
-            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.nav.home') === 'Beranda' ? 'Lihat Jadwal' : 'スケジュールを見る' }}</a>
-            <span class="prog-note">📅 {{ __('messages.nav.home') === 'Beranda' ? 'Segera' : 'まもなく' }}: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>
+            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.see_schedule') }}</a>
+            <span class="prog-note">📅 {{ __('messages.program.batch.coming_soon') }}: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>
           @else
-            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.nav.home') === 'Beranda' ? 'Detail' : '詳細' }}</a>
-            <span class="prog-note">✦ {{ __('messages.nav.home') === 'Beranda' ? 'Info pendaftaran' : '登録情報' }}</span>
+            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.details') }}</a>
+            <span class="prog-note">✦ {{ __('messages.program.batch.enroll_info') }}</span>
           @endif
         </div>
       </article>
