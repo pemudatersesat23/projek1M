@@ -22,8 +22,9 @@ class HomeController extends Controller
         $featuredPrograms = \App\Models\Program::with(['batches' => function($q) {
             $q->whereIn('status', ['dibuka', 'akan_dibuka']);
         }])->where('is_featured', true)->where('status', 'aktif')->take(5)->get();
+        $fasilitas = \App\Models\Fasilitas::orderBy('urutan')->get();
 
-        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms'));
+        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms', 'fasilitas'));
     }
 
     public function allCampuses()
@@ -47,6 +48,8 @@ class HomeController extends Controller
 
         return view('program-detail', compact('program', 'activeBatch', 'nextBatch', 'batchHistory'));
     }
+
+
 
     public function storePendaftaran(\App\Http\Requests\PendaftaranRequest $request, \App\Services\FileUploadService $uploadService)
     {

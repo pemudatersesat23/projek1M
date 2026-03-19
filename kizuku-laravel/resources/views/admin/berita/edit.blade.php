@@ -28,7 +28,7 @@
       </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.berita.update', $berita) }}" enctype="multipart/form-data" class="p-6">
+    <form method="POST" action="{{ route('admin.berita.update', $berita) }}" class="p-6" enctype="multipart/form-data">
       @csrf
       @method('PUT')
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
@@ -47,6 +47,11 @@
           </select>
         </div>
         <div>
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Lokasi</label>
+          <input type="text" name="lokasi" placeholder="Lokasi (opsional)" value="{{ old('lokasi', $berita->lokasi) }}"
+                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
+        </div>
+        <div>
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Upload Gambar (Opsional)</label>
           <div class="flex items-center gap-4">
             @if($berita->gambar)
@@ -58,6 +63,17 @@
                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
           </div>
           <p class="text-[11px] text-slate-400 mt-1">Kosongkan jika tidak ingin mengubah gambar.</p>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Foto Berita</label>
+          @if($berita->image)
+            <div class="mb-3">
+              <img src="{{ asset('storage/' . $berita->image) }}" alt="Foto" class="h-24 w-auto rounded border">
+            </div>
+          @endif
+          <input type="file" name="image" accept="image/*"
+                 class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+          <p class="text-[11px] text-slate-500 mt-1">Biarkan kosong jika tidak ingin mengubah foto. Format: JPG, PNG, GIF (Maks 5MB)</p>
         </div>
         <div class="md:col-span-2">
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Isi Berita</label>

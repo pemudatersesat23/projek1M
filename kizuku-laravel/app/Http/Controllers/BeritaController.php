@@ -14,24 +14,30 @@ class BeritaController extends Controller
         return view('admin.berita.index', compact('beritas'));
     }
 
+    public function show(Berita $berita)
+    {
+        return view('admin.berita.show', compact('berita'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'judul' => 'required|string|max:255',
             'status_publish' => 'required|in:draft,published',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'lokasi' => 'nullable|string|max:255',
         ]);
 
-        $gambarPath = null;
-        if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('berita', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('berita_images', 'public');
         }
 
         Berita::create([
             'judul'          => $request->judul,
             'kategori'       => $request->kategori ?? 'kat-info',
-            'emoji'          => $request->emoji ?? '📢',
-            'gambar'         => $gambarPath,
+            'image'          => $imagePath,
+            'lokasi'         => $request->lokasi,
             'isi'            => $request->isi,
             'status_publish' => $request->status_publish,
         ]);
@@ -50,22 +56,23 @@ class BeritaController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'status_publish' => 'required|in:draft,published',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'lokasi' => 'nullable|string|max:255',
         ]);
 
         $data = [
             'judul'          => $request->judul,
             'kategori'       => $request->kategori ?? 'kat-info',
-            'emoji'          => $request->emoji ?? '📢',
+            'lokasi'         => $request->lokasi,
             'isi'            => $request->isi,
             'status_publish' => $request->status_publish,
         ];
 
-        if ($request->hasFile('gambar')) {
-            if ($berita->gambar && Storage::disk('public')->exists($berita->gambar)) {
-                Storage::disk('public')->delete($berita->gambar);
+        if ($request->hasFile('image')) {
+            if ($berita->image && Storage::disk('public')->exists($berita->image)) {
+                Storage::disk('public')->delete($berita->image);
             }
-            $data['gambar'] = $request->file('gambar')->store('berita', 'public');
+            $data['image'] = $request->file('image')->store('berita_images', 'public');
         }
 
         $berita->update($data);
@@ -76,10 +83,11 @@ class BeritaController extends Controller
 
     public function destroy(Berita $berita)
     {
-        if ($berita->gambar && Storage::disk('public')->exists($berita->gambar)) {
-            Storage::disk('public')->delete($berita->gambar);
+        if ($berita->image && Storage::disk('public')->exists($berita->image)) {
+            Storage::disk('public')->delete($berita->image);
         }
         $berita->delete();
+
         return redirect()->route('admin.berita.index')
                          ->with('success', 'Berita berhasil dihapus!');
     }

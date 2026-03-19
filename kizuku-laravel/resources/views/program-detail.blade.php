@@ -516,9 +516,21 @@
               <span class="pd-stat-label">{{ __('messages.program.investment') }}</span>
               <span class="pd-stat-val">{{ $program->biaya }}</span>
             </div>
+            @php
+              if ($activeBatch) {
+                  $hsColor = '#059669'; // Green
+                  $hsText = __('messages.program.status_labels.dibuka');
+              } elseif ($nextBatch) {
+                  $hsColor = '#d97706'; // Amber/Orange
+                  $hsText = __('messages.program.status_labels.akan_dibuka');
+              } else {
+                  $hsColor = '#64748b'; // Slate/Gray
+                  $hsText = __('messages.program.status_labels.tutup');
+              }
+            @endphp
             <div class="pd-stat-card">
               <span class="pd-stat-label">{{ __('messages.program.status') }}</span>
-              <span class="pd-stat-val" style="color: #059669;">{{ __('messages.program.available') }}</span>
+              <span class="pd-stat-val" style="color: {{ $hsColor }};">{{ $hsText }}</span>
             </div>
           </div>
         </div>
@@ -693,13 +705,13 @@
             @elseif($nextBatch)
               <div class="batch-status-badge" style="background:rgba(217, 119, 6, 0.1); color:#d97706;">{{ __('messages.program.enroll_soon') }}</div>
               <span class="batch-name">{{ $nextBatch->nama_batch }}</span>
-              <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">{{ __('messages.nav.home') === 'Beranda' ? "Pendaftaran untuk batch ini akan dibuka pada {$nextBatch->tanggal_buka?->format('d F Y')}." : "このバッチの登録は {$nextBatch->tanggal_buka?->format('Y年m月d日')} に開始されます。" }}</p>
-              <a href="https://wa.me/6281212345678" target="_blank" class="btn btn-outline" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">{{ __('messages.nav.kontak') }}</a>
+              <p class="text-slate-500 text-sm mb-8 mt-4 font-semibold leading-relaxed">{{ __('messages.nav.home') === 'Beranda' ? "Pendaftaran untuk batch ini akan dibuka pada {$nextBatch->tanggal_buka?->format('d F Y')}." : "このバッチの登録は {$nextBatch->tanggal_buka?->format('Y年m月d日')} に開始されます。" }}</p>
+              <a href="#kontak" class="btn btn-outline" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">{{ __('messages.nav.kontak') }}</a>
             @else
               <div class="batch-status-badge" style="background:#f1f5f9; color:#64748b;">{{ __('messages.program.enroll_closed') }}</div>
               <span class="batch-name">{{ __('messages.program.no_schedule') }}</span>
-              <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">{{ __('messages.program.no_schedule_p') }}</p>
-              <a href="https://wa.me/6281212345678" target="_blank" class="btn btn-primary" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">{{ __('messages.program.ask_admin') }}</a>
+              <p class="text-slate-500 text-sm mb-8 mt-4 font-semibold leading-relaxed">{{ __('messages.program.no_schedule_p') }}</p>
+              <a href="#kontak" class="btn btn-primary" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">{{ __('messages.program.ask_admin') }}</a>
             @endif
           </div>
         </div>

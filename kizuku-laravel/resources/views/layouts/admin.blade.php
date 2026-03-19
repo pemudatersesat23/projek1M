@@ -93,6 +93,10 @@
           <span class="material-symbols-outlined text-[22px]">reviews</span>
           <span class="font-medium text-sm">Testimoni</span>
         </a>
+        <a href="{{ route('admin.fasilitas.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.fasilitas.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">apartment</span>
+          <span class="font-medium text-sm">Fasilitas</span>
+        </a>
         <div class="pt-2 pb-1 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manajemen Program</div>
         <a href="{{ route('admin.programs.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.programs.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">assignment</span>
@@ -101,6 +105,11 @@
         <a href="{{ route('admin.batches.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.batches.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">layers</span>
           <span class="font-medium text-sm">Batch Pendaftaran</span>
+        </a>
+        <div class="pt-2 pb-1 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem</div>
+        <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.settings.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">settings</span>
+          <span class="font-medium text-sm">Pengaturan</span>
         </a>
       </nav>
 

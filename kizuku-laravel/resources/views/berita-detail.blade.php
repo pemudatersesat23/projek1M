@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 @section('title', ($berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul) . ' - LPK Kizuku')
 
 @section('content')
@@ -73,5 +74,6 @@
             </a>
         </div>
     </div>
+
 </main>
 @endsection

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use App\Traits\AutoTranslate;
 
 class Berita extends Model
 {
-    use HasTranslations;
+    use HasTranslations, AutoTranslate;
 
     protected $fillable = [
-        'judul', 'kategori', 'emoji', 'gambar', 'isi', 'status_publish',
+        'judul', 'kategori', 'image', 'lokasi', 'isi', 'status_publish',
     ];
 
     public $translatable = ['judul', 'isi'];

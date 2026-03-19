@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use App\Traits\AutoTranslate;
 
 class Testimonial extends Model
 {
-    use HasTranslations;
+    use HasTranslations, AutoTranslate;
 
     protected $fillable = [
         'name',
@@ -18,5 +19,5 @@ class Testimonial extends Model
         'is_active',
     ];
 
-    public $translatable = ['role', 'content'];
+    public $translatable = ['name', 'role', 'content'];
 }

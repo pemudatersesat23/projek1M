@@ -87,7 +87,13 @@
           </button>
         </div>
         <div id="faq-container" class="space-y-4">
-          @php $faqs = old('faq', $program->faq ?? []); @endphp
+          @php 
+            $faqData = old('faq', $program->faq ?? []);
+            if (is_string($faqData)) {
+                $faqData = json_decode($faqData, true);
+            }
+            $faqs = is_array($faqData) ? $faqData : [];
+          @endphp
           @foreach($faqs as $index => $item)
           <div class="faq-item p-4 bg-slate-50 rounded-lg border border-slate-100 relative group">
             <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
