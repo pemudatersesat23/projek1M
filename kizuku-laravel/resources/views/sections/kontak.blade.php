@@ -3,8 +3,8 @@
   <div class="container">
     <div class="kontak-grid">
       <div class="kontak-left reveal">
-        <div class="sec-tag">{{ __('messages.home.kontak_tag') }}</div>
-        <h2 class="sec-h2">{!! __('messages.home.kontak_h2') !!}</h2>
+        <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.kontak_tag') }}</div>
+        <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.kontak_h2') !!}</h2>
         <p>{{ __('messages.home.kontak_p') }}</p>
         <div class="kontak-item"><div class="k-icon">📍</div><div><div class="k-label">{{ __('messages.home.kontak_labels.address') }}</div><div class="k-val">{{ \App\Models\Setting::get('office_address', 'Jl. Contoh No. 123, Kota Anda, Indonesia') }}</div></div></div>
         <div class="kontak-item"><div class="k-icon">📱</div><div><div class="k-label">{{ __('messages.home.kontak_labels.phone') }}</div><div class="k-val">+{{ \App\Models\Setting::get('whatsapp_number', '6281217549529') }}</div></div></div>

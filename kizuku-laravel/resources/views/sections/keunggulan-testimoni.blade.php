@@ -6,8 +6,8 @@
 
   <div class="container" style="position: relative; z-index: 2;">
     <div class="sec-head reveal" style="text-align:center;max-width:600px;margin:0 auto 50px;">
-      <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.partner_tag') }}</div>
-      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ __('messages.home.partner_h2') }}</h2>
+      <div class="sec-tag" style="background: rgba(225, 6, 0, 0.08); color: var(--red); border-color: rgba(225, 6, 0, 0.1);">{{ __('messages.home.partner_tag') }}</div>
+      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ __('messages.home.partner_h2') }}</h2>
       <p class="sec-p" style="margin:0 auto;">{{ __('messages.home.partner_p') }}</p>
     </div>
     <div class="kampus-grid reveal">
@@ -68,10 +68,14 @@
 
 <!-- ═══ TESTIMONI ═══ -->
 <section id="testimoni" class="section-pad">
-  <div class="container">
-    <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
-      <div class="sec-tag">{{ __('messages.home.testi_tag') }}</div>
-      <h2 class="sec-h2">{!! __('messages.home.testi_h2') !!}</h2>
+  <!-- Decorative Background Blobs -->
+  <div style="position: absolute; top: -10%; left: -5%; width: 450px; height: 450px; background: radial-gradient(circle, rgba(31, 162, 201, 0.05), transparent 70%); filter: blur(50px); pointer-events: none; z-index: 1; animation: float 18s infinite ease-in-out;"></div>
+  <div style="position: absolute; bottom: -5%; right: -5%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(15, 76, 129, 0.06), transparent 70%); filter: blur(60px); pointer-events: none; z-index: 1; animation: float 14s infinite ease-in-out reverse;"></div>
+
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="sec-head reveal" style="text-align:center;max-width:600px;margin:0 auto 50px;">
+      <div class="sec-tag" style="background: rgba(31, 162, 201, 0.1); color: var(--cyan); border-color: rgba(31, 162, 201, 0.15);">{{ __('messages.home.testi_tag') }}</div>
+      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.testi_h2') !!}</h2>
       <p class="sec-p" style="margin:0 auto;">{{ __('messages.home.testi_p') }}</p>
     </div>
     <div class="testi-grid">

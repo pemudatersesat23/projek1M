@@ -3,8 +3,8 @@
   <div class="container">
     <div class="sec-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:36px;">
       <div>
-        <div class="sec-tag">{{ __('messages.home.berita_tag') }}</div>
-        <h2 class="sec-h2" style="margin-bottom:6px;">{!! __('messages.home.berita_h2') !!}</h2>
+        <div class="sec-tag" style="background: rgba(225, 6, 0, 0.08); color: var(--red); border-color: rgba(225, 6, 0, 0.1);">{{ __('messages.home.berita_tag') }}</div>
+        <h2 class="sec-h2" style="margin-bottom:6px;background: linear-gradient(90deg, var(--black), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.berita_h2') !!}</h2>
         <p class="sec-p">{{ __('messages.home.berita_p') }}</p>
       </div>
       @auth

@@ -2,8 +2,8 @@
 <section id="fasilitas" class="section-pad" style="background-color: #f8f9fa;">
   <div class="container relative">
     <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
-      <div class="sec-tag dynamic-lang" data-id="{{ __('messages.home.fasilitas_tag', [], 'id') }}" data-jp="{{ __('messages.home.fasilitas_tag', [], 'jp') }}">{{ __('messages.home.fasilitas_tag') }}</div>
-      <h2 class="sec-h2 dynamic-lang" data-id="{{ __('messages.home.fasilitas_h2', [], 'id') }}" data-jp="{{ __('messages.home.fasilitas_h2', [], 'jp') }}" style="font-size:32px;font-weight:700;color:var(--dark, #1a1a2e);margin-bottom:16px;">{{ __('messages.home.fasilitas_h2') }}</h2>
+      <div class="sec-tag dynamic-lang" data-id="{{ __('messages.home.fasilitas_tag', [], 'id') }}" data-jp="{{ __('messages.home.fasilitas_tag', [], 'jp') }}" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.fasilitas_tag') }}</div>
+      <h2 class="sec-h2 dynamic-lang" data-id="{{ __('messages.home.fasilitas_h2', [], 'id') }}" data-jp="{{ __('messages.home.fasilitas_h2', [], 'jp') }}" style="font-size:32px;font-weight:700;margin-bottom:16px;background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ __('messages.home.fasilitas_h2') }}</h2>
       <p class="sec-p dynamic-lang" data-id="{{ __('messages.home.fasilitas_p', [], 'id') }}" data-jp="{{ __('messages.home.fasilitas_p', [], 'jp') }}" style="margin:0 auto;color:#64748b;">{{ __('messages.home.fasilitas_p') }}</p>
     </div>
 

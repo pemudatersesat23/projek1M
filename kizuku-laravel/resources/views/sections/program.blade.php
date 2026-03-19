@@ -2,8 +2,8 @@
 <section id="program" class="section-pad">
   <div class="container" style="position: relative; z-index: 2;">
     <div class="sec-head reveal">
-      <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.program_tag') }}</div>
-      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.program_h2') !!}</h2>
+      <div class="sec-tag" style="background: rgba(225, 6, 0, 0.08); color: var(--red); border-color: rgba(225, 6, 0, 0.1);">{{ __('messages.home.program_tag') }}</div>
+      <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.program_h2') !!}</h2>
       <p class="sec-p">{{ __('messages.home.program_p') }}</p>
     </div>
     <div class="prog-grid">
