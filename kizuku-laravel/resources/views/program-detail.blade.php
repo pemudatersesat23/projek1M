@@ -353,11 +353,36 @@
   }
   .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
   }
   .form-full {
+    grid-column: span 6;
+  }
+  .form-half {
+    grid-column: span 3;
+  }
+  .form-third {
     grid-column: span 2;
+  }
+  .form-section-label {
+    grid-column: span 6;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 30px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  .form-section-label .material-icons {
+    color: var(--detail-primary);
+  }
+  .form-section-label span.section-text {
+    font-size: 14px;
+    font-weight: 950;
+    color: #0f1c23;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   .input-label {
     display: flex;
@@ -396,9 +421,9 @@
   }
   .upload-zone {
     position: relative;
-    padding: 40px 24px;
+    padding: 18px 16px;
     border: 2px dashed #e2e8f0;
-    border-radius: 32px;
+    border-radius: 20px;
     background: #f8fafc;
     text-align: center;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -408,7 +433,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 10px;
+    height: 100%;
   }
   .upload-zone:hover {
     border-color: var(--detail-primary);
@@ -424,15 +450,15 @@
     z-index: 10;
   }
   .upload-icon {
-    width: 64px;
-    height: 64px;
+    width: 44px;
+    height: 44px;
     background: white;
     color: var(--detail-primary);
-    border-radius: 20px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 20px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.04);
     transition: all 0.3s;
     border: 1px solid #f1f5f9;
@@ -440,22 +466,22 @@
   .upload-zone:hover .upload-icon {
     background: var(--detail-primary);
     color: white;
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.05) rotate(5deg);
   }
   .upload-text {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     color: #334155;
     transition: all 0.3s;
   }
   .file-name-display {
-    padding: 8px 16px;
+    padding: 6px 14px;
     background: #f1f5f9;
     border-radius: 99px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--detail-primary);
-    max-width: 180px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -469,7 +495,7 @@
   .file-selected {
     border-style: solid;
     border-color: #10b981;
-    background: #f0fdf4;
+    background: #f0fdf4 !important;
   }
   .file-selected .upload-icon {
     background: #10b981;
@@ -481,6 +507,7 @@
   }
   .file-selected .upload-text {
     color: #059669;
+    font-size: 11px;
   }
 
   .reveal {
@@ -740,169 +767,308 @@
           <input type="hidden" name="program_id" value="{{ $program->id }}">
           <input type="hidden" name="batch_id" value="{{ $activeBatch->id }}">
           
-          {{-- Informasi Dasar --}}
-          <div class="form-group-custom form-full">
-            <span class="input-label"><span class="material-symbols-outlined text-[16px]">person</span> {{ __('messages.form.name') }}</span>
+          {{-- Section 1: Informasi Pribadi --}}
+          <div class="form-section-label">
+            <span class="material-symbols-outlined">person</span>
+            <span class="section-text">{{ __('messages.nav.home') === 'Beranda' ? 'Informasi Pribadi' : '個人情報' }}</span>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.name') }}</span>
             <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.ktp') }}" required>
           </div>
 
-          <div class="form-group-custom">
+          <div class="form-group-custom form-half">
             <span class="input-label">{{ __('messages.form.gender') }}</span>
             <select name="jenis_kelamin" class="premium-input premium-select" required>
+              <option value="" disabled selected>{{ __('messages.nav.home') === 'Beranda' ? 'Pilih Jenis Kelamin' : '性別を選択' }}</option>
               <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>{{ __('messages.nav.home') === 'Beranda' ? 'Laki-laki' : '男性' }}</option>
               <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>{{ __('messages.nav.home') === 'Beranda' ? 'Perempuan' : '女性' }}</option>
             </select>
           </div>
 
-          <div class="form-group-custom">
-            <span class="input-label">{{ __('messages.form.education') }}</span>
-            <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pendidikan') }}" required>
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.birth_place') }}</span>
+            <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="Contoh: Jakarta" required>
           </div>
 
-          {{-- Dynamic Groups --}}
-          @if(Str::contains(Str::lower($program->nama_program), ['magang', 'tokutei']))
-            <div class="form-full grid grid-cols-2 gap-8 p-8 bg-slate-50 rounded-[32px] border border-slate-100">
-              <div class="col-span-2 flex items-center gap-2 mb-2">
-                <span class="material-symbols-outlined text-primary">straighten</span>
-                <span class="text-[12px] font-black text-primary uppercase tracking-widest">{{ __('messages.form.physical') }}</span>
-              </div>
-              <div class="form-group-custom">
-                <label class="input-label">{{ __('messages.form.height') }} (cm)</label>
-                <input type="number" name="tinggi_badan" value="{{ old('tinggi_badan') }}" class="premium-input" placeholder="165" required>
-              </div>
-              <div class="form-group-custom">
-                <label class="input-label">{{ __('messages.form.weight') }} (kg)</label>
-                <input type="number" name="berat_badan" value="{{ old('berat_badan') }}" class="premium-input" placeholder="60" required>
-              </div>
-              <div class="form-group-custom col-span-2">
-                <label class="input-label">{{ __('messages.form.eyes') }}</label>
-                <input type="text" name="kondisi_mata" value="{{ old('kondisi_mata') }}" class="premium-input" placeholder="Normal / Minus 1.5" required>
-              </div>
-              <div class="col-span-2 flex gap-10">
-                <label class="flex items-center gap-3 cursor-pointer group">
-                  <div class="relative flex items-center">
-                    <input type="checkbox" name="tato" value="1" {{ old('tato') ? 'checked' : '' }} class="w-6 h-6 rounded-lg text-primary focus:ring-primary/20 transition-all border-slate-300">
-                  </div>
-                  <span class="text-sm font-bold text-slate-600 group-hover:text-primary">{{ __('messages.form.tattoo') }}</span>
-                </label>
-                <label class="flex items-center gap-3 cursor-pointer group">
-                  <div class="relative flex items-center">
-                    <input type="checkbox" name="merokok" value="1" {{ old('merokok') ? 'checked' : '' }} class="w-6 h-6 rounded-lg text-primary focus:ring-primary/20 transition-all border-slate-300">
-                  </div>
-                  <span class="text-sm font-bold text-slate-600 group-hover:text-primary">{{ __('messages.form.smoke') }}</span>
-                </label>
-              </div>
-            </div>
-          @endif
-
-          @if(Str::contains(Str::lower($program->nama_program), 'tokutei'))
-            <div class="form-full grid grid-cols-1 gap-8 p-8 bg-blue-50/50 rounded-[32px] border border-blue-100">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="material-symbols-outlined text-blue-600">verified</span>
-                <span class="text-[12px] font-black text-blue-600 uppercase tracking-widest">{{ __('messages.form.ssw') }}</span>
-              </div>
-              <div class="form-group-custom">
-                <label class="input-label">{{ __('messages.form.placeholders.ssw_field') }}</label>
-                <input type="text" name="bidang_ssw" value="{{ old('bidang_ssw') }}" class="premium-input" placeholder="Food Service / Kaigo" required>
-              </div>
-              <div class="form-group-custom">
-                <label class="input-label">{{ __('messages.form.placeholders.jp_level') }}</label>
-                <input type="text" name="level_bahasa_jepang" value="{{ old('level_bahasa_jepang') }}" class="premium-input" placeholder="N4 / JFT A2" required>
-              </div>
-            </div>
-          @endif
-
-          @if(Str::contains(Str::lower($program->nama_program), 'engineer'))
-            <div class="form-full grid grid-cols-2 gap-8 p-8 bg-emerald-50/30 rounded-[32px] border border-emerald-100">
-              <div class="col-span-2 flex items-center gap-2 mb-2">
-                <span class="material-symbols-outlined text-emerald-600">school</span>
-                <span class="text-[12px] font-black text-emerald-600 uppercase tracking-widest">{{ __('messages.form.academic') }}</span>
-              </div>
-              <div class="form-group-custom">
-                <label class="input-label">{{ __('messages.form.placeholders.ipk') }}</label>
-                <input type="text" name="ipk" value="{{ old('ipk') }}" class="premium-input" placeholder="3.50" required>
-              </div>
-              <div class="form-group-custom">
-                <label class="input-label">{{ __('messages.form.placeholders.major') }}</label>
-                <input type="text" name="jurusan_ipk" value="{{ old('jurusan_ipk') }}" class="premium-input" placeholder="S1 Teknik Informatika" required>
-              </div>
-            </div>
-          @endif
-
-          @if(Str::contains(Str::lower($program->nama_program), 'kursus'))
-            <div class="form-full p-8 bg-amber-50/30 rounded-[32px] border border-amber-100">
-              <span class="input-label">{{ __('messages.form.shift') }}</span>
-              <select name="shift_kursus" class="premium-input premium-select" required>
-                <option value="pagi">{{ __('messages.form.placeholders.shift_pagi') }}</option>
-                <option value="siang">{{ __('messages.form.placeholders.shift_siang') }}</option>
-                <option value="malam">{{ __('messages.form.placeholders.shift_malam') }}</option>
-              </select>
-            </div>
-          @endif
-
-          <div class="form-group-custom">
-            <span class="input-label">{{ __('messages.form.pob') }}</span>
-            <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pob') }}" required>
-          </div>
-
-          <div class="form-group-custom">
-            <span class="input-label">{{ __('messages.form.dob') }}</span>
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.birth_date') }}</span>
             <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input" required>
           </div>
 
           <div class="form-group-custom form-full">
             <span class="input-label">{{ __('messages.form.address') }}</span>
-            <textarea name="alamat" rows="3" class="premium-input" placeholder="{{ __('messages.form.placeholders.address') }}" required>{{ old('alamat') }}</textarea>
+            <textarea name="alamat" rows="2" class="premium-input" placeholder="Alamat lengkap tempat tinggal saat ini" required>{{ old('alamat') }}</textarea>
           </div>
 
-          <div class="form-group-custom">
-            <span class="input-label">{{ __('messages.form.phone') }}</span>
+          <div class="form-group-custom form-half">
+            <span class="input-label">WhatsApp (No. HP)</span>
+            <input type="text" name="phone" value="{{ old('phone') }}" class="premium-input" placeholder="0812XXXXXXXX" required>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">Email</span>
+            <input type="email" name="email" value="{{ old('email') }}" class="premium-input" placeholder="nama@email.com" required>
+          </div>
+
+          {{-- Section 2: Detail Akademik & Program --}}
+          <div class="form-section-label">
+            <span class="material-symbols-outlined">school</span>
+            <span class="section-text">{{ __('messages.nav.home') === 'Beranda' ? 'Detail Akademik & Program' : '学歴およびプログラムの詳細' }}</span>
+          </div>
+
+          <div class="form-group-custom form-full">
+            <span class="input-label">{{ __('messages.form.education') }}</span>
+            <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pendidikan') }}" required>
+          </div>
+
+          {{-- Section 1: Informasi Pribadi --}}
+          <div class="form-section-label">
+            <span class="material-symbols-outlined">person</span>
+            <span class="section-text">{{ __('messages.nav.home') === 'Beranda' ? 'Informasi Pribadi' : '個人情報' }}</span>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.name') }}</span>
+            <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.ktp') }}" required>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.gender') }}</span>
+            <select name="jenis_kelamin" class="premium-input premium-select" required>
+              <option value="" disabled selected>{{ __('messages.nav.home') === 'Beranda' ? 'Pilih Jenis Kelamin' : '性別を選択' }}</option>
+              <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>{{ __('messages.nav.home') === 'Beranda' ? 'Laki-laki' : '男性' }}</option>
+              <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>{{ __('messages.nav.home') === 'Beranda' ? 'Perempuan' : '女性' }}</option>
+            </select>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.pob') }}</span>
+            <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pob') }}" required>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">{{ __('messages.form.dob') }}</span>
+            <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input" required>
+          </div>
+
+          <div class="form-group-custom form-half">
+            <span class="input-label">WhatsApp / Phone</span>
             <input type="text" name="phone" value="{{ old('phone') }}" class="premium-input" placeholder="08xxxxxxxx" required>
           </div>
 
-          <div class="form-group-custom">
-            <span class="input-label">{{ __('messages.form.email') }}</span>
+          <div class="form-group-custom form-half">
+            <span class="input-label">Email</span>
             <input type="email" name="email" value="{{ old('email') }}" class="premium-input" placeholder="nama@email.com" required>
           </div>
 
           <div class="form-group-custom form-full">
-            <span class="input-label">{{ __('messages.form.experience') }}</span>
-            <textarea name="pengalaman_kerja" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}">{{ old('pengalaman_kerja') }}</textarea>
+            <span class="input-label">{{ __('messages.form.address') }}</span>
+            <textarea name="alamat" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.address') }}" required>{{ old('alamat') }}</textarea>
           </div>
 
-          {{-- Upload Grid --}}
-          <div class="form-full pt-10 mt-6 border-t border-slate-100">
-            <h5 class="text-[12px] font-black text-slate-400 uppercase tracking-[2px] mb-8 text-center">{{ __('messages.form.upload') }} (Max 5MB)</h5>
-            <div class="grid grid-cols-2 gap-6">
-              @foreach(['ktp'=>'KTP', 'kk'=>'KK', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah'] as $name => $label)
-                <div class="form-group-custom">
-                  <label class="text-[10px] font-extrabold text-slate-500 uppercase ml-2 mb-2 block">{{ $label }} <span class="text-red-500">*</span></label>
-                  <div class="upload-zone" id="zone-{{ $name }}">
-                    <input type="file" name="{{ $name }}" onchange="updateFileName(this, 'zone-{{ $name }}')" required>
-                    <div class="upload-icon">
-                      <span class="material-symbols-outlined">cloud_upload</span>
-                    </div>
-                    <div class="upload-text">{{ __('messages.form.upload_placeholder') }} {{ $label }}</div>
-                    <div class="file-name-display"></div>
-                  </div>
-                </div>
+          {{-- Section 2: Detail Akademik & Program --}}
+          <div class="form-section-label">
+            <span class="material-symbols-outlined">school</span>
+            <span class="section-text">{{ __('messages.nav.home') === 'Beranda' ? 'Detail Akademik & Program' : '学歴およびプログラムの詳細' }}</span>
+          </div>
+
+          <div class="form-group-custom form-full">
+            <span class="input-label">{{ __('messages.form.education') }}</span>
+            <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pendidikan') }}" required>
+          </div>
+
+          {{-- Program Specific Fields Integrated into Grid --}}
+          @if($program->slug === 'tokutei-ginou-tg')
+            <div class="form-full grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-blue-50/30 rounded-3xl border border-blue-100 mb-4">
+              <div class="col-span-full text-[11px] font-black text-blue-600 uppercase tracking-widest mb-2">{{ __('messages.form.ssw') }}</div>
+              @foreach(__('messages.form.ssw_fields') as $key => $label)
+                <label class="flex items-center gap-3 cursor-pointer p-3 bg-white rounded-xl border border-blue-50 hover:border-blue-200 transition-all">
+                  <input type="checkbox" name="additional_data[bidang_tg][]" value="{{ $key }}" class="w-5 h-5 rounded text-blue-600 border-slate-300">
+                  <span class="text-xs font-bold text-slate-700">{{ $label }}</span>
+                </label>
               @endforeach
-              <div class="form-group-custom col-span-2">
-                <label class="text-[10px] font-extrabold text-slate-500 uppercase ml-2 mb-2 block">Sertifikat / Tambahan</label>
-                <div class="upload-zone" id="zone-sertifikat">
-                  <input type="file" name="sertifikat" onchange="updateFileName(this, 'zone-sertifikat')">
-                  <div class="upload-icon">
-                    <span class="material-symbols-outlined">history_edu</span>
-                  </div>
-                  <div class="upload-text">{{ __('messages.form.upload_placeholder') }} Sertifikat</div>
-                  <div class="file-name-display"></div>
-                </div>
+              <div class="col-span-full form-group-custom mt-2">
+                <label class="input-label">{{ __('messages.form.placeholders.jp_level') }}</label>
+                <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="N4 / JFT A2" required>
               </div>
+            </div>
+          @elseif($program->slug === 'engineer-jepang-gijinkoku')
+            <div class="form-half form-group-custom">
+              <label class="input-label">{{ __('messages.form.placeholders.major') }}</label>
+              <select name="additional_data[jurusan]" class="premium-input premium-select" required>
+                @foreach(__('messages.form.majors') as $key => $label)
+                  <option value="{{ $key }}">{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-half form-group-custom">
+              <label class="input-label">{{ __('messages.form.placeholders.univ') }}</label>
+              <input type="text" name="additional_data[universitas]" class="premium-input" placeholder="Universitas ..." required>
+            </div>
+            <div class="form-third form-group-custom">
+              <label class="input-label">{{ __('messages.form.placeholders.grad_year') }}</label>
+              <input type="number" name="additional_data[tahun_lulus]" class="premium-input" placeholder="2023" required>
+            </div>
+            <div class="form-third form-group-custom">
+              <label class="input-label">IPK</label>
+              <input type="text" name="additional_data[ipk]" class="premium-input" placeholder="3.50" required>
+            </div>
+            <div class="form-third form-group-custom">
+              <label class="input-label">Level JP</label>
+              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="N3 / N2" required>
+            </div>
+          @elseif($program->slug === 'kenshusei-jishussei-magang-jepang')
+            <div class="form-third form-group-custom">
+              <label class="input-label">{{ __('messages.form.height') }} (cm)</label>
+              <input type="number" name="additional_data[tinggi_badan]" class="premium-input" required>
+            </div>
+            <div class="form-third form-group-custom">
+              <label class="input-label">{{ __('messages.form.weight') }} (kg)</label>
+              <input type="number" name="additional_data[berat_badan]" class="premium-input" required>
+            </div>
+            <div class="form-third form-group-custom">
+              <label class="input-label">{{ __('messages.form.eyes') }}</label>
+              <input type="text" name="additional_data[kondisi_mata]" class="premium-input" required>
+            </div>
+            <div class="form-half form-group-custom">
+              <label class="input-label">{{ __('messages.form.marriage_status.label') }}</label>
+              <select name="additional_data[status_pernikahan]" class="premium-input premium-select" required>
+                <option value="single">{{ __('messages.form.marriage_status.single') }}</option>
+                <option value="married">{{ __('messages.form.marriage_status.married') }}</option>
+                <option value="divorced">{{ __('messages.form.marriage_status.divorced') }}</option>
+              </select>
+            </div>
+            <div class="form-half flex gap-8 items-end pb-4">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" name="additional_data[tato]" value="1" class="w-5 h-5 rounded text-primary">
+                <span class="text-xs font-bold text-slate-600">{{ __('messages.form.tattoo') }}</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" name="additional_data[merokok]" value="1" class="w-5 h-5 rounded text-primary">
+                <span class="text-xs font-bold text-slate-600">{{ __('messages.form.smoke') }}</span>
+              </label>
+            </div>
+          @elseif($program->slug === 'kursus-bahasa-jepang-offline')
+            <div class="form-third form-group-custom">
+              <span class="input-label">Pilihan Kelas</span>
+              <select name="additional_data[pilihan_kelas]" class="premium-input premium-select" required>
+                @foreach(__('messages.form.course_levels') as $key => $label)
+                  <option value="{{ $key }}">{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-third form-group-custom">
+              <span class="input-label">Sistem</span>
+              <select name="additional_data[sistem_belajar]" class="premium-input premium-select" required>
+                <option value="online">Online</option>
+                <option value="offline" selected>Offline</option>
+              </select>
+            </div>
+            <div class="form-third form-group-custom">
+              <span class="input-label">Shift</span>
+              <select name="additional_data[shift_kursus]" class="premium-input premium-select" required>
+                <option value="pagi">Pagi</option>
+                <option value="siang">Siang</option>
+                <option value="malam">Malam</option>
+              </select>
+            </div>
+          @elseif($program->slug === 'engineer-jepang-ex-internship')
+            <div class="form-half form-group-custom">
+              <label class="input-label">Jurusan</label>
+              <select name="additional_data[jurusan]" class="premium-input premium-select" required>
+                @foreach(__('messages.form.majors') as $key => $label)
+                  <option value="{{ $key }}">{{ $label }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-half form-group-custom">
+              <label class="input-label">Univ / Sekolah</label>
+              <input type="text" name="additional_data[universitas]" class="premium-input" required>
+            </div>
+            <div class="form-half form-group-custom">
+              <label class="input-label">Tahun Lulus</label>
+              <input type="number" name="additional_data[tahun_lulus]" class="premium-input" required>
+            </div>
+            <div class="form-half form-group-custom">
+              <label class="input-label">Level JP</label>
+              <input type="text" name="additional_data[level_bahasa]" class="premium-input" required>
+            </div>
+          @endif
+
+          <div class="form-full form-group-custom">
+            <span class="input-label">{{ __('messages.form.experience') }}</span>
+            <textarea name="pengalaman_kerja" rows="1" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}">{{ old('pengalaman_kerja') }}</textarea>
+          </div>
+
+          {{-- Section 3: Dokumen Unggahan --}}
+          <div class="form-section-label">
+            <span class="material-symbols-outlined">cloud_upload</span>
+            <span class="section-text">{{ __('messages.form.upload') }} (Max 5MB)</span>
+          </div>
+
+          @php
+            $defaultDocs = ['ktp'=>'KTP', 'kk'=>'KK', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah'];
+            $specialDocs = [];
+            if (Str::contains($program->slug, ['engineer', 'internship'])) $specialDocs['cv'] = 'CV';
+            if ($program->slug === 'engineer-jepang-gijinkoku') $specialDocs['transkrip'] = 'Transkrip';
+            $specialDocs['bukti_sosmed'] = 'Bukti Follow';
+            
+            $allUploads = array_merge($defaultDocs, $specialDocs);
+          @endphp
+
+          @foreach($allUploads as $name => $label)
+            <div class="form-third form-group-custom">
+              <label class="text-[10px] font-extrabold text-slate-400 uppercase ml-1 mb-2 block">{{ $label }} @if($name !== 'sertifikat')<span class="text-red-500">*</span>@endif</label>
+              <div class="upload-zone" id="zone-{{ $name }}">
+                <input type="file" name="{{ $name }}" onchange="updateFileName(this, 'zone-{{ $name }}')" {{ $name !== 'sertifikat' ? 'required' : '' }}>
+                <div class="upload-icon">
+                  <span class="material-symbols-outlined">@if($name=='foto')image @elseif($name=='cv'||$name=='transkrip'||$name=='ijazah')description @else cloud_upload @endif</span>
+                </div>
+                <div class="upload-text">{{ $label }}</div>
+                <div class="file-name-display"></div>
+              </div>
+            </div>
+          @endforeach
+
+          <div class="form-third form-group-custom">
+            <label class="text-[10px] font-extrabold text-slate-400 uppercase ml-1 mb-2 block">Sertifikat (Optional)</label>
+            <div class="upload-zone" id="zone-sertifikat">
+              <input type="file" name="sertifikat" onchange="updateFileName(this, 'zone-sertifikat')">
+              <div class="upload-icon">
+                <span class="material-symbols-outlined">history_edu</span>
+              </div>
+              <div class="upload-text">Sertifikat</div>
+              <div class="file-name-display"></div>
             </div>
           </div>
 
+          {{-- Section 4: Pernyataan --}}
+          <div class="form-section-label">
+            <span class="material-symbols-outlined">gavel</span>
+            <span class="section-text">{{ __('messages.nav.home') === 'Beranda' ? 'Pernyataan & Persetujuan' : '声明と同意' }}</span>
+          </div>
+
+          <div class="form-full space-y-3 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+            <label class="flex items-start gap-4 cursor-pointer group">
+              <input type="checkbox" name="additional_data[agreement_truth]" value="1" class="mt-1 w-5 h-5 rounded text-primary" required>
+              <span class="text-xs font-bold text-slate-600 leading-relaxed">{{ __('messages.form.agreement') }}</span>
+            </label>
+            <label class="flex items-start gap-4 cursor-pointer group">
+              <input type="checkbox" name="additional_data[agreement_selection]" value="1" class="mt-1 w-5 h-5 rounded text-primary" required>
+              <span class="text-xs font-bold text-slate-600 leading-relaxed">{{ __('messages.form.agreement_selection') }}</span>
+            </label>
+            @if(Str::contains($program->slug, ['tokutei', 'kenshusei', 'engineer-jepang-gijinkoku']))
+            <label class="flex items-start gap-4 cursor-pointer group">
+              <input type="checkbox" name="additional_data[agreement_makassar]" value="1" class="mt-1 w-5 h-5 rounded text-primary" required>
+              <span class="text-xs font-bold text-slate-600 leading-relaxed">{{ __('messages.form.agreement_makassar') }}</span>
+            </label>
+            @endif
+          </div>
+
           @if ($errors->any())
-            <div class="form-full p-6 bg-red-50 border border-red-100 rounded-3xl text-red-600 text-sm font-bold">
+            <div class="form-full p-6 bg-red-50 border border-red-100 rounded-3xl text-red-600 text-sm font-bold mt-4">
               <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $error)
                   <li>{{ $error }}</li>
@@ -911,8 +1077,8 @@
             </div>
           @endif
 
-          <div class="form-full pt-8">
-            <button type="submit" class="btn btn-primary w-full py-6 rounded-[24px] text-lg font-black shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <div class="form-full pt-6">
+            <button type="submit" class="btn btn-primary w-full py-5 rounded-3xl text-lg font-black shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all">
               {{ __('messages.nav.home') === 'Beranda' ? 'Kirim Pendaftaran' : '登録を送信' }}
             </button>
           </div>

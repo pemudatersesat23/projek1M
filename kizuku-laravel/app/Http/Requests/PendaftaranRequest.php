@@ -47,6 +47,7 @@ class PendaftaranRequest extends FormRequest
             'level_bahasa_jepang' => 'nullable|string|max:255',
             'ipk' => 'nullable|string|max:20',
             'shift_kursus' => 'nullable|string|max:255',
+            'additional_data' => 'nullable|array',
 
             // File Validation
             'ktp' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -54,6 +55,9 @@ class PendaftaranRequest extends FormRequest
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'cv' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'transkrip' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti_sosmed' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ];
     }
 }

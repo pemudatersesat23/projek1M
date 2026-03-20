@@ -77,39 +77,19 @@
         </div>
       </div>
 
-      {{-- Informasi Khusus Recruitment --}}
-      @if($applicant->tinggi_badan || $applicant->bidang_ssw || $applicant->ipk || $applicant->shift_kursus)
+      {{-- Informasi Tambahan (Spesifik Program) --}}
+      @if($applicant->additional_data || $applicant->tinggi_badan || $applicant->bidang_ssw || $applicant->ipk || $applicant->shift_kursus)
       <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
         <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">assignment_ind</span> Informasi Khusus Recruitment
+          <span class="material-symbols-outlined text-primary">assignment_ind</span> Informasi Tambahan (Program)
         </h4>
+        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {{-- Legacy/Standard Specialized Fields --}}
           @if($applicant->tinggi_badan)
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tinggi / Berat Badan</p>
             <p class="text-slate-800 font-bold">{{ $applicant->tinggi_badan }} cm / {{ $applicant->berat_badan }} kg</p>
-          </div>
-          @endif
-          @if($applicant->kondisi_mata)
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Kondisi Mata</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->kondisi_mata }}</p>
-          </div>
-          @endif
-          @if($applicant->tinggi_badan)
-          <div class="flex gap-4">
-            <div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tato</p>
-              <span class="px-2 py-1 {{ $applicant->tato ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }} rounded text-[10px] font-bold uppercase">
-                {{ $applicant->tato ? 'Ada' : 'Tidak Ada' }}
-              </span>
-            </div>
-            <div>
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Merokok</p>
-              <span class="px-2 py-1 {{ $applicant->merokok ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }} rounded text-[10px] font-bold uppercase">
-                {{ $applicant->merokok ? 'Ya' : 'Tidak' }}
-              </span>
-            </div>
           </div>
           @endif
           @if($applicant->bidang_ssw)
@@ -118,23 +98,48 @@
             <p class="text-slate-800 font-bold">{{ $applicant->bidang_ssw }}</p>
           </div>
           @endif
-          @if($applicant->level_bahasa_jepang)
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Level Bahasa Jepang</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->level_bahasa_jepang }}</p>
-          </div>
-          @endif
           @if($applicant->ipk)
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">IPK</p>
             <p class="text-slate-800 font-bold">{{ $applicant->ipk }}</p>
           </div>
           @endif
-          @if($applicant->shift_kursus)
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pilihan Shift</p>
-            <p class="text-slate-800 font-bold capitalize">{{ $applicant->shift_kursus }}</p>
-          </div>
+
+          {{-- Additional Data JSON --}}
+          @if($applicant->additional_data)
+            @foreach($applicant->additional_data as $key => $value)
+              @if(!in_array($key, ['agreement_truth', 'agreement_selection', 'agreement_makassar']))
+                <div>
+                  <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ str_replace('_', ' ', ucfirst($key)) }}</p>
+                  <p class="text-slate-800 font-bold">
+                    @if(is_array($value))
+                      {{ implode(', ', array_map(fn($v) => ucfirst(str_replace('_', ' ', $v)), $value)) }}
+                    @else
+                      {{ ucfirst(str_replace('_', ' ', $value)) }}
+                    @endif
+                  </p>
+                </div>
+              @endif
+            @endforeach
+            
+            {{-- Agreements Section --}}
+            <div class="col-span-full pt-4 mt-4 border-t border-slate-100 flex flex-wrap gap-4">
+               @if(isset($applicant->additional_data['agreement_truth']))
+                <span class="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
+                   <span class="material-symbols-outlined text-sm">check_circle</span> Data Benar
+                </span>
+               @endif
+               @if(isset($applicant->additional_data['agreement_selection']))
+                <span class="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
+                   <span class="material-symbols-outlined text-sm">check_circle</span> Siap Pelatihan
+                </span>
+               @endif
+               @if(isset($applicant->additional_data['agreement_makassar']))
+                <span class="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
+                   <span class="material-symbols-outlined text-sm">check_circle</span> Siap Seleksi Offline
+                </span>
+               @endif
+            </div>
           @endif
         </div>
       </div>
@@ -154,6 +159,9 @@
                 'Pas Foto' => $applicant->document->foto,
                 'Ijazah' => $applicant->document->ijazah,
                 'Sertifikat' => $applicant->document->sertifikat,
+                'CV' => $applicant->document->cv,
+                'Transkrip Nilai' => $applicant->document->transkrip,
+                'Bukti Sosmed' => $applicant->document->bukti_sosmed,
               ];
             @endphp
             @foreach($docs as $label => $path)

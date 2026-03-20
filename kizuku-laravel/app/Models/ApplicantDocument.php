@@ -12,7 +12,10 @@ class ApplicantDocument extends Model
         'kk',
         'foto',
         'ijazah',
-        'sertifikat'
+        'sertifikat',
+        'cv',
+        'transkrip',
+        'bukti_sosmed'
     ];
 
     public function applicant()

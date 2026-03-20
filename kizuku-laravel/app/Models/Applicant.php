@@ -31,13 +31,15 @@ class Applicant extends Model
         'bidang_ssw',
         'level_bahasa_jepang',
         'ipk',
-        'shift_kursus'
+        'shift_kursus',
+        'additional_data'
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
         'tato' => 'boolean',
         'merokok' => 'boolean',
+        'additional_data' => 'array',
     ];
 
     public function program()

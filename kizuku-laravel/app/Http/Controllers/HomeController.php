@@ -49,18 +49,18 @@ class HomeController extends Controller
 
     public function storePendaftaran(\App\Http\Requests\PendaftaranRequest $request, \App\Services\FileUploadService $uploadService)
     {
-        \Log::info('Pendaftaran submission started', $request->safe()->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));
+        $fileInputs = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat', 'cv', 'transkrip', 'bukti_sosmed'];
+        \Log::info('Pendaftaran submission started', $request->safe()->except($fileInputs));
         
         try {
             \Log::info('Validation passed via Request class');
 
-            $applicant = Applicant::create($request->safe()->except(['ktp', 'kk', 'foto', 'ijazah', 'sertifikat']));
+            $applicant = Applicant::create($request->safe()->except($fileInputs));
             \Log::info('Applicant created', ['id' => $applicant->id]);
 
             // Handle File Uploads using Service
-            $fileFields = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat'];
             $filesToUpload = [];
-            foreach ($fileFields as $field) {
+            foreach ($fileInputs as $field) {
                 if ($request->hasFile($field)) {
                     $filesToUpload[$field] = $request->file($field);
                 }
