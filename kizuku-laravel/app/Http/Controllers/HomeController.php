@@ -21,7 +21,7 @@ class HomeController extends Controller
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
         $featuredPrograms = \App\Models\Program::with(['batches' => function($q) {
             $q->whereIn('status', ['dibuka', 'akan_dibuka']);
-        }])->where('is_featured', true)->where('status', 'aktif')->take(5)->get();
+        }])->where('is_featured', true)->where('status', 'aktif')->get();
         $fasilitas = \App\Models\Fasilitas::orderBy('urutan')->get();
         $galleries = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
 

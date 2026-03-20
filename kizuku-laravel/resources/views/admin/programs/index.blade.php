@@ -7,10 +7,7 @@
       <h3 class="text-slate-800 font-bold text-2xl">{{ __('messages.nav.program') }}</h3>
       <p class="text-slate-500 text-sm">{{ __('messages.dashboard.admin_label') }} - {{ __('messages.form.title') }}</p>
     </div>
-    <a href="{{ route('admin.programs.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
-      <span class="material-symbols-outlined text-lg">add</span>
-      Tambah Program
-    </a>
+    {{-- Button Tambah Program Dihapus Sesuai Permintaan --}}
   </div>
 
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

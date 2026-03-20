@@ -73,6 +73,10 @@
             <label class="block text-sm font-medium text-slate-700 mb-1">Alur Seleksi</label>
             <textarea name="alur_seleksi" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('alur_seleksi', $program->alur_seleksi ?? '') }}</textarea>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Materi Utama</label>
+            <textarea name="materi" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Materi yang akan dipelajari...">{{ old('materi', $program->materi ?? '') }}</textarea>
+          </div>
         </div>
       </div>
 

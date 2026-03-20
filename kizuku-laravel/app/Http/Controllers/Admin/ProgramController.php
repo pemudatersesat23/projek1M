@@ -16,6 +16,7 @@ class ProgramController extends Controller
         return view('admin.programs.index', compact('programs'));
     }
 
+    /*
     public function create()
     {
         return view('admin.programs.create');
@@ -47,6 +48,7 @@ class ProgramController extends Controller
 
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil ditambahkan.');
     }
+    */
 
     public function show(Program $program)
     {
