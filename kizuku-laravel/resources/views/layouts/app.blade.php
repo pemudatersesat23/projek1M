@@ -265,7 +265,9 @@
     
     <ul class="nav-links">
       <li><a href="{{ url('/') }}#beranda" class="{{ Request::is('/') ? 'active' : '' }}">{{ __('messages.nav.home') }}</a></li>
-      <li><a href="{{ url('/') }}#program">{{ __('messages.nav.program') }}</a></li>
+      <li><a href="{{ route('programs.index') }}" class="{{ Request::routeIs('programs.index') ? 'active' : '' }}">{{ __('messages.nav.program') }}</a></li>
+      <li><a href="{{ route('pages.alur') }}" class="{{ Request::routeIs('pages.alur') ? 'active' : '' }}">{{ __('messages.nav.alur') }}</a></li>
+      <li><a href="{{ url('/') }}#berita">{{ __('messages.nav.berita') }}</a></li>
       <li><a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a></li>
       <li><a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a></li>
       <li><a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a></li>
@@ -300,7 +302,9 @@
   <div class="mobile-menu" id="mobmenu">
     <div class="mob-links">
       <a href="{{ url('/') }}#beranda">{{ __('messages.nav.home') }}</a>
-      <a href="{{ url('/') }}#program">{{ __('messages.nav.program') }}</a>
+      <a href="{{ route('programs.index') }}">{{ __('messages.nav.program') }}</a>
+      <a href="{{ route('pages.alur') }}">{{ __('messages.nav.alur') }}</a>
+      <a href="{{ url('/') }}#berita">{{ __('messages.nav.berita') }}</a>
       <a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a>
       <a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a>
       <a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a>

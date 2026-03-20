@@ -10,6 +10,8 @@ return [
         'kontak' => 'Hubungi Kami',
         'login' => 'Login Admin',
         'konsultasi' => 'Konsultasi',
+        'alur' => 'Alur Pendaftaran',
+        'faq' => 'FAQ',
         'see_all_partners' => 'Lihat Semua Kampus Partner',
     ],
     'auth' => [
@@ -263,5 +265,37 @@ return [
             'go_japan' => 'Berangkat ke Jepang',
             'official_program' => 'Program resmi SSW/TG',
         ],
+    ],
+    'alur' => [
+        'tag' => '✦ PROSES SELEKSI',
+        'title' => 'Alur Pendaftaran & <br><span class="text-primary">Keberangkatan</span>',
+        'subtitle' => 'Pahami setiap langkah perjalanannmu menuju karier sukses di Jepang bersama LPK Kizuku.',
+        'step1' => [
+            'icon' => 'app_registration',
+            'title' => 'Pendaftaran Online',
+            'desc' => 'Pilih program yang sesuai dan isi formulir pendaftaran melalui website kami atau hubungi admin via WhatsApp.',
+        ],
+        'step2' => [
+            'icon' => 'verified_user',
+            'title' => 'Proses Seleksi',
+            'desc' => 'Verifikasi dokumen, tes fisik ringan, dan interview awal untuk memastikan kesesuaian kamu dengan kriteria program.',
+        ],
+        'step3' => [
+            'icon' => 'school',
+            'title' => 'Proses Pelatihan',
+            'desc' => 'Pelatihan intensif bahasa Jepang (N5-N3), pengenalan budaya kerja, dan pengasahan skill teknis sesuai bidang.',
+        ],
+        'step4' => [
+            'icon' => 'groups',
+            'title' => 'Wawancara Perusahaan',
+            'desc' => 'Sesi interview langsung dengan perwakilan perusahaan/user dari Jepang untuk penempatan kerja.',
+        ],
+        'step5' => [
+            'icon' => 'flight_takeoff',
+            'title' => 'Proses Keberangkatan',
+            'desc' => 'Pengurusan dokumen COE/Visa, medical check-up akhir, dan persiapan teknis keberangkatan ke Jepang.',
+        ],
+        'cta_title' => 'Mulai Langkah Pertama Anda Hari Ini',
+        'cta_btn' => 'Pilih Program & Daftar',
     ],
 ];

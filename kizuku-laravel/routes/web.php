@@ -38,6 +38,10 @@ Route::get('/kursus-bahasa-jepang', function() {
     return app(HomeController::class)->showProgram('kursus-bahasa-jepang');
 })->name('pages.kursus');
 
+Route::get('/program', [HomeController::class, 'showAllPrograms'])->name('programs.index');
+
+Route::get('/alur-pendaftaran', [HomeController::class, 'showAlur'])->name('pages.alur');
+
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
 // ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══

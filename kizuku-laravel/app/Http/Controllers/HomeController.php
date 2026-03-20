@@ -87,4 +87,17 @@ class HomeController extends Controller
         $recentNews = Berita::published()->where('id', '!=', $berita->id)->latest()->take(5)->get();
         return view('berita-detail', compact('berita', 'recentNews'));
     }
+
+    public function showAlur()
+    {
+        return view('alur-pendaftaran');
+    }
+
+    public function showAllPrograms()
+    {
+        $programs = Program::where('status', 'aktif')->with(['batches' => function($q) {
+            $q->whereIn('status', ['dibuka', 'akan_dibuka']);
+        }])->get();
+        return view('programs.index', compact('programs'));
+    }
 }

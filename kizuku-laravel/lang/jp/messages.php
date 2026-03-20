@@ -10,6 +10,8 @@ return [
         'kontak' => 'お問い合わせ',
         'login' => 'ログイン',
         'konsultasi' => '無料相談',
+        'alur' => '選考の流れ',
+        'faq' => 'よくある質問',
         'see_all_partners' => 'すべての提携キャンパスを見る',
     ],
     'auth' => [
@@ -242,5 +244,37 @@ return [
             'go_japan' => '日本へ出発',
             'official_program' => '公式SSW/TGプログラム',
         ],
+    ],
+    'alur' => [
+        'tag' => '✦ 選考プロセス',
+        'title' => '申し込みと <br><span class="text-primary">日本への出発の流れ</span>',
+        'subtitle' => 'LPK Kizukuと共に、日本でのキャリア成功に向けたステップを理解しましょう。',
+        'step1' => [
+            'icon' => 'app_registration',
+            'title' => 'オンライン登録',
+            'desc' => '適切なプログラムを選択し、ウェブサイトのフォームまたはWhatsAppからお申し込みください。',
+        ],
+        'step2' => [
+            'icon' => 'verified_user',
+            'title' => '選考プロセス',
+            'desc' => '書類審査、簡単な適性検査、および初期面接を行い、プログラムへの適合性を確認します。',
+        ],
+        'step3' => [
+            'icon' => 'school',
+            'title' => '研修期間',
+            'desc' => '日本語（N5-N3）、日本の企業文化、および各分野の専門スキルの集中研修を行います。',
+        ],
+        'step4' => [
+            'icon' => 'groups',
+            'title' => '企業面接',
+            'desc' => '日本の企業担当者との直接面接を行い、配属先を決定します。',
+        ],
+        'step5' => [
+            'icon' => 'flight_takeoff',
+            'title' => '出発の手続き',
+            'desc' => 'COE/ビザの申請、最終健康診断、および日本への出発に向けた最終準備を行います。',
+        ],
+        'cta_title' => '今日、あなたの第一歩を踏み出しましょう',
+        'cta_btn' => 'プログラムを選んで登録する',
     ],
 ];
