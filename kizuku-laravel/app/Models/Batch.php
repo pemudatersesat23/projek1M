@@ -3,9 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
+use App\Traits\AutoTranslate;
 
 class Batch extends Model
 {
+    use HasTranslations, AutoTranslate;
+    public $translatable = [
+        'nama_batch',
+    ];
+
     protected $fillable = [
         'program_id',
         'nama_batch',

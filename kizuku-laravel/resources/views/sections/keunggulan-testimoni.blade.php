@@ -102,38 +102,8 @@
           </div>
         </div>
       @empty
-        <div class="testi-card reveal reveal-d1">
-          <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-          <p class="testi-text">"{{ __('messages.home.testi_items.rizki_content') }}"</p>
-          <div class="testi-person">
-            <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">R</div>
-            <div>
-                <div class="testi-name">Rizki Pratama</div>
-                <div class="testi-role">{{ __('messages.home.testi_items.rizki_role') }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-card reveal reveal-d2">
-          <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-          <p class="testi-text">"{{ __('messages.home.testi_items.andi_content') }}"</p>
-          <div class="testi-person">
-            <div class="testi-avatar" style="background:linear-gradient(135deg,var(--blue),var(--cyan))">A</div>
-            <div>
-                <div class="testi-name">Andi Setiawan</div>
-                <div class="testi-role">{{ __('messages.home.testi_items.andi_role') }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-card reveal reveal-d3">
-          <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-          <p class="testi-text">"{{ __('messages.home.testi_items.siti_content') }}"</p>
-          <div class="testi-person">
-            <div class="testi-avatar" style="background:linear-gradient(135deg,#1a1a2e,#555)">S</div>
-            <div>
-                <div class="testi-name">Siti Nurhaliza</div>
-                <div class="testi-role">{{ __('messages.home.testi_items.siti_role') }}</div>
-            </div>
-          </div>
+        <div class="col-span-full text-center text-slate-500 py-12" style="grid-column: 1 / -1;">
+          <p>{{ __('messages.home.testi_empty') ?: 'Belum ada testimoni alumni.' }}</p>
         </div>
       @endforelse
     </div>

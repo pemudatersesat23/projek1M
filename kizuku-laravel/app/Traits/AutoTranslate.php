@@ -24,7 +24,7 @@ trait AutoTranslate
     {
         if (!isset($this->translatable)) return;
 
-        $locales = ['id', 'jp']; // We use 'id' for Indonesian and 'jp' for Japanese as per lang directory
+        $locales = ['id', 'jp'];
 
         foreach ($this->translatable as $field) {
             $translations = $this->getTranslations($field);
@@ -32,8 +32,7 @@ trait AutoTranslate
             // If we have Indonesian but no Japanese
             if (!empty($translations['id']) && empty($translations['jp'])) {
                 try {
-                    $tr = new GoogleTranslate('ja'); // 'ja' is the language code for Japanese in Google Translate
-                    $translated = $tr->translate($translations['id']);
+                    $translated = $this->translateValue($translations['id'], 'ja');
                     $this->setTranslation($field, 'jp', $translated);
                 } catch (\Exception $e) {
                     Log::error("AutoTranslate Error (id -> jp) for field {$field}: " . $e->getMessage());
@@ -43,13 +42,33 @@ trait AutoTranslate
             // If we have Japanese but no Indonesian
             if (!empty($translations['jp']) && empty($translations['id'])) {
                 try {
-                    $tr = new GoogleTranslate('id');
-                    $translated = $tr->translate($translations['jp']);
+                    $translated = $this->translateValue($translations['jp'], 'id');
                     $this->setTranslation($field, 'id', $translated);
                 } catch (\Exception $e) {
                     Log::error("AutoTranslate Error (jp -> id) for field {$field}: " . $e->getMessage());
                 }
             }
         }
+    }
+
+    /**
+     * Helper to translate a value recursively if it's an array.
+     */
+    protected function translateValue($value, $targetLocale)
+    {
+        if (is_array($value)) {
+            $result = [];
+            foreach ($value as $key => $val) {
+                $result[$key] = $this->translateValue($val, $targetLocale);
+            }
+            return $result;
+        }
+
+        if (is_string($value) && !empty($value)) {
+            $tr = new GoogleTranslate($targetLocale);
+            return $tr->translate($value);
+        }
+
+        return $value;
     }
 }

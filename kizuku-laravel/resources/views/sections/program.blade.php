@@ -38,7 +38,7 @@
 
           @if($activeBatch)
             <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.enroll') }} {{ $activeBatch->nama_batch }}</a>
-            <span class="prog-note">⚡ {{ __('messages.program.batch_open') }}</span>
+            <span class="prog-note">⚡ {{ __('messages.program.batch.batch_open') }}</span>
           @elseif($upcomingBatch)
             <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.see_schedule') }}</a>
             <span class="prog-note">📅 {{ __('messages.program.batch.coming_soon') }}: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>

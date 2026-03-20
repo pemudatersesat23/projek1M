@@ -124,7 +124,10 @@ class ProgramAndBatchSeeder extends Seeder
             // Create sample batches for each program
             Batch::create([
                 'program_id' => $program->id,
-                'nama_batch' => 'Batch 1 - Selesai',
+                'nama_batch' => [
+                    'id' => 'Batch 1 - Selesai',
+                    'jp' => '第1バッチ - 終了',
+                ],
                 'status' => 'selesai',
                 'tanggal_buka' => now()->subMonths(6),
                 'tanggal_tutup' => now()->subMonths(5),
@@ -134,7 +137,10 @@ class ProgramAndBatchSeeder extends Seeder
 
             Batch::create([
                 'program_id' => $program->id,
-                'nama_batch' => 'Batch 2 - Sedang Dibuka',
+                'nama_batch' => [
+                    'id' => 'Batch 2 - Sedang Dibuka',
+                    'jp' => '第2バッチ - 募集中',
+                ],
                 'status' => 'dibuka',
                 'tanggal_buka' => now()->subDays(10),
                 'tanggal_tutup' => now()->addDays(20),
@@ -145,7 +151,10 @@ class ProgramAndBatchSeeder extends Seeder
 
             Batch::create([
                 'program_id' => $program->id,
-                'nama_batch' => 'Batch 3 - Akan Dibuka',
+                'nama_batch' => [
+                    'id' => 'Batch 3 - Akan Dibuka',
+                    'jp' => '第3バッチ - まもなく',
+                ],
                 'status' => 'akan_dibuka',
                 'tanggal_buka' => now()->addMonths(2),
                 'tanggal_tutup' => now()->addMonths(3),
