@@ -4,13 +4,26 @@
 @section('title', ($berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul) . ' - LPK Kizuku')
 
 @section('content')
-<main class="berita-detail-page" style="padding-top: 100px; min-height: 80vh; background: #f8fafc;">
-    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
-        <nav style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 14px;">
-            <a href="{{ url('/') }}" style="color: inherit; text-decoration: none;">Home</a>
-            <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
-            <span>Berita</span>
-        </nav>
+<main class="berita-detail-page" style="padding-top: 68px; min-height: 80vh; background: radial-gradient(circle at 10% 10%, rgba(225, 6, 0, 0.03) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(15, 76, 129, 0.03) 0%, transparent 40%), #fff;">
+    
+    {{-- Header Page --}}
+    <div style="background: linear-gradient(to bottom, rgba(225, 6, 0, 0.12) 0%, rgba(255, 255, 255, 0) 100%); padding: 60px 0 30px; text-align: center; position: relative;">
+        <div class="container" style="position: relative; z-index: 1;">
+            <h1 style="font-size: clamp(32px, 5vw, 48px); font-weight: 800; margin: 0; letter-spacing: -1.5px; color: var(--red);">
+                {{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? 'ニュース' : 'Berita' }}
+            </h1>
+            <p style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #64748b;">
+                {{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? 'LPK Kizukuからの最新情報' : 'Informasi dan update terbaru dari LPK Kizuku' }}
+            </p>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 20px 20px 60px; position: relative; z-index: 2;">
+        <div style="margin-bottom: 32px; display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 14px; font-weight: 500;">
+            <a href="{{ url('/') }}" style="color: inherit; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='inherit'">Home</a>
+            <span class="material-symbols-outlined" style="font-size: 16px; opacity: 0.5;">chevron_right</span>
+            <span style="color: var(--red); font-weight: 700;">Berita</span>
+        </div>
 
         <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             @if($berita->image)
