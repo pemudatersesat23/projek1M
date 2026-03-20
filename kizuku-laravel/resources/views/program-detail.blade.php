@@ -788,7 +788,7 @@
           </div>
 
           <div class="form-group-custom form-half">
-            <span class="input-label">{{ $program->slug === 'kenshusei-jishussei-magang-jepang' ? 'TTL' : __('messages.form.pob') }} {{ $program->slug === 'kursus-bahasa-jepang-offline' ? '' : '*' }}</span>
+            <span class="input-label">{{ $program->slug === 'kenshusei-jishussei-magang-jepang' ? 'Tempat & Tanggal Lahir' : __('messages.form.pob') }} {{ $program->slug === 'kursus-bahasa-jepang-offline' ? '' : '*' }}</span>
             <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pob') }}" {{ $program->slug === 'kursus-bahasa-jepang-offline' ? '' : 'required' }}>
           </div>
 
@@ -889,23 +889,15 @@
               <span class="input-label">Kondisi Mata *</span>
               <input type="text" name="additional_data[kondisi_mata]" value="{{ old('additional_data.kondisi_mata') }}" class="premium-input" placeholder="Normal / Minus" required>
             </div>
-            <div class="form-group-custom form-half">
+            <div class="form-group-custom form-full">
               <span class="input-label">Status Pernikahan *</span>
               <select name="additional_data[status_pernikahan]" class="premium-input premium-select" required>
-                <option value="single" {{ old('additional_data.status_pernikahan') == 'single' ? 'selected' : '' }}>Belum Menikah</option>
-                <option value="married" {{ old('additional_data.status_pernikahan') == 'married' ? 'selected' : '' }}>Menikah</option>
-                <option value="divorced" {{ old('additional_data.status_pernikahan') == 'divorced' ? 'selected' : '' }}>Cerai</option>
+                @foreach(__('messages.form.marriage_status') as $key => $label)
+                  @if($key !== 'label')
+                    <option value="{{ $key }}" {{ old('additional_data.status_pernikahan') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                  @endif
+                @endforeach
               </select>
-            </div>
-            <div class="form-group-custom form-half" style="display: flex; gap: 15px; align-items: flex-end; padding-bottom: 2px;">
-              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f8fafc; padding: 12px 20px; border-radius: 15px; border: 1px solid #e2e8f0; flex: 1;">
-                <input type="checkbox" name="additional_data[tato]" value="1" {{ old('additional_data.tato') ? 'checked' : '' }} style="width: 18px; height: 18px; accent-color: var(--detail-primary);">
-                <span style="font-size: 13px; font-weight: 700; color: #475569;">Tatto</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f8fafc; padding: 12px 20px; border-radius: 15px; border: 1px solid #e2e8f0; flex: 1;">
-                <input type="checkbox" name="additional_data[merokok]" value="1" {{ old('additional_data.merokok') ? 'checked' : '' }} style="width: 18px; height: 18px; accent-color: var(--detail-primary);">
-                <span style="font-size: 13px; font-weight: 700; color: #475569;">Merokok</span>
-              </label>
             </div>
 
             {{-- Bagian 3: Pendidikan & Program --}}
@@ -1028,8 +1020,8 @@
                 <select name="additional_data[jurusan_engineer]" class="premium-input premium-select" required>
                   <option value="" disabled selected>Pilih Jurusan</option>
                   <option value="sipil" {{ old('additional_data.jurusan_engineer') == 'sipil' ? 'selected' : '' }}>Teknik Sipil</option>
-                  <option value="arsitektur" {{ old('additional_data.jurusan_engineer') == 'arsitektur' ? 'selected' : '' }}>Teknik Arsitektur</option>
-                  <option value="mesin_elektro" {{ old('additional_data.jurusan_engineer') == 'mesin_elektro' ? 'selected' : '' }}>Teknik Mesin Elektro</option>
+                  <option value="arsitektur" {{ old('additional_data.jurusan_engineer') == 'arsitektur' ? 'selected' : '' }}>Arsitektur</option>
+                  <option value="elektro" {{ old('additional_data.jurusan_engineer') == 'elektro' ? 'selected' : '' }}>Teknik Elektro</option>
                   <option value="mesin" {{ old('additional_data.jurusan_engineer') == 'mesin' ? 'selected' : '' }}>Teknik Mesin</option>
                   <option value="informatika" {{ old('additional_data.jurusan_engineer') == 'informatika' ? 'selected' : '' }}>Teknik Informatika</option>
                   <option value="lainnya" {{ old('additional_data.jurusan_engineer') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
@@ -1174,7 +1166,7 @@
                 <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
                   <input type="checkbox" name="additional_data[agreement_truth]" value="1" required
                     style="width: 20px; height: 20px; margin-top: 2px; accent-color: var(--detail-primary); cursor: pointer; flex-shrink: 0;">
-                  <span style="font-size: 14px; font-weight: 700; color: #475569; line-height: 1.6;">✅ {{ $program->slug === 'engineer-jepang-ex-internship' ? 'Saya menyatakan seluruh data benar dan dapat dipertanggungjawabkan *' : __('messages.form.agreement') . ' *' }}</span>
+                  <span style="font-size: 14px; font-weight: 700; color: #475569; line-height: 1.6;">✅ Pernyataan kebenaran data *</span>
                 </label>
               </div>
 
@@ -1190,7 +1182,7 @@
                 <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
                   <input type="checkbox" name="additional_data[agreement_makassar]" value="1" required
                     style="width: 20px; height: 20px; margin-top: 2px; accent-color: var(--detail-primary); cursor: pointer; flex-shrink: 0;">
-                  <span style="font-size: 14px; font-weight: 700; color: #475569; line-height: 1.6;">📍 Siap seleksi offline di Makassar? *</span>
+                  <span style="font-size: 14px; font-weight: 700; color: #475569; line-height: 1.6;">📍 Siap seleksi offline di Makassar *</span>
                 </label>
               </div>
               @endif
