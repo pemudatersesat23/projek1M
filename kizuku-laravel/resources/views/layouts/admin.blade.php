@@ -5,6 +5,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('admin-title', 'Dashboard') — Admin | LPK Kizuku</title>
+  <link rel="icon" type="image/png" href="{{ asset('image/logo tab broswer.png') }}">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -49,13 +50,12 @@
 
     {{-- Sidebar Navigation --}}
     <aside class="admin-sidebar w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full" id="sidebar">
-      <div class="p-6 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-          <span class="text-white font-bold text-lg">K</span>
-        </div>
-        <div>
-          <h1 class="font-bold text-primary leading-tight">LPK Kizuku</h1>
-          <p class="text-xs text-slate-500">Admin Panel</p>
+      <div class="py-8 px-5 border-b border-slate-50 flex flex-col items-center">
+        <a href="{{ route('admin.dashboard') }}" class="block">
+            <img src="{{ asset('image/logo kiuzuku utama.png') }}" alt="LPK Kizuku Logo" class="h-28 w-auto object-contain">
+        </a>
+        <div class="mt-4 text-center">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Admin Panel Control</p>
         </div>
       </div>
 
