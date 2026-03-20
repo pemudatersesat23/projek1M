@@ -7,6 +7,7 @@
   @include('sections.program')
   @include('sections.fasilitas')
   @include('sections.keunggulan-testimoni')
+  @include('sections.gallery')
   @include('sections.kontak')
   @include('sections.berita')
 @endsection

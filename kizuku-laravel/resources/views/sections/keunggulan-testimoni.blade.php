@@ -10,61 +10,77 @@
       <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ __('messages.home.partner_h2') }}</h2>
       <p class="sec-p" style="margin:0 auto;">{{ __('messages.home.partner_p') }}</p>
     </div>
-    <div class="kampus-grid reveal">
-      @forelse($campuses as $campus)
-        <div class="kampus-card">
-          <!-- Banner -->
-          <div class="kampus-banner">
-            @if($campus->banner)
-              <img src="{{ asset($campus->banner) }}" alt="Banner {{ $campus->name }}">
-            @else
-              <div class="kampus-banner-empty">No Banner</div>
-            @endif
-          </div>
-          
-          <!-- Overlapping Logo -->
-          <div class="kampus-logo-wrapper">
-            <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}">
-          </div>
+    <div class="swiper kampusPartnerSwiper reveal">
+      <div class="swiper-wrapper">
+        @forelse($campuses as $campus)
+          <div class="swiper-slide">
+            <div class="kampus-card" style="height: 100%; margin-bottom: 0;">
+              <!-- Banner -->
+              <div class="kampus-banner">
+                @if($campus->banner)
+                  <img src="{{ asset($campus->banner) }}" alt="Banner {{ $campus->name }}">
+                @else
+                  <div class="kampus-banner-empty">No Banner</div>
+                @endif
+              </div>
+              
+              <!-- Overlapping Logo -->
+              <div class="kampus-logo-wrapper">
+                <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}">
+              </div>
 
-          <!-- Content -->
-          <div class="kampus-content">
-            <h4 class="kampus-name">
-                @if(app()->getLocale() == 'jp' && $campus->getTranslation('name', 'jp', false))
-                    {{ $campus->getTranslation('name', 'jp') }}
-                @else
-                    {{ $campus->getTranslation('name', 'id') ?: $campus->name }}
-                @endif
-            </h4>
-            
-            <div class="kampus-divider"></div>
-            
-            <p class="kampus-desc">
-                @if(app()->getLocale() == 'jp' && $campus->getTranslation('description', 'jp', false))
-                    {{ $campus->getTranslation('description', 'jp') }}
-                @else
-                    {{ $campus->getTranslation('description', 'id') ?: 'Belum ada deskripsi.' }}
-                @endif
-            </p>
+              <!-- Content -->
+              <div class="kampus-content">
+                <h4 class="kampus-name">
+                    @if(app()->getLocale() == 'jp' && $campus->getTranslation('name', 'jp', false))
+                        {{ $campus->getTranslation('name', 'jp') }}
+                    @else
+                        {{ $campus->getTranslation('name', 'id') ?: $campus->name }}
+                    @endif
+                </h4>
+                
+                <div class="kampus-divider"></div>
+                
+                <p class="kampus-desc">
+                    @if(app()->getLocale() == 'jp' && $campus->getTranslation('description', 'jp', false))
+                        {{ $campus->getTranslation('description', 'jp') }}
+                    @else
+                        {{ $campus->getTranslation('description', 'id') ?: 'Belum ada deskripsi.' }}
+                    @endif
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      @empty
-        <div class="col-span-full text-center text-slate-500 py-8" style="grid-column: 1 / -1;">
-          {{ __('messages.home.partner_empty') }}
-        </div>
-      @endforelse
+        @empty
+          <div class="text-center text-slate-500 py-8 w-full">
+            {{ __('messages.home.partner_empty') }}
+          </div>
+        @endforelse
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination !-bottom-2"></div>
+      <!-- Add Navigation -->
+      <div class="swiper-button-next !text-primary !-right-2 md:!right-4 after:!text-xl"></div>
+      <div class="swiper-button-prev !text-primary !-left-2 md:!left-4 after:!text-xl"></div>
     </div>
-    
-    @if(\App\Models\PartnerCampus::count() > 4)
-    <div class="text-center mt-10 reveal">
-      <a href="{{ route('kampus-partner.all') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm transition-colors">
-        {{ __('messages.nav.see_all_partners') }}
-        <span class="material-symbols-outlined text-sm">arrow_forward</span>
-      </a>
-    </div>
-    @endif
   </div>
 </section>
+
+<style>
+  .kampusPartnerSwiper {
+    padding: 20px 10px 50px !important;
+  }
+  .kampusPartnerSwiper .swiper-slide {
+    height: auto;
+    display: flex;
+  }
+  .kampus-card {
+    transition: transform 0.3s ease;
+  }
+  .kampus-card:hover {
+    transform: translateY(-5px);
+  }
+</style>
 
 <!-- ═══ TESTIMONI ═══ -->
 <section id="testimoni" class="section-pad">
@@ -78,34 +94,62 @@
       <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.testi_h2') !!}</h2>
       <p class="sec-p" style="margin:0 auto;">{{ __('messages.home.testi_p') }}</p>
     </div>
-    <div class="testi-grid">
-      @forelse($testimonials as $testi)
-        <div class="testi-card reveal">
-          <div class="stars">
-            @for($i=1; $i<=$testi->stars; $i++)
-              <span>★</span>
-            @endfor
-          </div>
-          <p class="testi-text">"{{ $testi->getTranslation('content', app()->getLocale()) }}"</p>
-          <div class="testi-person">
-            <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">
-              @if($testi->avatar_path)
-                <img src="{{ asset('storage/' . $testi->avatar_path) }}" class="w-full h-full object-cover rounded-full">
-              @else
-                {{ substr($testi->name, 0, 1) }}
-              @endif
+    <div class="swiper testimonialSwiper reveal">
+      <div class="swiper-wrapper">
+        @forelse($testimonials as $testi)
+          <div class="swiper-slide">
+            <div class="testi-card" style="height: 100%; margin-bottom: 0;">
+              <div class="stars">
+                @for($i=1; $i<=$testi->stars; $i++)
+                  <span>★</span>
+                @endfor
+              </div>
+              <p class="testi-text">"{{ $testi->getTranslation('content', app()->getLocale()) }}"</p>
+              <div class="testi-person">
+                <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">
+                  @if($testi->avatar_path)
+                    <img src="{{ asset('storage/' . $testi->avatar_path) }}" class="w-full h-full object-cover rounded-full">
+                  @else
+                    {{ substr($testi->name, 0, 1) }}
+                  @endif
+                </div>
+                <div>
+                  <div class="testi-name">{{ $testi->name }}</div>
+                  <div class="testi-role">{{ $testi->getTranslation('role', app()->getLocale()) }}</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="testi-name">{{ $testi->name }}</div>
-              <div class="testi-role">{{ $testi->getTranslation('role', app()->getLocale()) }}</div>
-            </div>
           </div>
-        </div>
-      @empty
-        <div class="col-span-full text-center text-slate-500 py-12" style="grid-column: 1 / -1;">
-          <p>{{ __('messages.home.testi_empty') ?: 'Belum ada testimoni alumni.' }}</p>
-        </div>
-      @endforelse
+        @empty
+          <div class="text-center text-slate-500 py-12 w-full">
+            <p>{{ __('messages.home.testi_empty') ?: 'Belum ada testimoni alumni.' }}</p>
+          </div>
+        @endforelse
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination !-bottom-2"></div>
+      <!-- Add Navigation -->
+      <div class="swiper-button-next !text-primary !-right-2 md:!right-4 after:!text-xl"></div>
+      <div class="swiper-button-prev !text-primary !-left-2 md:!left-4 after:!text-xl"></div>
     </div>
   </div>
 </section>
+
+<style>
+  .testimonialSwiper {
+    padding: 20px 10px 50px !important;
+  }
+  .testimonialSwiper .swiper-slide {
+    height: auto;
+    display: flex;
+  }
+  .testi-card {
+    width: 100%;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.3s;
+  }
+</style>

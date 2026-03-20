@@ -18,7 +18,6 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::get('/kampus-partner', [HomeController::class, 'allCampuses'])->name('kampus-partner.all');
 Route::get('/program/{slug}', [HomeController::class, 'showProgram'])->name('programs.show');
 Route::get('/berita/{berita}', [HomeController::class, 'showBerita'])->name('berita.show');
 
@@ -64,6 +63,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     // CMS Hero & Testimonials
     Route::resource('hero-sections', \App\Http\Controllers\Admin\HeroSectionController::class);
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
+    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
 
     // CRUD Applicants
     Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);

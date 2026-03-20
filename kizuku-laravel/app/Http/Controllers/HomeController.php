@@ -16,22 +16,18 @@ class HomeController extends Controller
     public function index()
     {
         $beritas = Berita::published()->latest()->take(7)->get();
-        $campuses = \App\Models\PartnerCampus::latest()->take(4)->get();
+        $campuses = \App\Models\PartnerCampus::latest()->get();
         $heroSections = \App\Models\HeroSection::where('is_active', true)->latest()->get();
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
         $featuredPrograms = \App\Models\Program::with(['batches' => function($q) {
             $q->whereIn('status', ['dibuka', 'akan_dibuka']);
         }])->where('is_featured', true)->where('status', 'aktif')->take(5)->get();
         $fasilitas = \App\Models\Fasilitas::orderBy('urutan')->get();
+        $galleries = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
 
-        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms', 'fasilitas'));
+        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms', 'fasilitas', 'galleries'));
     }
 
-    public function allCampuses()
-    {
-        $campuses = \App\Models\PartnerCampus::latest()->get();
-        return view('kampus-partner', compact('campuses'));
-    }
 
     public function showProgram($slug)
     {

@@ -93,6 +93,10 @@
           <span class="material-symbols-outlined text-[22px]">reviews</span>
           <span class="font-medium text-sm">Testimoni</span>
         </a>
+        <a href="{{ route('admin.galleries.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.galleries.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">photo_library</span>
+          <span class="font-medium text-sm">Galeri Foto</span>
+        </a>
         <a href="{{ route('admin.fasilitas.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.fasilitas.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">apartment</span>
           <span class="font-medium text-sm">Fasilitas</span>

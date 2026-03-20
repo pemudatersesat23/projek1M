@@ -22,6 +22,9 @@
   <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
   <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
   <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+  <!-- Swiper.js for Sliders -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <style>
     .lang-switcher-wrapper {
         display: flex;
@@ -265,6 +268,7 @@
       <li><a href="{{ url('/') }}#program">{{ __('messages.nav.program') }}</a></li>
       <li><a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a></li>
       <li><a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a></li>
+      <li><a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a></li>
       <li><a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a></li>
     </ul>
 
@@ -299,6 +303,7 @@
       <a href="{{ url('/') }}#program">{{ __('messages.nav.program') }}</a>
       <a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a>
       <a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a>
+      <a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a>
       <a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a>
     </div>
 
@@ -418,6 +423,78 @@
   <script src="{{ asset('js/navbar.js') }}"></script>
   <script src="{{ asset('js/lang-toggle.js') }}"></script>
   <script>
+    // Initialize Swiper Sliders
+    document.addEventListener('DOMContentLoaded', function() {
+      const testimonialSwiper = new Swiper('.testimonialSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+          640: { slidesPerView: 1 },
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }
+      });
+
+      const gallerySwiper = new Swiper('.gallerySwiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+          640: { slidesPerView: 2 },
+          768: { slidesPerView: 3 },
+          1024: { slidesPerView: 4 },
+        }
+      });
+
+      const kampusPartnerSwiper = new Swiper('.kampusPartnerSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+          640: { slidesPerView: 1 },
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }
+      });
+    });
+
     const waModal = document.getElementById('waModal');
     
     function openWaModal() {
