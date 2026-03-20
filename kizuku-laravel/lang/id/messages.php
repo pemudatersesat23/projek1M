@@ -140,6 +140,20 @@ return [
             'peternakan' => 'Peternakan',
             'gedung' => 'Pembersihan Gedung',
         ],
+        'japanese_levels_simple' => [
+            'belum' => 'Belum belajar',
+            'sedang' => 'Sedang belajar',
+            'n5' => 'JLPT N5',
+            'n4' => 'JLPT N4',
+            'n3' => 'JLPT N3+',
+        ],
+        'questions' => [
+            'contract_3_years' => 'Bersedia kontrak minimal 3 tahun?',
+            'ever_interned' => 'Pernah ikut magang Jepang sebelumnya?',
+            'training_ready' => 'Bersedia pelatihan sebelum berangkat?',
+            'placement_ready' => 'Bersedia ditempatkan di seluruh Jepang?',
+            'class_rules' => 'Bersedia mengikuti aturan kelas',
+        ],
         'majors' => [
             'sipil' => 'Teknik Sipil',
             'arsitektur' => 'Teknik Arsitektur',
@@ -156,6 +170,13 @@ return [
             'jlpt' => 'Persiapan JLPT',
             'tg' => 'Persiapan TG',
             'eng' => 'Persiapan Engineering',
+        ],
+        'course_info' => [
+            'class_choice' => 'Pilihan Kelas',
+            'system_choice' => 'Sistem Kelas',
+            'current_level' => 'Level saat ini',
+            'study_purpose' => 'Tujuan mengikuti kursus',
+            'study_target' => 'Target JLPT / Target keberangkatan',
         ],
         'marriage_status' => [
             'label' => 'Status Pernikahan',
