@@ -421,7 +421,7 @@
   }
   .upload-zone {
     position: relative;
-    padding: 18px 16px;
+    padding: 18px 12px;
     border: 2px dashed #e2e8f0;
     border-radius: 20px;
     background: #f8fafc;
@@ -433,13 +433,36 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    height: 100%;
+    gap: 12px;
+    height: 120px;
+  }
+  .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 1024px) {
+    .docs-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .upload-zone .material-symbols-outlined {
+    font-size: 24px;
+    color: var(--detail-primary);
+  }
+  .upload-text {
+    font-size: 10px;
+    font-weight: 800;
+    color: #475569;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .upload-zone:hover {
     border-color: var(--detail-primary);
     background: white;
-    box-shadow: 0 20px 40px rgba(0,103,163,0.08);
+    box-shadow: 0 20px 50px rgba(0,103,163,0.06);
     transform: translateY(-2px);
   }
   .upload-zone input[type="file"] {
@@ -450,64 +473,47 @@
     z-index: 10;
   }
   .upload-icon {
-    width: 44px;
-    height: 44px;
+    width: 64px;
+    height: 64px;
     background: white;
-    color: var(--detail-primary);
-    border-radius: 14px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+    color: var(--detail-primary);
+    box-shadow: 0 10px 25px rgba(0,103,163,0.08);
     transition: all 0.3s;
-    border: 1px solid #f1f5f9;
+  }
+  .upload-icon .material-symbols-outlined {
+    font-size: 32px;
   }
   .upload-zone:hover .upload-icon {
     background: var(--detail-primary);
     color: white;
-    transform: scale(1.05) rotate(5deg);
+    transform: scale(1.1) rotate(5deg);
   }
   .upload-text {
     font-size: 13px;
     font-weight: 800;
     color: #334155;
-    transition: all 0.3s;
+    letter-spacing: -0.2px;
   }
-  .file-name-display {
-    padding: 6px 14px;
-    background: #f1f5f9;
-    border-radius: 99px;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--detail-primary);
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .file-selected {
+  .upload-zone.file-selected {
     border-style: solid;
     border-color: #10b981;
-    background: #f0fdf4 !important;
+    background: #f0fdf4;
   }
-  .file-selected .upload-icon {
+  .upload-zone.file-selected .upload-icon {
     background: #10b981;
     color: white;
-    border-color: #10b981;
+    box-shadow: 0 10px 25px rgba(16,185,129,0.2);
   }
-  .file-selected .file-name-display {
-    display: block;
-  }
-  .file-selected .upload-text {
-    color: #059669;
-    font-size: 11px;
+  .file-name-display {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    max-width: 90%;
+    margin-top: 4px;
   }
 
   .reveal {
@@ -752,8 +758,22 @@
     <div class="container">
       <div class="form-card">
         <div class="form-header">
-          <h2 class="form-title">Formulir Pendaftaran Online</h2>
-          <p class="form-subtitle">Pendaftaran Program {{ $program->nama_program }} - {{ $activeBatch->nama_batch }}</p>
+          <h2 class="form-title">{{ __('messages.home.kontak_form_title') }}</h2>
+          <p class="form-subtitle">
+            {{ __('messages.home.mc_progs.open') === '募集中' ? 'プログラム登録' : 'Pendaftaran Program' }} 
+            @if(App::getLocale() === 'jp')
+                {{ [
+                    'tokutei-ginou-tg' => '特定技能 (TG)',
+                    'kenshusei-jishussei-magang-jepang' => '技能実習生 (研修生)',
+                    'engineer-jepang-gijinkoku' => 'エンジニア',
+                    'engineer-jepang-ex-internship' => 'エンジニア (経験者)',
+                    'kursus-bahasa-jepang-offline' => '日本語クラス (オフライン)',
+                ][$program->slug] ?? $program->nama_program }}
+            @else
+                {{ $program->nama_program }}
+            @endif
+            - {{ $activeBatch->nama_batch }}
+          </p>
         </div>
 
         @if(session('success'))
@@ -770,43 +790,43 @@
           {{-- SECTION: DATA PRIBADI (Common for all) --}}
           <div class="form-section-label">
             <span class="material-symbols-outlined">person</span>
-            <span class="section-text">Bagian 1: Data Pribadi</span>
+            <span class="section-text">{{ __('messages.form.sections.pribadi') }}</span>
           </div>
 
           <div class="form-group-custom form-full">
-            <span class="input-label">Nama Lengkap (sesuai KTP/Paspor) *</span>
-            <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="Masukkan nama lengkap" required>
+            <span class="input-label">{{ __('messages.form.name') }} *</span>
+            <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.ktp') }}" required>
           </div>
 
           <div class="form-group-custom form-half">
-            <span class="input-label">Jenis Kelamin *</span>
+            <span class="input-label">{{ __('messages.form.gender') }} *</span>
             <select name="jenis_kelamin" class="premium-input premium-select" required>
-              <option value="" disabled selected>Pilih Jenis Kelamin</option>
-              <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-              <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+              <option value="" disabled selected>{{ __('messages.home.kontak_form_program_ph') === '-- プログラムを選択 --' ? '性別を選択' : 'Pilih Jenis Kelamin' }}</option>
+              <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>{{ __('messages.form.marriage_status.single') === '未婚 (独身)' ? '男性' : 'Laki-laki' }}</option>
+              <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>{{ __('messages.form.marriage_status.single') === '未婚 (独身)' ? '女性' : 'Perempuan' }}</option>
             </select>
           </div>
 
           <div class="form-group-custom form-half">
-            <span class="input-label">Tempat & Tanggal Lahir *</span>
+            <span class="input-label">{{ __('messages.form.pob_dob') }} *</span>
             <div class="flex gap-2">
-              <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input w-2/3" placeholder="Contoh: Makassar" required>
+              <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input w-2/3" placeholder="{{ __('messages.form.placeholders.pob') }}" required>
               <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input w-1/3" required>
             </div>
           </div>
 
           <div class="form-group-custom form-full">
-            <span class="input-label">Alamat Domisili Lengkap *</span>
-            <textarea name="alamat" rows="2" class="premium-input" placeholder="Alamat lengkap saat ini" required>{{ old('alamat') }}</textarea>
+            <span class="input-label">{{ __('messages.form.domicile') }} *</span>
+            <textarea name="alamat" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.address') }}" required>{{ old('alamat') }}</textarea>
           </div>
 
           <div class="form-group-custom form-half">
-            <span class="input-label">Nomor HP / WhatsApp Aktif *</span>
+            <span class="input-label">{{ __('messages.form.phone') }} *</span>
             <input type="text" name="phone" value="{{ old('phone') }}" class="premium-input" placeholder="08XXXXXXXXXX" required>
           </div>
 
           <div class="form-group-custom form-half">
-            <span class="input-label">Email Aktif *</span>
+            <span class="input-label">{{ __('messages.form.email') }} *</span>
             <input type="email" name="email" value="{{ old('email') }}" class="premium-input" placeholder="nama@email.com" required>
           </div>
 
@@ -814,49 +834,49 @@
           @if($program->slug === 'tokutei-ginou-tg')
             <div class="form-section-label">
               <span class="material-symbols-outlined">school</span>
-              <span class="section-text">Bagian 2: Pendidikan & Keahlian</span>
+              <span class="section-text">{{ __('messages.form.sections.pendidikan') }}</span>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Pendidikan Terakhir *</span>
+              <span class="input-label">{{ __('messages.form.education') }} *</span>
               <input type="text" name="pendidikan" value="{{ old('pendidikan') }}" class="premium-input" placeholder="SMA/D3/S1" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Jurusan / Program Studi *</span>
-              <input type="text" name="additional_data[jurusan]" class="premium-input" placeholder="Masukkan jurusan" required>
+              <span class="input-label">{{ __('messages.form.major_study') }} *</span>
+              <input type="text" name="additional_data[jurusan]" class="premium-input" placeholder="{{ __('messages.form.placeholders.major') }}" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Nama Sekolah/Universitas *</span>
-              <input type="text" name="additional_data[universitas]" class="premium-input" placeholder="Nama sekolah/kampus" required>
+              <span class="input-label">{{ __('messages.form.school_univ') }} *</span>
+              <input type="text" name="additional_data[universitas]" class="premium-input" placeholder="{{ __('messages.form.placeholders.univ') }}" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Tahun Lulus *</span>
-              <input type="number" name="additional_data[tahun_lulus]" class="premium-input" placeholder="Contoh: 2022" required>
+              <span class="input-label">{{ __('messages.form.grad_year') }} *</span>
+              <input type="number" name="additional_data[tahun_lulus]" class="premium-input" placeholder="{{ __('messages.form.placeholders.grad_year') }}" required>
             </div>
             <div class="form-group-custom form-full">
-              <span class="input-label">Kemampuan Bahasa Jepang *</span>
-              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="Contoh: JLPT N4 / JFT-Basic A2" required>
+              <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
+              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="{{ __('messages.form.placeholders.jp_level') }}" required>
             </div>
             <div class="form-full">
-              <span class="input-label" style="display:block; margin-bottom:16px;">Bidang TG yang diminati *</span>
+              <span class="input-label" style="display:block; margin-bottom:16px;">{{ __('messages.form.placeholders.ssw_field') }} *</span>
               <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
                 @php
                   $tgFields = [
-                    'makanan' => '1. Pengolahan Makanan',
-                    'pertanian' => '2. Pertanian',
-                    'kaigo' => '3. Perawatan Lansia (Kaigo)',
-                    'restoran' => '4. Restoran / Layanan Makanan',
-                    'hotel' => '5. Perhotelan',
-                    'konstruksi' => '6. Konstruksi',
-                    'manufaktur' => '7. Manufaktur Mesin & Peralatan',
-                    'otomotif' => '8. Otomotif',
-                    'peternakan' => '9. Peternakan',
-                    'cleaning' => '10. Pembersihan Gedung'
+                    'makanan' => __('messages.form.ssw_fields.makanan'),
+                    'pertanian' => __('messages.form.ssw_fields.pertanian'),
+                    'kaigo' => __('messages.form.ssw_fields.kaigo'),
+                    'restoran' => __('messages.form.ssw_fields.restoran'),
+                    'hotel' => __('messages.form.ssw_fields.hotel'),
+                    'konstruksi' => __('messages.form.ssw_fields.konstruksi'),
+                    'manufaktur' => __('messages.form.ssw_fields.manufaktur'),
+                    'otomotif' => __('messages.form.ssw_fields.otomotif'),
+                    'peternakan' => __('messages.form.ssw_fields.peternakan'),
+                    'cleaning' => __('messages.form.ssw_fields.gedung')
                   ];
                 @endphp
                 @foreach($tgFields as $key => $label)
                   <label style="display: flex; align-items: center; gap: 12px; padding: 16px; background: #f8fafc; border-radius: 16px; border: 1px solid #f1f5f9; cursor: pointer;">
                     <input type="checkbox" name="additional_data[bidang_tg][]" value="{{ $key }}" style="width: 20px; height: 20px; accent-color: var(--primary);">
-                    <span style="font-size: 13px; font-weight: 700; color: #334155;">{{ $label }}</span>
+                    <span style="font-size: 13px; font-weight: 700; color: #334155;">{{ $loop->iteration }}. {{ $label }}</span>
                   </label>
                 @endforeach
               </div>
@@ -864,182 +884,194 @@
           @elseif($program->slug === 'engineer-jepang-gijinkoku')
             <div class="form-section-label">
               <span class="material-symbols-outlined">engineering</span>
-              <span class="section-text">Bagian 2: Pendidikan & Keahlian</span>
+              <span class="section-text">{{ __('messages.form.sections.pendidikan') }}</span>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Jurusan (Pilih Satu) *</span>
+              <span class="input-label">{{ __('messages.form.major_study') }} *</span>
               <select name="additional_data[jurusan]" class="premium-input premium-select" required>
-                <option value="Teknik Sipil">Teknik Sipil</option>
-                <option value="Teknik Arsitektur">Teknik Arsitektur</option>
-                <option value="Teknik Mesin Elektro">Teknik Mesin Elektro</option>
-                <option value="Teknik Mesin">Teknik Mesin</option>
-                <option value="Teknik Informatika">Teknik Informatika</option>
-                <option value="Lainya">Lainya</option>
+                @foreach(['sipil', 'arsitektur', 'mesin_elektro', 'mesin', 'informatika', 'lainnya'] as $mj)
+                  <option value="{{ __('messages.form.majors.' . $mj) }}">{{ __('messages.form.majors.' . $mj) }}</option>
+                @endforeach
               </select>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Nama Universitas *</span>
-              <input type="text" name="additional_data[universitas]" class="premium-input" placeholder="Nama Kampus" required>
+              <span class="input-label">{{ __('messages.form.school_univ') }} *</span>
+              <input type="text" name="additional_data[universitas]" class="premium-input" placeholder="{{ __('messages.form.placeholders.univ') }}" required>
             </div>
             <div class="form-group-custom form-third">
-              <span class="input-label">Tahun Lulus *</span>
+              <span class="input-label">{{ __('messages.form.grad_year') }} *</span>
               <input type="number" name="additional_data[tahun_lulus]" class="premium-input" required>
             </div>
             <div class="form-group-custom form-third">
-              <span class="input-label">Level Bahasa Jepang *</span>
-              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="N3 / N2" required>
+              <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
+              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="{{ __('messages.form.placeholders.jp_level') }}" required>
             </div>
             <div class="form-group-custom form-third">
-              <span class="input-label">Pengalaman Kerja *</span>
-              <input type="text" name="pengalaman_kerja" class="premium-input" placeholder="Contoh: 2 Tahun di PT X" required>
+              <span class="input-label">{{ __('messages.form.experience_field') }} *</span>
+              <input type="text" name="pengalaman_kerja" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}" required>
             </div>
           @elseif($program->slug === 'kenshusei-jishussei-magang-jepang')
             <div class="form-section-label">
               <span class="material-symbols-outlined">accessibility_new</span>
-              <span class="section-text">Bagian 2: Pendidikan & Keahlian</span>
+              <span class="section-text">{{ __('messages.form.sections.pendidikan') }}</span>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Tinggi & Berat Badan *</span>
-              <input type="text" name="additional_data[tb_bb]" class="premium-input" placeholder="Contoh: 170cm / 60kg" required>
+              <span class="input-label">{{ __('messages.form.physical') }} *</span>
+              <input type="text" name="additional_data[tb_bb]" class="premium-input" placeholder="{{ __('messages.form.placeholders.height_weight') }}" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Status Pernikahan *</span>
+              <span class="input-label">{{ __('messages.form.marriage_status.label') }} *</span>
               <select name="additional_data[status_pernikahan]" class="premium-input premium-select" required>
-                <option value="single">Lajang</option>
-                <option value="married">Menikah</option>
+                <option value="single">{{ __('messages.form.marriage_status.single') }}</option>
+                <option value="married">{{ __('messages.form.marriage_status.married') }}</option>
               </select>
             </div>
             <div class="form-group-custom form-third">
-              <span class="input-label">Pendidikan Terakhir *</span>
+              <span class="input-label">{{ __('messages.form.education') }} *</span>
               <input type="text" name="pendidikan" class="premium-input" required>
             </div>
             <div class="form-group-custom form-third">
-              <span class="input-label">Jurusan (Jika ada)</span>
-              <input type="text" name="additional_data[jurusan]" class="premium-input">
+              <span class="input-label">{{ __('messages.form.major_study') }}</span>
+              <input type="text" name="additional_data[jurusan]" class="premium-input" placeholder="{{ __('messages.form.docs.optional') }}">
             </div>
             <div class="form-group-custom form-third">
-              <span class="input-label">Tahun Lulus</span>
-              <input type="number" name="additional_data[tahun_lulus]" class="premium-input">
+              <span class="input-label">{{ __('messages.form.grad_year') }}</span>
+              <input type="number" name="additional_data[tahun_lulus]" class="premium-input" placeholder="{{ __('messages.form.placeholders.grad_year') }}">
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Bidang Magang diminati *</span>
-              <input type="text" name="additional_data[bidang_magang]" class="premium-input" placeholder="Contoh: Konstruksi / Pertanian" required>
+              <span class="input-label">{{ __('messages.form.placeholders.ssw_field') }} *</span>
+              <input type="text" name="additional_data[bidang_magang]" class="premium-input" placeholder="{{ __('messages.form.placeholders.major_kenshu') }}" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Level Bahasa Jepang *</span>
-              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="N5 / Belum belajar" required>
+              <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
+              <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="{{ __('messages.form.placeholders.jp_level') }}" required>
             </div>
           @elseif($program->slug === 'kursus-bahasa-jepang-offline')
             <div class="form-section-label">
               <span class="material-symbols-outlined">menu_book</span>
-              <span class="section-text">Bagian 2: Pilihan Program</span>
+              <span class="section-text">{{ __('messages.form.sections.pilihan') }}</span>
             </div>
             <div class="form-full">
-              <span class="input-label mb-4 block">Pilihan Kelas *</span>
+              <span class="input-label mb-4 block">{{ __('messages.form.shift') }} *</span>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                @foreach(['Kelas N5', 'N4', 'N3', 'Kaiwa', 'Persiapan JLPT', 'Persiapan TG', 'Persiapan Engineering'] as $kelas)
+                @php
+                  $courseChoices = [
+                    'n5' => __('messages.form.course_levels.n5'),
+                    'n4' => __('messages.form.course_levels.n4'),
+                    'n3' => __('messages.form.course_levels.n3'),
+                    'kaiwa' => __('messages.form.course_levels.kaiwa'),
+                    'jlpt' => __('messages.form.course_levels.jlpt'),
+                    'tg' => __('messages.form.course_levels.tg'),
+                    'eng' => __('messages.form.course_levels.eng'),
+                  ];
+                @endphp
+                @foreach($courseChoices as $key => $lbl)
                   <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer hover:bg-white transition-all">
-                    <input type="radio" name="additional_data[pilihan_kelas]" value="{{ $kelas }}" class="w-5 h-5 text-primary">
-                    <span class="text-xs font-bold">{{ $kelas }}</span>
+                    <input type="radio" name="additional_data[pilihan_kelas]" value="{{ $lbl }}" class="w-5 h-5 text-primary">
+                    <span class="text-xs font-bold">{{ $lbl }}</span>
                   </label>
                 @endforeach
               </div>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Sistem Kelas *</span>
+              <span class="input-label">{{ __('messages.form.system') }} *</span>
               <select name="additional_data[sistem_belajar]" class="premium-input premium-select" required>
-                <option value="online">Online</option>
-                <option value="offline">Offline</option>
+                <option value="online">{{ __('messages.form.online') }}</option>
+                <option value="offline">{{ __('messages.form.offline') }}</option>
               </select>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Level saat ini *</span>
-              <input type="text" name="additional_data[level_sekarang]" class="premium-input" placeholder="Contoh: Pemula / Dasar" required>
+              <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
+              <input type="text" name="additional_data[level_sekarang]" class="premium-input" placeholder="{{ __('messages.form.placeholders.jp_level') }}" required>
             </div>
             <div class="form-section-label">
               <span class="material-symbols-outlined">target</span>
-              <span class="section-text">Bagian 3: Tujuan Belajar</span>
+              <span class="section-text">{{ __('messages.form.sections.tujuan') }}</span>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Tujuan mengikuti kursus *</span>
+              <span class="input-label">{{ __('messages.program.focus') }} *</span>
               <input type="text" name="additional_data[tujuan_kursus]" class="premium-input" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Target JLPT / Target Keberangkatan</span>
-              <input type="text" name="additional_data[target_jlpt]" class="premium-input">
+              <span class="input-label">{{ __('messages.form.placeholders.grad_year') }} / {{ __('messages.form.placeholders.motiv') }}</span>
+              <input type="text" name="additional_data[target_jlpt]" class="premium-input" placeholder="JLPT / {{ __('messages.nav.login') === 'ログイン' ? '日本への出発' : 'Keberangkatan' }}">
             </div>
           @elseif($program->slug === 'engineer-jepang-ex-internship')
             <div class="form-section-label">
               <span class="material-symbols-outlined">history_edu</span>
-              <span class="section-text">Bagian 2: Pendidikan & Keahlian</span>
+              <span class="section-text">{{ __('messages.form.sections.pendidikan') }}</span>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Jurusan / Program Studi *</span>
+              <span class="input-label">{{ __('messages.form.major_study') }} *</span>
               <select name="additional_data[jurusan]" class="premium-input premium-select" required>
-                <option value="Teknik Mesin">Teknik Mesin</option>
-                <option value="Teknik Elektro">Teknik Elektro</option>
-                <option value="Teknik Sipil">Teknik Sipil</option>
-                <option value="Lainya">Lainya</option>
+                @foreach(['mesin', 'mesin_elektro', 'sipil', 'lainnya'] as $mj)
+                  <option value="{{ __('messages.form.majors.' . $mj) }}">{{ __('messages.form.majors.' . $mj) }}</option>
+                @endforeach
               </select>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Nama Sekolah/Universitas *</span>
+              <span class="input-label">{{ __('messages.form.school_univ') }} *</span>
               <input type="text" name="additional_data[universitas]" class="premium-input" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Tahun Lulus *</span>
+              <span class="input-label">{{ __('messages.form.grad_year') }} *</span>
               <input type="number" name="additional_data[tahun_lulus]" class="premium-input" required>
             </div>
             <div class="form-group-custom form-half">
-              <span class="input-label">Kemampuan Bahasa Jepang *</span>
+              <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
               <select name="additional_data[level_bahasa]" class="premium-input premium-select" required>
-                <option value="Belum belajar">Belum belajar</option>
-                <option value="Sedang belajar">Sedang belajar</option>
+                <option value="Belum belajar">{{ __('messages.form.jp_skill') === '日本語能力' ? '未学習' : 'Belum belajar' }}</option>
+                <option value="Sedang belajar">{{ __('messages.form.jp_skill') === '日本語能力' ? '学習中' : 'Sedang belajar' }}</option>
                 <option value="JLPT N5">JLPT N5</option>
                 <option value="JLPT N4">JLPT N4</option>
-                <option value="JLPT N3 atau lebih">JLPT N3 atau lebih</option>
+                <option value="JLPT N3 atau lebih">JLPT N3+</option>
               </select>
             </div>
             <div class="form-group-custom form-full">
-              <span class="input-label">Pengalaman Kerja (nama perusahaan, posisi, lama bekerja)</span>
-              <textarea name="pengalaman_kerja" rows="2" class="premium-input"></textarea>
+              <span class="input-label">{{ __('messages.form.experience_field') }}</span>
+              <textarea name="pengalaman_kerja" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}"></textarea>
             </div>
           @endif
 
           @if($program->slug === 'tokutei-ginou-tg')
             <div class="form-group-custom form-full">
-              <span class="input-label">Pengalaman Kerja *</span>
-              <textarea name="pengalaman_kerja" rows="2" class="premium-input" placeholder="Contoh: 1 Tahun di Restoran X" required></textarea>
+              <span class="input-label">{{ __('messages.form.experience_field') }} *</span>
+              <textarea name="pengalaman_kerja" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}" required></textarea>
             </div>
           @endif
 
           {{-- SECTION: DOKUMEN --}}
           <div class="form-section-label">
             <span class="material-symbols-outlined">cloud_upload</span>
-            <span class="section-text">Bagian Dokumen Unggahan</span>
+            <span class="section-text">{{ __('messages.form.sections.dokumen') }}</span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 form-full">
+          <div class="docs-grid form-full">
             @php
               $docs = [];
               if($program->slug === 'tokutei-ginou-tg') {
-                $docs = ['ktp'=>'KTP', 'kk'=>'KK', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah', 'sertifikat'=>'Sertifikat JLPT/Keterampilan', 'bukti_follow'=>'Bukti Follow IG & TikTok'];
+                $docs = ['ktp'=>__('messages.form.docs.ktp'), 'kk'=>__('messages.form.docs.kk'), 'foto'=>__('messages.form.docs.foto'), 'ijazah'=>__('messages.form.docs.ijazah'), 'sertifikat'=>__('messages.form.docs.sertifikat'), 'bukti_follow'=>__('messages.form.docs.bukti_follow')];
               } elseif($program->slug === 'engineer-jepang-gijinkoku') {
-                $docs = ['cv'=>'CV', 'ktp'=>'KTP', 'kk'=>'KK', 'foto'=>'Pas Foto', 'ijazah'=>'Ijazah', 'transkrip'=>'Transkrip Nilai', 'sertifikat'=>'Sertifikat JLPT/Keterampilan', 'bukti_follow'=>'Bukti Follow IG & TikTok'];
+                $docs = ['cv'=>__('messages.form.docs.cv'), 'ktp'=>__('messages.form.docs.ktp'), 'kk'=>__('messages.form.docs.kk'), 'foto'=>__('messages.form.docs.foto'), 'ijazah'=>__('messages.form.docs.ijazah'), 'transkrip'=>__('messages.form.docs.transkrip'), 'sertifikat'=>__('messages.form.docs.sertifikat'), 'bukti_follow'=>__('messages.form.docs.bukti_follow')];
               } elseif($program->slug === 'kenshusei-jishussei-magang-jepang') {
-                $docs = ['ktp'=>'KTP', 'kk'=>'KK', 'ijazah'=>'Ijazah', 'foto'=>'Pas Foto', 'sertifikat'=>'Sertifikat Bahasa (jika ada)', 'bukti_follow'=>'Bukti Follow IG & TikTok'];
+                $docs = ['ktp'=>__('messages.form.docs.ktp'), 'kk'=>__('messages.form.docs.kk'), 'ijazah'=>__('messages.form.docs.ijazah'), 'foto'=>__('messages.form.docs.foto'), 'sertifikat'=>__('messages.form.docs.sertifikat_bahasa'), 'bukti_follow'=>__('messages.form.docs.bukti_follow')];
               } elseif($program->slug === 'kursus-bahasa-jepang-offline') {
-                $docs = ['bukti_follow'=>'Bukti Follow IG & TikTok'];
+                $docs = ['bukti_follow'=>__('messages.form.docs.bukti_follow')];
               } else {
-                $docs = ['cv'=>'CV', 'ijazah'=>'Ijazah', 'transkrip'=>'Transkrip Nilai', 'sertifikat'=>'Sertifikat (jika ada)', 'bukti_follow'=>'Bukti Follow IG & TikTok'];
+                $docs = ['cv'=>__('messages.form.docs.cv'), 'ijazah'=>__('messages.form.docs.ijazah'), 'transkrip'=>__('messages.form.docs.transkrip'), 'sertifikat'=>__('messages.form.docs.sertifikat'), 'bukti_follow'=>__('messages.form.docs.bukti_follow')];
               }
             @endphp
 
             @foreach($docs as $name => $label)
               <div class="form-group-custom">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block">{{ $label }} @if(!Str::contains($label, 'jika ada') && $name !== 'sertifikat') <span class="text-red-500">*</span> @endif</label>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block">
+                  {{ $label }} 
+                  @if(!Str::contains(strtolower($label), ['jika ada', 'optional', '任意']) && $name !== 'sertifikat') 
+                    <span class="text-red-500">*</span> 
+                  @endif
+                </label>
                 <div class="upload-zone" id="zone-{{ $name }}">
-                  <input type="file" name="{{ $name }}" onchange="updateFileName(this, 'zone-{{ $name }}')" @if(!Str::contains($label, 'jika ada') && $name !== 'sertifikat') required @endif>
+                  <input type="file" name="{{ $name }}" onchange="updateFileName(this, 'zone-{{ $name }}')" @if(!Str::contains(strtolower($label), ['jika ada', 'optional', '任意']) && $name !== 'sertifikat') required @endif>
                   <div class="upload-icon">
                     <span class="material-symbols-outlined">@if($name=='foto')image @elseif($name=='cv'||$name=='transkrip'||$name=='ijazah')description @else cloud_upload @endif</span>
                   </div>
@@ -1054,42 +1086,42 @@
           @if($program->slug !== 'kursus-bahasa-jepang-offline')
             <div class="form-section-label">
               <span class="material-symbols-outlined">info</span>
-              <span class="section-text">Bagian Informasi Tambahan</span>
+              <span class="section-text">{{ __('messages.form.sections.tambahan') }}</span>
             </div>
             
             <div class="form-group-custom form-full">
-              <span class="input-label">Motivasi bekerja di Jepang *</span>
-              <textarea name="additional_data[motivasi]" rows="2" class="premium-input" placeholder="Apa motivasi utama Anda?" required></textarea>
+              <span class="input-label">{{ __('messages.form.motiv_japan') }} *</span>
+              <textarea name="additional_data[motivasi]" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.motivation') }}" required></textarea>
             </div>
 
-            @if($program->slug === 'tokutei-ginou-tg')
+            @if($program->slug === 'tokutei-ginou-tg' || $program->slug === 'engineer-jepang-gijinkoku')
               <div class="form-group-custom form-half">
-                <span class="input-label">Bersedia kontrak minimal 3 tahun? *</span>
+                <span class="input-label">{{ __('messages.form.contract_3y') }} *</span>
                 <select name="additional_data[kontrak_3_tahun]" class="premium-input premium-select" required>
-                  <option value="ya">Ya, Bersedia</option>
-                  <option value="tidak">Tidak</option>
+                  <option value="ya">{{ __('messages.form.online') === 'オンライン' ? 'はい、可能です' : 'Ya, Bersedia' }}</option>
+                  <option value="tidak">{{ __('messages.form.online') === 'オンライン' ? 'いいえ' : 'Tidak' }}</option>
                 </select>
               </div>
-              <div class="form-group-custom form-half">
-                <span class="input-label">Pernah ikut magang Jepang sebelumnya? *</span>
+              <div class="form-group-custom {{ $program->slug === 'tokutei-ginou-tg' ? 'form-half' : 'form-full' }}">
+                <span class="input-label">{{ __('messages.form.prev_intern') }} *</span>
                 <select name="additional_data[pernah_magang]" class="premium-input premium-select" required>
-                  <option value="tidak">Belum Pernah</option>
-                  <option value="ya">Pernah</option>
+                  <option value="tidak">{{ __('messages.form.online') === 'オンライン' ? 'いいえ' : 'Belum Pernah' }}</option>
+                  <option value="ya">{{ __('messages.form.online') === 'オンライン' ? 'はい、あります' : 'Pernah' }}</option>
                 </select>
               </div>
             @elseif($program->slug === 'kenshusei-jishussei-magang-jepang')
               <div class="form-group-custom form-half">
-                <span class="input-label">Bersedia pelatihan sebelum berangkat? *</span>
+                <span class="input-label">{{ __('messages.form.training_ready') }} *</span>
                 <select name="additional_data[bersedia_pelatihan]" class="premium-input premium-select" required>
-                  <option value="ya">Ya, Bersedia</option>
-                  <option value="tidak">Tidak</option>
+                  <option value="ya">{{ __('messages.form.online') === 'オンライン' ? 'はい、可能です' : 'Ya, Bersedia' }}</option>
+                  <option value="tidak">{{ __('messages.form.online') === 'オンライン' ? 'いいえ' : 'Tidak' }}</option>
                 </select>
               </div>
               <div class="form-group-custom form-half">
-                <span class="input-label">Bersedia ditempatkan di seluruh Jepang? *</span>
+                <span class="input-label">{{ __('messages.form.placement_ready') }} *</span>
                 <select name="additional_data[bersedia_penempatan]" class="premium-input premium-select" required>
-                  <option value="ya">Ya, Bersedia</option>
-                  <option value="tidak">Tidak</option>
+                  <option value="ya">{{ __('messages.form.online') === 'オンライン' ? 'はい、可能です' : 'Ya, Bersedia' }}</option>
+                  <option value="tidak">{{ __('messages.form.online') === 'オンライン' ? 'いいえ' : 'Tidak' }}</option>
                 </select>
               </div>
             @endif
@@ -1098,37 +1130,37 @@
           {{-- SECTION: PERNYATAAN --}}
           <div class="form-section-label">
             <span class="material-symbols-outlined">verified_user</span>
-            <span class="section-text">Bagian Pernyataan & Persetujuan</span>
+            <span class="section-text">{{ __('messages.form.sections.pernyataan') }}</span>
           </div>
 
           <div class="form-full" style="display: flex; flex-direction: column; gap: 16px; padding: 32px; background: #f8fafc; border-radius: 32px; border: 1px solid #f1f5f9;">
             <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
               <input type="checkbox" name="additional_data[agreement_truth]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
-              <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">Saya menyatakan bahwa seluruh data yang saya masukkan adalah benar dan dapat dipertanggungjawabkan. *</span>
+              <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_truth') }} *</span>
             </label>
 
             @if($program->slug === 'tokutei-ginou-tg' || $program->slug === 'kenshusei-jishussei-magang-jepang')
               <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
                 <input type="checkbox" name="additional_data[agreement_selection]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
-                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">Saya bersedia mengikuti seluruh tahapan seleksi dan pelatihan yang telah ditentukan. *</span>
+                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_selection') }} *</span>
               </label>
               <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
                 <input type="checkbox" name="additional_data[agreement_makassar]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
-                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">Saya siap mengikuti seleksi offline (tatap muka) di Makassar jika diperlukan. *</span>
+                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_makassar') }} *</span>
               </label>
             @endif
 
             @if($program->slug === 'kursus-bahasa-jepang-offline')
               <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
                 <input type="checkbox" name="additional_data[agreement_rules]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
-                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">Saya bersedia mengikuti seluruh aturan kelas yang berlaku di LPK Kizuku International Academy. *</span>
+                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_rules') }} *</span>
               </label>
             @endif
           </div>
 
           <div class="form-full pt-10">
             <button type="submit" class="btn btn-primary w-full py-6 rounded-[32px] text-xl font-black shadow-3xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-              Kirim Pendaftaran Sekarang
+              {{ __('messages.form.submit') }}
             </button>
           </div>
         </form>
