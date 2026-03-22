@@ -617,6 +617,43 @@
             @endif
           </div>
 
+          @if($program->slug === 'tokutei-ginou-tg')
+          <h3 class="pd-section-h3" style="margin-top: 40px;">10 Bidang Pekerjaan Tokutei Ginou</h3>
+          <p style="color: var(--slate-500); margin-bottom: 24px; font-weight: 500; font-size: 16px; line-height: 1.6;">Program Tokutei Ginou (SSW) membuka peluang kerja yang terjamin dan transparan di berbagai sektor industri esensial di Jepang. Berikut adalah 10 bidang keahlian utama yang dapat Anda pilih:</p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 48px;">
+            @php
+              $tgFields = [
+                  ['icon' => 'restaurant', 'name' => 'Pengolahan Makanan'],
+                  ['icon' => 'agriculture', 'name' => 'Pertanian'],
+                  ['icon' => 'elderly', 'name' => 'Perawatan Lansia (Kaigo)'],
+                  ['icon' => 'local_dining', 'name' => 'Restoran / Layanan Makanan'],
+                  ['icon' => 'bed', 'name' => 'Perhotelan'],
+                  ['icon' => 'construction', 'name' => 'Konstruksi'],
+                  ['icon' => 'precision_manufacturing', 'name' => 'Manufaktur Mesin & Peralatan'],
+                  ['icon' => 'directions_car', 'name' => 'Otomotif'],
+                  ['icon' => 'pets', 'name' => 'Peternakan'],
+                  ['icon' => 'cleaning_services', 'name' => 'Pembersihan Gedung']
+              ];
+            @endphp
+            @foreach($tgFields as $index => $field)
+              <div class="tg-field-card" style="display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9; background: white; transition: all 0.3s; cursor: default;">
+                <div class="tg-field-icon" style="width: 48px; height: 48px; border-radius: 12px; background: #f8fafc; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s;">
+                  <span class="material-symbols-outlined">{{ $field['icon'] }}</span>
+                </div>
+                <div>
+                  <span style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 2px;">Bidang {{ $index + 1 }}</span>
+                  <span style="display: block; font-size: 14px; font-weight: 800; color: #0f1c23;">{{ $field['name'] }}</span>
+                </div>
+              </div>
+            @endforeach
+          </div>
+          <style>
+            .tg-field-card:hover { border-color: rgba(0, 103, 163, 0.3) !important; box-shadow: 0 10px 30px rgba(0,103,163,0.06); }
+            .tg-field-card:hover .tg-field-icon { background: rgba(0, 103, 163, 0.1) !important; color: var(--detail-primary) !important; }
+            @media (max-width: 768px) { .tg-field-card { padding: 12px; } }
+          </style>
+          @endif
+
           <h3 class="pd-section-h3">{{ __('messages.program.benefit') }}</h3>
           <div class="pd-benefit-list reveal">
             @php 
