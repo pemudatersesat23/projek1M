@@ -70,6 +70,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
     Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
     Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
+    Route::resource('keunggulans', \App\Http\Controllers\Admin\KeunggulanController::class);
 
     // CRUD Applicants
     Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);

@@ -4,6 +4,7 @@
 
 @section('content')
   @include('sections.hero')
+  @include('sections.keunggulan')
   @include('sections.program')
   @include('sections.fasilitas')
   @include('sections.keunggulan-testimoni')

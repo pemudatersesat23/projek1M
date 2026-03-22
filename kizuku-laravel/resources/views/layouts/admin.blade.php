@@ -105,6 +105,10 @@
           <span class="material-symbols-outlined text-[22px]">quiz</span>
           <span class="font-medium text-sm">FAQ Global</span>
         </a>
+        <a href="{{ route('admin.keunggulans.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.keunggulans.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">verified_user</span>
+          <span class="font-medium text-sm">Keunggulan Kizuku</span>
+        </a>
         <div class="pt-2 pb-1 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manajemen Program</div>
         <a href="{{ route('admin.programs.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.programs.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">assignment</span>
