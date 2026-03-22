@@ -94,11 +94,37 @@
 </section>
 
 <!-- ═══ STATS ═══ -->
+@php
+    $statsActive = \App\Models\Setting::get('stats_active', 1);
+@endphp
+@if($statsActive == 1)
 <div class="stats-strip">
   <div class="stats-inner container">
-    <div class="stat-item"><div class="stat-num">1000<span>+</span></div><div class="stat-lbl">{{ __('messages.home.stats.alumni') }}</div></div>
-    <div class="stat-item"><div class="stat-num">98<span>%</span></div><div class="stat-lbl">{{ __('messages.home.stats.success') }}</div></div>
-    <div class="stat-item"><div class="stat-num">10<span>+</span></div><div class="stat-lbl">{{ __('messages.home.stats.years') }}</div></div>
-    <div class="stat-item"><div class="stat-num">4</div><div class="stat-lbl">{{ __('messages.home.stats.programs') }}</div></div>
+    @php
+        function splitStat($val) {
+            preg_match('/^(\d+)(.*)$/', $val, $matches);
+            if (count($matches) == 3) {
+                return '<div class="stat-num">' . $matches[1] . '<span>' . $matches[2] . '</span></div>';
+            }
+            return '<div class="stat-num">' . $val . '</div>';
+        }
+    @endphp
+    <div class="stat-item">
+        {!! splitStat(\App\Models\Setting::get('stats_alumni', '1000+')) !!}
+        <div class="stat-lbl">{{ __('messages.home.stats.alumni') }}</div>
+    </div>
+    <div class="stat-item">
+        {!! splitStat(\App\Models\Setting::get('stats_success', '98%')) !!}
+        <div class="stat-lbl">{{ __('messages.home.stats.success') }}</div>
+    </div>
+    <div class="stat-item">
+        {!! splitStat(\App\Models\Setting::get('stats_years', '10+')) !!}
+        <div class="stat-lbl">{{ __('messages.home.stats.years') }}</div>
+    </div>
+    <div class="stat-item">
+        {!! splitStat(\App\Models\Setting::get('stats_programs', '4')) !!}
+        <div class="stat-lbl">{{ __('messages.home.stats.programs') }}</div>
+    </div>
   </div>
 </div>
+@endif
