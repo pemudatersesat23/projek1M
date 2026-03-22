@@ -328,8 +328,8 @@
   }
   .form-card {
     background: white;
-    border-radius: 40px;
-    padding: 60px;
+    border-radius: 24px;
+    padding: 32px;
     box-shadow: 0 40px 100px rgba(0,103,163,0.06);
     border: 1px solid rgba(0,103,163,0.05);
     max-width: 900px;
@@ -337,13 +337,13 @@
   }
   .form-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 32px;
   }
   .form-title {
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 950;
     color: #0f1c23;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     letter-spacing: -1px;
   }
   .form-subtitle {
@@ -354,7 +354,7 @@
   .form-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 20px;
+    gap: 16px;
   }
   .form-full {
     grid-column: span 6;
@@ -370,7 +370,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 30px 0 10px;
+    margin: 20px 0 8px;
     padding-bottom: 8px;
     border-bottom: 2px solid #f1f5f9;
   }
@@ -388,23 +388,23 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--detail-primary);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   .premium-input {
     width: 100%;
     background: #f8fafc;
     border: 2px solid #f1f5f9;
-    padding: 18px 24px;
-    border-radius: 20px;
+    padding: 14px 16px;
+    border-radius: 12px;
     font-weight: 700;
     color: #0f1c23;
     transition: all 0.3s;
-    font-size: 15px;
+    font-size: 14px;
   }
   .premium-input:focus {
     background: white;
@@ -421,9 +421,9 @@
   }
   .upload-zone {
     position: relative;
-    padding: 18px 12px;
+    padding: 14px 10px;
     border: 2px dashed #e2e8f0;
-    border-radius: 20px;
+    border-radius: 12px;
     background: #f8fafc;
     text-align: center;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -433,8 +433,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    height: 120px;
+    gap: 8px;
+    min-height: 110px;
   }
   .docs-grid {
     display: grid;
@@ -473,10 +473,10 @@
     z-index: 10;
   }
   .upload-icon {
-    width: 64px;
-    height: 64px;
+    width: 40px;
+    height: 40px;
     background: white;
-    border-radius: 20px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -485,7 +485,7 @@
     transition: all 0.3s;
   }
   .upload-icon .material-symbols-outlined {
-    font-size: 32px;
+    font-size: 24px;
   }
   .upload-zone:hover .upload-icon {
     background: var(--detail-primary);
@@ -793,7 +793,7 @@
             <span class="section-text">{{ __('messages.form.sections.pribadi') }}</span>
           </div>
 
-          <div class="form-group-custom form-full">
+          <div class="form-group-custom form-half">
             <span class="input-label">{{ __('messages.form.name') }} *</span>
             <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.ktp') }}" required>
           </div>
@@ -808,11 +808,13 @@
           </div>
 
           <div class="form-group-custom form-half">
-            <span class="input-label">{{ __('messages.form.pob_dob') }} *</span>
-            <div class="flex gap-2">
-              <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input w-2/3" placeholder="{{ __('messages.form.placeholders.pob') }}" required>
-              <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input w-1/3" required>
-            </div>
+             <span class="input-label">{{ app()->getLocale() === 'jp' ? '出生地' : 'Tempat Lahir' }} *</span>
+             <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pob') }}" required>
+          </div>
+
+          <div class="form-group-custom form-half">
+             <span class="input-label">{{ app()->getLocale() === 'jp' ? '生年月日' : 'Tanggal Lahir' }} *</span>
+             <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input" required>
           </div>
 
           <div class="form-group-custom form-full">
@@ -852,9 +854,13 @@
               <span class="input-label">{{ __('messages.form.grad_year') }} *</span>
               <input type="number" name="additional_data[tahun_lulus]" class="premium-input" placeholder="{{ __('messages.form.placeholders.grad_year') }}" required>
             </div>
-            <div class="form-group-custom form-full">
+            <div class="form-group-custom form-half">
               <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
               <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="{{ __('messages.form.placeholders.jp_level') }}" required>
+            </div>
+            <div class="form-group-custom form-half">
+              <span class="input-label">{{ __('messages.form.experience_field') }} *</span>
+              <input type="text" name="pengalaman_kerja" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}" required>
             </div>
             <div class="form-full">
               <span class="input-label" style="display:block; margin-bottom:16px;">{{ __('messages.form.placeholders.ssw_field') }} *</span>
@@ -898,15 +904,15 @@
               <span class="input-label">{{ __('messages.form.school_univ') }} *</span>
               <input type="text" name="additional_data[universitas]" class="premium-input" placeholder="{{ __('messages.form.placeholders.univ') }}" required>
             </div>
-            <div class="form-group-custom form-third">
+            <div class="form-group-custom form-half">
               <span class="input-label">{{ __('messages.form.grad_year') }} *</span>
               <input type="number" name="additional_data[tahun_lulus]" class="premium-input" required>
             </div>
-            <div class="form-group-custom form-third">
+            <div class="form-group-custom form-half">
               <span class="input-label">{{ __('messages.form.jp_skill') }} *</span>
               <input type="text" name="additional_data[level_bahasa]" class="premium-input" placeholder="{{ __('messages.form.placeholders.jp_level') }}" required>
             </div>
-            <div class="form-group-custom form-third">
+            <div class="form-group-custom form-full">
               <span class="input-label">{{ __('messages.form.experience_field') }} *</span>
               <input type="text" name="pengalaman_kerja" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}" required>
             </div>
@@ -926,15 +932,15 @@
                 <option value="married">{{ __('messages.form.marriage_status.married') }}</option>
               </select>
             </div>
-            <div class="form-group-custom form-third">
+            <div class="form-group-custom form-half">
               <span class="input-label">{{ __('messages.form.education') }} *</span>
               <input type="text" name="pendidikan" class="premium-input" required>
             </div>
-            <div class="form-group-custom form-third">
+            <div class="form-group-custom form-half">
               <span class="input-label">{{ __('messages.form.major_study') }}</span>
               <input type="text" name="additional_data[jurusan]" class="premium-input" placeholder="{{ __('messages.form.docs.optional') }}">
             </div>
-            <div class="form-group-custom form-third">
+            <div class="form-group-custom form-half">
               <span class="input-label">{{ __('messages.form.grad_year') }}</span>
               <input type="number" name="additional_data[tahun_lulus]" class="premium-input" placeholder="{{ __('messages.form.placeholders.grad_year') }}">
             </div>
@@ -1033,12 +1039,7 @@
             </div>
           @endif
 
-          @if($program->slug === 'tokutei-ginou-tg')
-            <div class="form-group-custom form-full">
-              <span class="input-label">{{ __('messages.form.experience_field') }} *</span>
-              <textarea name="pengalaman_kerja" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.experience') }}" required></textarea>
-            </div>
-          @endif
+
 
           {{-- SECTION: DOKUMEN --}}
           <div class="form-section-label">
@@ -1094,7 +1095,7 @@
               <textarea name="additional_data[motivasi]" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.motivation') }}" required></textarea>
             </div>
 
-            @if($program->slug === 'tokutei-ginou-tg' || $program->slug === 'engineer-jepang-gijinkoku')
+            @if($program->slug === 'tokutei-ginou-tg')
               <div class="form-group-custom form-half">
                 <span class="input-label">{{ __('messages.form.contract_3y') }} *</span>
                 <select name="additional_data[kontrak_3_tahun]" class="premium-input premium-select" required>
@@ -1102,6 +1103,8 @@
                   <option value="tidak">{{ __('messages.form.online') === 'オンライン' ? 'いいえ' : 'Tidak' }}</option>
                 </select>
               </div>
+            @endif
+            @if($program->slug === 'tokutei-ginou-tg' || $program->slug === 'engineer-jepang-gijinkoku')
               <div class="form-group-custom {{ $program->slug === 'tokutei-ginou-tg' ? 'form-half' : 'form-full' }}">
                 <span class="input-label">{{ __('messages.form.prev_intern') }} *</span>
                 <select name="additional_data[pernah_magang]" class="premium-input premium-select" required>
@@ -1133,33 +1136,33 @@
             <span class="section-text">{{ __('messages.form.sections.pernyataan') }}</span>
           </div>
 
-          <div class="form-full" style="display: flex; flex-direction: column; gap: 16px; padding: 32px; background: #f8fafc; border-radius: 32px; border: 1px solid #f1f5f9;">
-            <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
+          <div class="form-full" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #f8fafc; border-radius: 24px; border: 1px solid #f1f5f9;">
+            <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
               <input type="checkbox" name="additional_data[agreement_truth]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
               <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_truth') }} *</span>
             </label>
 
-            @if($program->slug === 'tokutei-ginou-tg' || $program->slug === 'kenshusei-jishussei-magang-jepang')
-              <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
+            @if($program->slug === 'tokutei-ginou-tg')
+              <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
                 <input type="checkbox" name="additional_data[agreement_selection]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
                 <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_selection') }} *</span>
               </label>
-              <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
-                <input type="checkbox" name="additional_data[agreement_makassar]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
-                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_makassar') }} *</span>
+              <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+                <input type="checkbox" name="additional_data[agreement_kendari]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
+                <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_kendari') }} *</span>
               </label>
             @endif
 
             @if($program->slug === 'kursus-bahasa-jepang-offline')
-              <label style="display: flex; align-items: flex-start; gap: 16px; cursor: pointer;">
+              <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
                 <input type="checkbox" name="additional_data[agreement_rules]" value="1" style="margin-top: 4px; width: 24px; height: 24px; accent-color: var(--primary);" required>
                 <span style="font-size: 14px; font-weight: 700; color: #334155; line-height: 1.6;">{{ __('messages.form.agreement_rules') }} *</span>
               </label>
             @endif
           </div>
 
-          <div class="form-full pt-10">
-            <button type="submit" class="btn btn-primary w-full py-6 rounded-[32px] text-xl font-black shadow-3xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <div class="form-full pt-6">
+            <button type="submit" class="btn btn-primary w-full py-4 rounded-xl text-lg font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
               {{ __('messages.form.submit') }}
             </button>
           </div>

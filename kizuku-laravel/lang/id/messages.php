@@ -185,7 +185,7 @@ return [
         ],
         'agreement_truth' => 'Saya menyatakan bahwa semua data yang saya isi adalah benar dan dapat dipertanggungjawabkan.',
         'agreement_selection' => 'Saya bersedia mengikuti seluruh tahapan seleksi sesuai ketentuan LPK Kizuku.',
-        'agreement_makassar' => 'Saya bersedia mengikuti pelatihan di pusat pelatihan LPK Kizuku di Makassar.',
+        'agreement_kendari' => 'Saya bersedia mengikuti pelatihan di pusat pelatihan LPK Kizuku di Kota Kendari.',
         'agreement_rules' => 'Saya setuju untuk mematuhi semua tata tertib dan peraturan selama masa pendidikan.',
     ],
     'home' => [

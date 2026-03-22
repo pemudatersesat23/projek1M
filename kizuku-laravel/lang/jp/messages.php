@@ -185,7 +185,7 @@ return [
         ],
         'agreement_truth' => '私は入力したすべてのデータが正確であり、責任を負うことを宣言します。',
         'agreement_selection' => '私はLPK Kizukuの規定に従い、すべての選考手続きに参加することに同意します。',
-        'agreement_makassar' => '私はマカッサルにあるLPK Kizukuの研修センターで研修を受けることに同意します。',
+        'agreement_kendari' => '私はケンダリ市にあるLPK Kizukuの研修センターで研修を受けることに同意します。',
         'agreement_rules' => '私は教育期間中、すべての規則と規制を遵守することに同意します。',
     ],
     'home' => [

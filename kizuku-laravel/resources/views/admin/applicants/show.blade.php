@@ -108,7 +108,7 @@
           {{-- Additional Data JSON --}}
           @if($applicant->additional_data)
             @foreach($applicant->additional_data as $key => $value)
-              @if(!in_array($key, ['agreement_truth', 'agreement_selection', 'agreement_makassar']))
+              @if(!in_array($key, ['agreement_truth', 'agreement_selection', 'agreement_kendari']))
                 <div>
                   <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ str_replace('_', ' ', ucfirst($key)) }}</p>
                   <p class="text-slate-800 font-bold">
@@ -134,7 +134,7 @@
                    <span class="material-symbols-outlined text-sm">check_circle</span> Siap Pelatihan
                 </span>
                @endif
-               @if(isset($applicant->additional_data['agreement_makassar']))
+               @if(isset($applicant->additional_data['agreement_kendari']))
                 <span class="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
                    <span class="material-symbols-outlined text-sm">check_circle</span> Siap Seleksi Offline
                 </span>
