@@ -271,6 +271,7 @@
       <li><a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a></li>
       <li><a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a></li>
       <li><a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a></li>
+      <li><a href="{{ route('pages.faq') }}" class="{{ Request::routeIs('pages.faq') ? 'active' : '' }}">FAQ</a></li>
       <li><a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a></li>
     </ul>
 
@@ -308,6 +309,7 @@
       <a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a>
       <a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a>
       <a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a>
+      <a href="{{ route('pages.faq') }}">FAQ</a>
       <a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a>
     </div>
 

@@ -41,6 +41,7 @@ Route::get('/kursus-bahasa-jepang', function() {
 Route::get('/program', [HomeController::class, 'showAllPrograms'])->name('programs.index');
 
 Route::get('/alur-pendaftaran', [HomeController::class, 'showAlur'])->name('pages.alur');
+Route::get('/faq', [HomeController::class, 'faq'])->name('pages.faq');
 
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
@@ -68,6 +69,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('hero-sections', \App\Http\Controllers\Admin\HeroSectionController::class);
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
     Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
+    Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
 
     // CRUD Applicants
     Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);

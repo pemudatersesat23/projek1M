@@ -100,4 +100,22 @@ class HomeController extends Controller
         }])->get();
         return view('programs.index', compact('programs'));
     }
+
+    public function faq()
+    {
+        $faqsRaw = \App\Models\Faq::where('is_active', true)->orderBy('order')->get();
+        // Group by category, handle empty categories as "Umum"
+        $faqsGrouped = [];
+        foreach($faqsRaw as $f) {
+            $cat = $f->getTranslation('kategori', app()->getLocale(), false);
+            if(empty($cat) && app()->getLocale() == 'jp') {
+                $cat = '一般'; // Umum in JP
+            } elseif (empty($cat)) {
+                $cat = 'Umum';
+            }
+            $faqsGrouped[$cat][] = $f;
+        }
+
+        return view('faq', compact('faqsGrouped'));
+    }
 }
