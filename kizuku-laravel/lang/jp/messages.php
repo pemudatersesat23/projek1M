@@ -13,6 +13,9 @@ return [
         'alur' => '選考の流れ',
         'faq' => 'よくある質問',
         'see_all_partners' => 'すべての提携キャンパスを見る',
+        'about' => '概要',
+        'info' => '情報',
+        'gallery' => 'ギャラリー',
     ],
     'auth' => [
         'profile' => 'プロフィール',

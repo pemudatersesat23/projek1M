@@ -13,6 +13,9 @@ return [
         'alur' => 'Alur Pendaftaran',
         'faq' => 'FAQ',
         'see_all_partners' => 'Lihat Semua Kampus Partner',
+        'about' => 'Tentang',
+        'info' => 'Informasi',
+        'gallery' => 'Galeri',
     ],
     'auth' => [
         'profile' => 'Profil Saya',

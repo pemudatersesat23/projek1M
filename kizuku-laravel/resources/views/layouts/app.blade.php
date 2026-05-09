@@ -267,19 +267,35 @@
       <li><a href="{{ url('/') }}#beranda" class="{{ Request::is('/') ? 'active' : '' }}">{{ __('messages.nav.home') }}</a></li>
       <li><a href="{{ route('programs.index') }}" class="{{ Request::routeIs('programs.index') ? 'active' : '' }}">{{ __('messages.nav.program') }}</a></li>
       <li><a href="{{ route('pages.alur') }}" class="{{ Request::routeIs('pages.alur') ? 'active' : '' }}">{{ __('messages.nav.alur') }}</a></li>
-      <li><a href="{{ url('/') }}#berita">{{ __('messages.nav.berita') }}</a></li>
-      <li><a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a></li>
-      <li><a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a></li>
-      <li><a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a></li>
-      <li><a href="{{ route('pages.faq') }}" class="{{ Request::routeIs('pages.faq') ? 'active' : '' }}">FAQ</a></li>
-      <li><a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a></li>
+      <li class="dropdown">
+        <span class="dropdown-toggle">{{ __('messages.nav.about') }} <span class="dropdown-arrow">▼</span></span>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a></li>
+          <li><a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a></li>
+          <li><a href="{{ url('/') }}#galeri">{{ __('messages.nav.gallery') }}</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <span class="dropdown-toggle">{{ __('messages.nav.info') }} <span class="dropdown-arrow">▼</span></span>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url('/') }}#berita">{{ __('messages.nav.berita') }}</a></li>
+          <li><a href="{{ route('pages.faq') }}">{{ __('messages.nav.faq') }}</a></li>
+          <li><a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a></li>
+        </ul>
+      </li>
     </ul>
 
     <div class="nav-cta">
       <div class="lang-switcher-wrapper">
-        <a href="{{ route('lang.switch', 'jp') }}" class="lang-toggle-link {{ (app()->getLocale() == 'jp' || app()->getLocale() == 'ja') ? 'active' : '' }}">JP</a>
+        <a href="{{ route('lang.switch', 'jp') }}" class="lang-toggle-link {{ (app()->getLocale() == 'jp' || app()->getLocale() == 'ja') ? 'active' : '' }}" style="display:flex; align-items:center; gap:4px;">
+          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
+          JP
+        </a>
         <span class="text-slate-300">|</span>
-        <a href="{{ route('lang.switch', 'id') }}" class="lang-toggle-link {{ app()->getLocale() == 'id' ? 'active' : '' }}">ID</a>
+        <a href="{{ route('lang.switch', 'id') }}" class="lang-toggle-link {{ app()->getLocale() == 'id' ? 'active' : '' }}" style="display:flex; align-items:center; gap:4px;">
+          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><rect fill="#ED2939" width="3" height="1"/></svg>
+          ID
+        </a>
       </div>
 
       @guest
@@ -305,11 +321,15 @@
       <a href="{{ url('/') }}#beranda">{{ __('messages.nav.home') }}</a>
       <a href="{{ route('programs.index') }}">{{ __('messages.nav.program') }}</a>
       <a href="{{ route('pages.alur') }}">{{ __('messages.nav.alur') }}</a>
-      <a href="{{ url('/') }}#berita">{{ __('messages.nav.berita') }}</a>
+      
+      <div class="mob-dropdown-title">{{ __('messages.nav.about') }}</div>
       <a href="{{ url('/') }}#kampus-partner">{{ __('messages.nav.partner') }}</a>
       <a href="{{ url('/') }}#testimoni">{{ __('messages.nav.testimoni') }}</a>
-      <a href="{{ url('/') }}#galeri">{{ app()->getLocale() == 'id' ? 'Galeri' : (app()->getLocale() == 'jp' ? 'ギャラリー' : 'Gallery') }}</a>
-      <a href="{{ route('pages.faq') }}">FAQ</a>
+      <a href="{{ url('/') }}#galeri">{{ __('messages.nav.gallery') }}</a>
+      
+      <div class="mob-dropdown-title">{{ __('messages.nav.info') }}</div>
+      <a href="{{ url('/') }}#berita">{{ __('messages.nav.berita') }}</a>
+      <a href="{{ route('pages.faq') }}">{{ __('messages.nav.faq') }}</a>
       <a href="{{ url('/') }}#kontak">{{ __('messages.nav.kontak') }}</a>
     </div>
 
@@ -328,8 +348,14 @@
 
     <div class="mob-cta">
       <div class="lang-switcher-wrapper flex justify-center gap-4 mb-4">
-        <a href="{{ route('lang.switch', 'jp') }}" class="text-sm font-bold {{ app()->getLocale() == 'jp' ? 'text-primary' : 'text-slate-400' }}">JAPANESE</a>
-        <a href="{{ route('lang.switch', 'id') }}" class="text-sm font-bold {{ app()->getLocale() == 'id' ? 'text-primary' : 'text-slate-400' }}">INDONESIA</a>
+        <a href="{{ route('lang.switch', 'jp') }}" class="text-sm font-bold flex items-center gap-2 {{ app()->getLocale() == 'jp' ? 'text-primary' : 'text-slate-400' }}">
+          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
+          JAPANESE
+        </a>
+        <a href="{{ route('lang.switch', 'id') }}" class="text-sm font-bold flex items-center gap-2 {{ app()->getLocale() == 'id' ? 'text-primary' : 'text-slate-400' }}">
+          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><rect fill="#ED2939" width="3" height="1"/></svg>
+          INDONESIA
+        </a>
       </div>
       @guest
         <a class="btn btn-outline" href="{{ url('/') }}#kontak">{{ __('messages.nav.konsultasi') }}</a>
