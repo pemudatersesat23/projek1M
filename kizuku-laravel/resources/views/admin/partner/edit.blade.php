@@ -1,13 +1,13 @@
 @extends('layouts.admin')
-@section('admin-title', 'Edit Kampus Partner')
+@section('admin-title', 'Edit Partnership')
 
 @section('admin-content')
   <div class="mb-6">
     <a href="{{ route('admin.partner-campus.index') }}" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 w-max mb-2">
       <span class="material-symbols-outlined text-sm">arrow_back</span> Kembali
     </a>
-    <h3 class="text-lg font-bold text-slate-800">Edit Kampus Partner</h3>
-    <p class="text-sm text-slate-500 mt-1">Perbarui data atau ganti logo kampus partner.</p>
+    <h3 class="text-lg font-bold text-slate-800">Edit Partnership</h3>
+    <p class="text-sm text-slate-500 mt-1">Perbarui data atau ganti logo partnership.</p>
   </div>
 
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 max-w-2xl">

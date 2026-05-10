@@ -34,6 +34,12 @@ class SettingSeeder extends Seeder
                 'value' => 'Senin – Sabtu, 08.00 – 17.00 WIB',
                 'type' => 'text',
             ],
+            [
+                'key' => 'hero_slider_duration',
+                'label' => 'Durasi Slider Hero (Detik)',
+                'value' => '5',
+                'type' => 'number',
+            ],
         ];
 
         foreach ($settings as $setting) {

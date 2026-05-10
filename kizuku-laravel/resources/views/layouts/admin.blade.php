@@ -82,7 +82,7 @@
         </a>
         <a href="{{ route('admin.partner-campus.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.partner-campus.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">school</span>
-          <span class="font-medium text-sm">Kampus Partner</span>
+          <span class="font-medium text-sm">Partnership</span>
         </a>
         <div class="pt-2 pb-1 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Konten Website</div>
         <a href="{{ route('admin.hero-sections.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.hero-sections.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
