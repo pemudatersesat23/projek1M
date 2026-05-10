@@ -20,6 +20,7 @@ class HeroSection extends Model
         'btn_secondary_link',
         'badge_text',
         'is_active',
+        'sort_order',
     ];
 
     public $translatable = ['title', 'subtitle', 'btn_primary_text', 'btn_secondary_text', 'badge_text'];

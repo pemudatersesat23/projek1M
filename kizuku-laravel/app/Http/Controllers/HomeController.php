@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         $beritas = Berita::published()->latest()->take(7)->get();
         $campuses = \App\Models\PartnerCampus::latest()->get();
-        $heroSections = \App\Models\HeroSection::where('is_active', true)->latest()->get();
+        $heroSections = \App\Models\HeroSection::where('is_active', true)->orderBy('sort_order')->get();
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
         $featuredPrograms = \App\Models\Program::with(['batches' => function($q) {
             $q->whereIn('status', ['dibuka', 'akan_dibuka']);

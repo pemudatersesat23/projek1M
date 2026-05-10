@@ -503,6 +503,24 @@
         }
       });
 
+      const heroSwiper = new Swiper('.heroSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        effect: 'fade',
+        fadeEffect: {
+          crossFade: true
+        },
+        autoplay: {
+          delay: 7000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.heroSwiper .swiper-pagination',
+          clickable: true,
+        },
+      });
+
       const kampusPartnerSwiper = new Swiper('.kampusPartnerSwiper', {
         slidesPerView: 1,
         spaceBetween: 20,

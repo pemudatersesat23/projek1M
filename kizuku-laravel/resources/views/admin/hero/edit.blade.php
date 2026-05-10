@@ -17,44 +17,8 @@
       @csrf
       @method('PUT')
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="md:col-span-2">
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Judul Banner *</label>
-          <input type="text" name="title" required value="{{ old('title', $heroSection->title) }}" placeholder="Wujudkan Karier Impian di Jepang"
-                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">
-        </div>
-
-        <div class="md:col-span-2">
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Sub-Judul / Deskripsi</label>
-          <textarea name="subtitle" rows="3" placeholder="Penjelasan singkat..."
-                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">{{ old('subtitle', $heroSection->subtitle) }}</textarea>
-        </div>
-
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Tombol Utama (Text)</label>
-          <input type="text" name="btn_primary_text" required value="{{ old('btn_primary_text', $heroSection->btn_primary_text) }}"
-                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Tombol Utama (Link)</label>
-          <input type="text" name="btn_primary_link" required value="{{ old('btn_primary_link', $heroSection->btn_primary_link) }}"
-                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Tombol Kedua (Text)</label>
-          <input type="text" name="btn_secondary_text" required value="{{ old('btn_secondary_text', $heroSection->btn_secondary_text) }}"
-                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Tombol Kedua (Link)</label>
-          <input type="text" name="btn_secondary_link" required value="{{ old('btn_secondary_link', $heroSection->btn_secondary_link) }}"
-                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Ganti Background Banner</label>
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Ganti Gambar Background</label>
           <div class="flex items-center gap-4 mb-3">
              <div class="w-24 h-16 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden">
                 @if($heroSection->image_path)
@@ -65,16 +29,23 @@
                   </div>
                 @endif
              </div>
-             <div class="text-[10px] text-slate-500 italic">Pilih file baru untuk mengganti gambar saat ini.</div>
+             <div class="text-[10px] text-slate-500 italic">Pilih file baru untuk mengganti gambar.</div>
           </div>
           <input type="file" name="image" accept="image/*"
                  class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
         </div>
 
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Urutan Slide (Angka)</label>
+          <input type="number" name="sort_order" required value="{{ old('sort_order', $heroSection->sort_order) }}"
+                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none transition-all">
+          <p class="text-[10px] text-slate-400 mt-1 italic">Contoh: 1, 2, 3...</p>
+        </div>
+
         <div class="flex items-end pb-2">
           <label class="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" name="is_active" value="1" {{ $heroSection->is_active ? 'checked' : '' }} class="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary transition-all cursor-pointer">
-            <span class="text-sm font-bold text-slate-700">Aktifkan Banner Ini</span>
+            <span class="text-sm font-bold text-slate-700">Aktifkan Gambar Ini</span>
           </label>
         </div>
       </div>

@@ -23,17 +23,12 @@ class HeroSectionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string',
-            'image' => 'nullable|image|max:5120',
-            'btn_primary_text' => 'required|string|max:50',
-            'btn_primary_link' => 'required|string',
-            'btn_secondary_text' => 'required|string|max:50',
-            'btn_secondary_link' => 'required|string',
+            'image' => 'required|image|max:5120',
+            'sort_order' => 'required|integer',
             'is_active' => 'boolean',
         ]);
 
-        $data = $request->except('image');
+        $data = $request->only(['sort_order', 'is_active']);
         $data['is_active'] = $request->has('is_active');
         
         if ($request->hasFile('image')) {
@@ -53,17 +48,12 @@ class HeroSectionController extends Controller
     public function update(Request $request, HeroSection $heroSection)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string',
             'image' => 'nullable|image|max:5120',
-            'btn_primary_text' => 'required|string|max:50',
-            'btn_primary_link' => 'required|string',
-            'btn_secondary_text' => 'required|string|max:50',
-            'btn_secondary_link' => 'required|string',
+            'sort_order' => 'required|integer',
             'is_active' => 'boolean',
         ]);
 
-        $data = $request->except('image');
+        $data = $request->only(['sort_order', 'is_active']);
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
