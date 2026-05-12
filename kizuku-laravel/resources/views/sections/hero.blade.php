@@ -2,14 +2,14 @@
 <section id="beranda" style="position: relative; padding-top: 68px; overflow: hidden; min-height: 100vh; display: flex; align-items: center;">
   
   <!-- Swiper Background -->
-  <div class="swiper heroBgSwiper" style="position: absolute; inset: 0; z-index: -2;">
+  <div class="swiper heroBgSwiper" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;">
     <div class="swiper-wrapper">
       @forelse($heroSections->sortBy('sort_order') as $hero)
-        <div class="swiper-slide">
+        <div class="swiper-slide" style="width: 100%; height: 100%;">
           <div class="slide-bg" style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(11, 18, 32, .75) 0%, rgba(15, 76, 129, .55) 50%, rgba(11, 18, 32, .7) 100%), url('{{ $hero->image_path ? asset('storage/'.$hero->image_path) : asset('image/backgorund hero section.jpeg') }}') center/cover no-repeat;"></div>
         </div>
       @empty
-        <div class="swiper-slide">
+        <div class="swiper-slide" style="width: 100%; height: 100%;">
           <div class="slide-bg" style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(11, 18, 32, .75) 0%, rgba(15, 76, 129, .55) 50%, rgba(11, 18, 32, .7) 100%), url('{{ asset('image/backgorund hero section.jpeg') }}') center/cover no-repeat;"></div>
         </div>
       @endforelse
