@@ -185,7 +185,79 @@
           </div>
         @endif
       </div>
+
+      {{-- Dynamic Answers (Form Builder) --}}
+      <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">dynamic_form</span>
+          Jawaban Formulir Dinamis
+        </h4>
+        @if($applicant->dynamicAnswers->isNotEmpty())
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach($applicant->dynamicAnswers as $answer)
+              @php
+                $snapLabel = $answer->field_label_snapshot;
+                $displayLabel = is_array($snapLabel)
+                  ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Field'))
+                  : (string) $snapLabel;
+                $val = $answer->value;
+              @endphp
+              <div>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $displayLabel }}</p>
+                <p class="text-slate-800 font-bold">
+                  @if(is_array($val))
+                    {{ implode(', ', $val) }}
+                  @else
+                    {{ $val ?: '—' }}
+                  @endif
+                </p>
+              </div>
+            @endforeach
+          </div>
+        @else
+          <div class="py-8 text-center">
+            <span class="material-symbols-outlined text-3xl text-slate-200">inbox</span>
+            <p class="text-slate-400 text-sm mt-2">Tidak ada jawaban formulir dinamis.</p>
+          </div>
+        @endif
+      </div>
+
+      {{-- Dynamic Files (Form Builder) --}}
+      @if($applicant->dynamicFiles->isNotEmpty())
+      <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">upload_file</span>
+          Dokumen Dinamis
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          @foreach($applicant->dynamicFiles as $dynFile)
+            @php
+              $snapLabel = $dynFile->field_label_snapshot;
+              $fileLabel = is_array($snapLabel)
+                ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Dokumen'))
+                : (string) $snapLabel;
+            @endphp
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-slate-400 mt-0.5">description</span>
+                <div>
+                  <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ $fileLabel }}</p>
+                  <p class="text-sm font-bold text-slate-700 mt-0.5">{{ $dynFile->original_name }}</p>
+                  <p class="text-xs text-slate-400">{{ $dynFile->readableSize() }}</p>
+                </div>
+              </div>
+              <a href="{{ route('admin.applicants.dynamic-files.download', [$applicant, $dynFile]) }}"
+                 class="flex items-center gap-1 text-xs font-bold text-primary hover:underline whitespace-nowrap">
+                <span class="material-symbols-outlined text-sm">download</span> Unduh
+              </a>
+            </div>
+          @endforeach
+        </div>
+      </div>
+      @endif
+
     </div>
+
 
     <div class="space-y-8">
       {{-- Status Pendaftaran --}}

@@ -45,6 +45,46 @@ Route::get('/faq', [HomeController::class, 'faq'])->name('pages.faq');
 
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
+// AJAX: resolve dynamic fields for a program+schema combo (public, GET, read-only)
+// Returns ONLY schema-specific fields when schema_id is provided.
+// General (program-level) fields are always rendered SSR in registration-form.blade.php.
+Route::get('/api/dynamic-fields', function(\App\Services\DynamicFormService $svc) {
+    $programId = request('program_id');
+    $schemaId  = request('schema_id') ?: null;
+
+    if (!$programId) return response()->json([]);
+
+    $locale = app()->getLocale();
+
+    if ($schemaId) {
+        // Return ONLY the schema-specific fields (schema_id not null)
+        // General fields are already rendered SSR — do not duplicate them
+        $fields = \App\Models\FormField::active()
+            ->where('program_id', (int)$programId)
+            ->where('schema_id', (int)$schemaId)
+            ->ordered()
+            ->get();
+    } else {
+        // No schema selected — return empty (general fields already visible SSR)
+        return response()->json([]);
+    }
+
+    return response()->json(
+        $fields->map(fn($f) => [
+            'id'         => $f->id,
+            'field_name' => $f->field_name,
+            'type'       => $f->type,
+            'label'      => $f->getTranslation('label', $locale) ?: $f->getTranslation('label', 'id'),
+            'placeholder'=> $f->getTranslation('placeholder', $locale) ?: $f->getTranslation('placeholder', 'id') ?: '',
+            'description'=> $f->getTranslation('description', $locale) ?: $f->getTranslation('description', 'id') ?: '',
+            'is_required'=> (bool) $f->is_required,
+            'options'    => $f->options,
+            'accepted_file_types' => $f->accepted_file_types,
+            'max_file_size'       => $f->max_file_size,
+        ])
+    );
+})->name('api.dynamic-fields');
+
 // ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══
 Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')->group(function () {
     // Admin Dashboard
@@ -62,6 +102,8 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
     Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
     Route::resource('program-schemas', \App\Http\Controllers\Admin\ProgramSchemaController::class);
+    Route::resource('form-fields', \App\Http\Controllers\Admin\FormFieldController::class);
+    Route::get('form-fields-schemas', [\App\Http\Controllers\Admin\FormFieldController::class, 'schemasForProgram'])->name('form-fields.schemas');
     Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->parameters([
         'fasilitas' => 'fasilitas'
     ]);
@@ -76,6 +118,13 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     // CRUD Applicants
     Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);
     Route::patch('applicants/{applicant}/status', [\App\Http\Controllers\Admin\ApplicantController::class, 'updateStatus'])->name('applicants.updateStatus');
+
+    // Protected dynamic file download (admin only, IDOR-guarded)
+    Route::get(
+        'applicants/{applicant}/dynamic-files/{file}/download',
+        [\App\Http\Controllers\Admin\ApplicantDynamicFileDownloadController::class, 'download']
+    )->name('applicants.dynamic-files.download');
+
 
     // Payment Settings
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');

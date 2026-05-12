@@ -139,27 +139,121 @@
 
 <script>
   let selectedSchemaId = null;
+  const dynamicFieldsUrl = '{{ route("api.dynamic-fields") }}';
+  const programId        = {{ $program->id }};
+  const currentLocale    = '{{ app()->getLocale() }}';
 
   function selectSchema(id) {
     selectedSchemaId = id;
-    
+
     // Set value into hidden input in the registration form
     const schemaInput = document.getElementById('selected_schema_id');
-    if(schemaInput) {
-      schemaInput.value = id;
-    }
-    
+    if (schemaInput) schemaInput.value = id;
+
     // Update active state visuals
     document.querySelectorAll('.schema-box').forEach(box => {
       box.style.borderColor = '#e2e8f0';
-      box.style.background = 'transparent';
+      box.style.background  = 'transparent';
     });
-    
     const activeBox = document.getElementById('schema-box-' + id);
-    if(activeBox) {
+    if (activeBox) {
       activeBox.style.borderColor = 'var(--primary)';
-      activeBox.style.background = '#f0f9ff';
+      activeBox.style.background  = '#f0f9ff';
     }
+
+    // Fetch dynamic fields for this schema and inject them
+    fetchDynamicFields(id);
+  }
+
+  function fetchDynamicFields(schemaId) {
+    const url = dynamicFieldsUrl + '?program_id=' + programId + (schemaId ? '&schema_id=' + schemaId : '');
+    fetch(url)
+      .then(r => r.json())
+      .then(fields => renderDynamicFields(fields))
+      .catch(() => {});
+  }
+
+  function renderDynamicFields(fields) {
+    const container = document.getElementById('dynamic-fields-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!fields || !fields.length) return;
+
+    const nonFile = fields.filter(f => f.type !== 'file');
+    const fileF   = fields.filter(f => f.type === 'file');
+
+    if (nonFile.length) {
+      container.insertAdjacentHTML('beforeend', buildSectionLabel('dynamic_form', currentLocale === 'jp' ? '追加情報' : 'Informasi Tambahan (Skema)'));
+      nonFile.forEach(f => container.insertAdjacentHTML('beforeend', buildFieldHtml(f)));
+    }
+
+    if (fileF.length) {
+      container.insertAdjacentHTML('beforeend', buildSectionLabel('cloud_upload', currentLocale === 'jp' ? '追加書類 (スキーマ)' : 'Dokumen Tambahan (Skema)'));
+      const grid = document.createElement('div');
+      grid.className = 'docs-grid form-full';
+      fileF.forEach(f => grid.insertAdjacentHTML('beforeend', buildFieldHtml(f)));
+      container.appendChild(grid);
+    }
+  }
+
+  function buildSectionLabel(icon, text) {
+    return `<div class="form-section-label form-full"><span class="material-symbols-outlined">${icon}</span><span class="section-text">${escHtml(text)}</span></div>`;
+  }
+
+  function buildFieldHtml(f) {
+    const reqAttr = f.is_required ? 'required' : '';
+    const req     = f.is_required ? '<span style="color:#E31E24">*</span>' : '';
+    const isHalf  = ['text','email','phone','number','date','select','radio'].includes(f.type);
+    const wrapper = `form-group-custom ${isHalf ? 'form-half' : 'form-full'} dynamic-field-wrapper`;
+
+    let inputHtml = '';
+
+    if (['text','email','number','date'].includes(f.type)) {
+      inputHtml = `<input type="${f.type}" name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input" placeholder="${escHtml(f.placeholder)}" ${reqAttr}>`;
+    } else if (f.type === 'phone') {
+      inputHtml = `<input type="tel" name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input" placeholder="${escHtml(f.placeholder)}" ${reqAttr}>`;
+    } else if (f.type === 'textarea') {
+      inputHtml = `<textarea name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input" rows="3" placeholder="${escHtml(f.placeholder)}" ${reqAttr}></textarea>`;
+    } else if (f.type === 'select') {
+      const opts = (f.options || []).map(o => {
+        const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
+        return `<option value="${escHtml(o.value)}">${escHtml(lbl)}</option>`;
+      }).join('');
+      inputHtml = `<select name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input premium-select" ${reqAttr}><option value="" disabled selected>${f.placeholder || 'Pilih...'}</option>${opts}</select>`;
+    } else if (f.type === 'radio') {
+      const opts = (f.options || []).map(o => {
+        const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
+        return `<label class="dynamic-radio-label"><input type="radio" name="dynamic_answers[${escHtml(f.field_name)}]" value="${escHtml(o.value)}" ${reqAttr}><span>${escHtml(lbl)}</span></label>`;
+      }).join('');
+      inputHtml = `<div class="dynamic-radio-group">${opts}</div>`;
+    } else if (f.type === 'checkbox') {
+      const opts = (f.options || []).map(o => {
+        const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
+        return `<label class="dynamic-checkbox-label"><input type="checkbox" name="dynamic_answers[${escHtml(f.field_name)}][]" value="${escHtml(o.value)}"><span>${escHtml(lbl)}</span></label>`;
+      }).join('');
+      inputHtml = `<div class="dynamic-checkbox-group">${opts}</div>`;
+    } else if (f.type === 'file') {
+      const exts    = f.accepted_file_types || ['pdf','jpg','jpeg','png'];
+      const maxMb   = ((f.max_file_size || 2048) / 1024).toFixed(1);
+      const accept  = exts.map(e => '.' + e).join(',');
+      const zoneId  = 'zone-dyn-ajax-' + f.field_name;
+      inputHtml = `<div class="upload-zone" id="${zoneId}">
+        <input type="file" name="dynamic_files[${escHtml(f.field_name)}]" accept="${accept}" onchange="updateFileName(this,'${zoneId}')" ${reqAttr}>
+        <div class="upload-icon"><span class="material-symbols-outlined">upload_file</span></div>
+        <div class="upload-text text-[11px] font-bold">${escHtml(f.label)}</div>
+        <div class="file-name-display text-[10px]">Format: ${exts.join(', ')} | Maks: ${maxMb} MB</div>
+      </div>`;
+    }
+
+    const hint = f.description ? `<p class="dynamic-field-hint">${escHtml(f.description)}</p>` : '';
+    return `<div class="${wrapper}"><span class="input-label">${escHtml(f.label)} ${req}</span>${inputHtml}${hint}</div>`;
+  }
+
+  function escHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
   }
 
   // Add click handler to scroll to internal form
@@ -170,16 +264,15 @@
         if (hasSchema && !selectedSchemaId) {
           e.preventDefault();
           alert('Silakan pilih skema pendaftaran terlebih dahulu.');
-          document.querySelector('.schema-selector-card').scrollIntoView({ behavior: 'smooth' });
+          document.querySelector('.schema-selector-card')?.scrollIntoView({ behavior: 'smooth' });
           return;
         }
-        
-        const batchId = this.getAttribute('data-batch');
+
+        const batchId   = this.getAttribute('data-batch');
         const batchInput = document.querySelector('input[name="batch_id"]');
-        if (batchInput) {
-            batchInput.value = batchId;
-        }
+        if (batchInput) batchInput.value = batchId;
       });
     });
   });
 </script>
+

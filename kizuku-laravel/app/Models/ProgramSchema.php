@@ -50,6 +50,11 @@ class ProgramSchema extends Model
         return $this->hasMany(Applicant::class, 'schema_id');
     }
 
+    public function formFields()
+    {
+        return $this->hasMany(FormField::class, 'schema_id');
+    }
+
     // Scopes
     public function scopeActive($query)
     {

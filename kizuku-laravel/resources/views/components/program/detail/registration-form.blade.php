@@ -18,6 +18,11 @@
   $programName = $isJp
     ? ($slugJpNames[$program->slug] ?? $program->nama_program)
     : $program->nama_program;
+
+  // Dynamic form
+  $dynFields    = $dynamicFields ?? collect();
+  $dynHasFiles  = $hasDynamicFiles ?? false;
+  $dynLocale    = $currentLocale  ?? $locale;
 @endphp
 
 <section id="registration-section" class="registration-section reveal">
@@ -39,7 +44,9 @@
         </div>
       @endif
 
-      <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data" class="form-grid">
+      <form action="{{ route('pendaftaran.store') }}" method="POST"
+            enctype="multipart/form-data"
+            class="form-grid">
         @csrf
         <input type="hidden" name="program_id" value="{{ $program->id }}">
         <input type="hidden" name="batch_id"   value="{{ $activeBatch->id }}">
@@ -84,7 +91,7 @@
           <input type="email" name="email" value="{{ old('email') }}" class="premium-input" placeholder="nama@email.com" required>
         </div>
 
-        {{-- ── FORM SPESIFIK PER PROGRAM ── --}}
+        {{-- ── FORM SPESIFIK PER PROGRAM (legacy hardcoded) ── --}}
         @if($program->slug === 'tokutei-ginou-tg')
           @include('components.program.detail.forms.tg-form')
         @elseif($program->slug === 'engineer-jepang-gijinkoku')
@@ -97,7 +104,45 @@
           @include('components.program.detail.forms.ex-internship-form')
         @endif
 
+        {{-- ── DYNAMIC FIELDS (from Form Builder) ── --}}
+        @if($dynFields->isNotEmpty())
+          {{-- Non-file dynamic fields --}}
+          @php $nonFileFields = $dynFields->filter(fn($f) => !$f->isFile()); @endphp
+          @if($nonFileFields->isNotEmpty())
+            <div class="form-section-label form-full">
+              <span class="material-symbols-outlined">dynamic_form</span>
+              <span class="section-text">
+                {{ $dynLocale === 'jp' ? '追加情報' : 'Informasi Tambahan' }}
+              </span>
+            </div>
+            @foreach($nonFileFields as $dynField)
+              @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
+            @endforeach
+          @endif
+
+          {{-- File dynamic fields --}}
+          @php $fileFields = $dynFields->filter(fn($f) => $f->isFile()); @endphp
+          @if($fileFields->isNotEmpty())
+            <div class="form-section-label form-full">
+              <span class="material-symbols-outlined">cloud_upload</span>
+              <span class="section-text">
+                {{ $dynLocale === 'jp' ? '追加書類' : 'Dokumen Tambahan' }}
+              </span>
+            </div>
+            <div class="docs-grid form-full">
+              @foreach($fileFields as $dynField)
+                @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
+              @endforeach
+            </div>
+          @endif
+        @endif
+
+        {{-- ── SCHEMA-SPECIFIC DYNAMIC FIELDS (loaded via AJAX on schema selection) ── --}}
+        {{-- This div gets populated by fetchDynamicFields() in batch-section.blade.php --}}
+        <div id="dynamic-fields-container" class="contents"></div>
+
         {{-- ── DOKUMEN (berdasarkan slug via config) ── --}}
+
         <div class="form-section-label">
           <span class="material-symbols-outlined">cloud_upload</span>
           <span class="section-text">{{ __('messages.form.sections.dokumen') }}</span>

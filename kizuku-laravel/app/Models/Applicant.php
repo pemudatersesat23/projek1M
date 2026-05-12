@@ -47,4 +47,14 @@ class Applicant extends Model
     {
         return $this->hasOne(ApplicantDocument::class);
     }
+
+    public function dynamicAnswers()
+    {
+        return $this->hasMany(ApplicantFormAnswer::class);
+    }
+
+    public function dynamicFiles()
+    {
+        return $this->hasMany(ApplicantDynamicFile::class);
+    }
 }
