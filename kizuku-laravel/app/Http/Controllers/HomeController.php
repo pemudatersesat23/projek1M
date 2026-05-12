@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Models\ApplicantDocument;
 use Illuminate\Support\Facades\Storage;
+use App\Services\DynamicFormService;
 
 class HomeController extends Controller
 {
@@ -22,19 +23,16 @@ class HomeController extends Controller
         $fasilitas    = \App\Models\Fasilitas::orderBy('urutan')->get();
         $galleries    = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
 
-        // ── Programs ────────────────────────────────────────────────────────
-        // Ambil featured programs; jika tidak ada, fallback ke semua aktif.
-        // Sehingga blade TIDAK perlu melakukan query sendiri.
-        $batchQuery = fn ($q) => $q->whereIn('status', ['dibuka', 'akan_dibuka']);
-
-        $featuredPrograms = \App\Models\Program::with(['batches' => $batchQuery])
-            ->where('is_featured', true)
-            ->where('status', 'aktif')
+        $featuredPrograms = \App\Models\Program::active()
+            ->featured()
+            ->ordered()
+            ->with(['activeBatches', 'activeSchemas'])
             ->get();
 
         if ($featuredPrograms->isEmpty()) {
-            $featuredPrograms = \App\Models\Program::with(['batches' => $batchQuery])
-                ->where('status', 'aktif')
+            $featuredPrograms = \App\Models\Program::active()
+                ->ordered()
+                ->with(['activeBatches', 'activeSchemas'])
                 ->get();
         }
 
@@ -73,55 +71,137 @@ class HomeController extends Controller
 
 
 
-    public function showProgram($slug)
+    public function showProgram($slug, DynamicFormService $dynamicFormService)
     {
-        $program = Program::where('slug', $slug)->firstOrFail();
-        
-        // Find active batch (dibuka) or next upcoming batch (akan_dibuka)
-        $activeBatch = $program->batches()->where('status', 'dibuka')->first();
-        $nextBatch = $program->batches()->where('status', 'akan_dibuka')->orderBy('tanggal_buka')->first();
-        
-        // Get batch history (history of previous and current batches)
-        $batchHistory = $program->batches()
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $program = Program::where('slug', $slug)
+            ->with(['batches' => function($q) {
+                $q->orderBy('created_at', 'desc');
+            }, 'activeBatches', 'activeSchemas'])
+            ->firstOrFail();
 
-        return view('program-detail', compact('program', 'activeBatch', 'nextBatch', 'batchHistory'));
+        $activeBatch  = $program->currentOpenBatch();
+        $nextBatch    = $program->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
+        $batchHistory = $program->batches;
+
+        // Resolve dynamic form fields — schema_id null at page load (schema not yet chosen)
+        // All general fields are loaded here; schema-specific will merge if schema is pre-selected
+        $dynamicFields   = $dynamicFormService->getFieldsFor($program->id);
+        $hasDynamicFiles = $dynamicFormService->hasFileFields($dynamicFields);
+        $currentLocale   = app()->getLocale();
+
+        return view('program-detail', compact(
+            'program', 'activeBatch', 'nextBatch', 'batchHistory',
+            'dynamicFields', 'hasDynamicFiles', 'currentLocale'
+        ));
     }
 
 
 
-    public function storePendaftaran(\App\Http\Requests\PendaftaranRequest $request, \App\Services\FileUploadService $uploadService)
-    {
-        $fileInputs = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat', 'cv', 'transkrip', 'bukti_sosmed'];
-        \Log::info('Pendaftaran submission started', $request->safe()->except($fileInputs));
-        
+    public function storePendaftaran(
+        \App\Http\Requests\PendaftaranRequest $request,
+        \App\Services\FileUploadService $uploadService,
+        \App\Services\DynamicForm\DynamicValidationService $dynValidator,
+        \App\Services\DynamicForm\DynamicFileUploadService $dynUploader,
+        \App\Services\DynamicFormService $dynFormService
+    ) {
+        $fixedFileInputs = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat', 'cv', 'transkrip', 'bukti_sosmed'];
+        \Log::info('Pendaftaran started', $request->safe()->except(array_merge($fixedFileInputs, ['dynamic_files'])));
+
+        // 1. Resolve active form fields for this program/schema
+        $programId    = (int) $request->input('program_id');
+        $schemaId     = $request->input('schema_id') ? (int) $request->input('schema_id') : null;
+        $activeFields = $dynFormService->getFieldsFor($programId, $schemaId);
+
+        // 2. Validate dynamic payload (unknown-field guard + per-field rules)
         try {
-            \Log::info('Validation passed via Request class');
+            $dynValidator->validateDynamicPayload($request, $activeFields);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        }
 
-            $applicant = Applicant::create($request->safe()->except($fileInputs));
-            \Log::info('Applicant created', ['id' => $applicant->id]);
+        // 3. DB transaction with file-upload tracking for rollback
+        $uploadedPaths = [];
 
-            // Handle File Uploads using Service
-            $filesToUpload = [];
-            foreach ($fileInputs as $field) {
-                if ($request->hasFile($field)) {
-                    $filesToUpload[$field] = $request->file($field);
+        try {
+            $applicant = \Illuminate\Support\Facades\DB::transaction(
+                function () use (
+                    $request, $uploadService, $dynUploader,
+                    $fixedFileInputs, $activeFields, &$uploadedPaths
+                ) {
+                    // 3a. Create Applicant (existing flow)
+                    $applicant = Applicant::create(
+                        $request->safe()->except(
+                            array_merge($fixedFileInputs, ['dynamic_answers', 'dynamic_files'])
+                        )
+                    );
+                    \Log::info('Applicant created', ['id' => $applicant->id]);
+
+                    // 3b. Fixed document uploads (existing flow)
+                    $filesToUpload = [];
+                    foreach ($fixedFileInputs as $field) {
+                        if ($request->hasFile($field)) {
+                            $filesToUpload[$field] = $request->file($field);
+                        }
+                    }
+                    if (!empty($filesToUpload)) {
+                        $docs = $uploadService->uploadMultiple($filesToUpload);
+                        $docs['applicant_id'] = $applicant->id;
+                        ApplicantDocument::create($docs);
+                        \Log::info('Fixed documents saved');
+                    }
+
+                    // 3c. Save dynamic answers
+                    $dynamicAnswers = $request->input('dynamic_answers', []);
+                    foreach ($activeFields->filter(fn($f) => !$f->isFile()) as $field) {
+                        $rawValue = $dynamicAnswers[$field->field_name] ?? null;
+                        if ($rawValue === null && !$field->is_required) continue;
+
+                        \App\Models\ApplicantFormAnswer::create([
+                            'applicant_id'         => $applicant->id,
+                            'form_field_id'        => $field->id,
+                            'value'                => is_array($rawValue) ? $rawValue : (string) $rawValue,
+                            'field_label_snapshot' => $field->label,
+                            'field_type_snapshot'  => $field->type,
+                        ]);
+                    }
+
+                    // 3d. Upload and save dynamic files
+                    foreach ($activeFields->filter(fn($f) => $f->isFile()) as $field) {
+                        $fileKey = "dynamic_files.{$field->field_name}";
+                        if (!$request->hasFile($fileKey)) continue;
+
+                        $uploaded        = $request->file($fileKey);
+                        $meta            = $dynUploader->upload($uploaded, $applicant->id, $field->id);
+                        $uploadedPaths[] = $meta['path'];
+
+                        \App\Models\ApplicantDynamicFile::create([
+                            'applicant_id'         => $applicant->id,
+                            'form_field_id'        => $field->id,
+                            'file_path'            => $meta['path'],
+                            'original_name'        => $meta['original_name'],
+                            'mime_type'            => $meta['mime_type'],
+                            'size'                 => $meta['size'],
+                            'field_label_snapshot' => $field->label,
+                            'field_type_snapshot'  => $field->type,
+                        ]);
+                    }
+
+                    return $applicant;
                 }
-            }
+            );
 
-            if (!empty($filesToUpload)) {
-                $docs = $uploadService->uploadMultiple($filesToUpload);
-                $docs['applicant_id'] = $applicant->id;
-                ApplicantDocument::create($docs);
-                \Log::info('Documents saved via Service');
-            }
-
-            \Log::info('Redirecting back');
+            \Log::info('Pendaftaran complete', ['applicant_id' => $applicant->id]);
             return redirect()->back()->with('success', __('messages.form.registration_success'));
+
         } catch (\Exception $e) {
+            // Cleanup any files that were uploaded before the failure
+            if (!empty($uploadedPaths)) {
+                $dynUploader->deleteMany($uploadedPaths);
+            }
             \Log::error('Pendaftaran error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withErrors(__('messages.form.error_occurred') ?? 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
+            return redirect()->back()
+                ->withErrors(__('messages.form.error_occurred') ?? 'Terjadi kesalahan. Silakan coba lagi.')
+                ->withInput();
         }
     }
 

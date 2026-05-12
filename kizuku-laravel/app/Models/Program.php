@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 use App\Traits\AutoTranslate;
 
 class Program extends Model
 {
-    use HasTranslations, AutoTranslate;
+    use HasTranslations, AutoTranslate, SoftDeletes;
 
     protected $fillable = [
         'nama_program',
@@ -27,7 +28,9 @@ class Program extends Model
         'thumbnail_path',
         'video_url',
         'status',
-        'is_featured'
+        'is_featured',
+        'sort_order',
+        'has_schema'
     ];
 
     public $translatable = [
@@ -47,11 +50,28 @@ class Program extends Model
     protected $casts = [
         'faq' => 'array',
         'is_featured' => 'boolean',
+        'has_schema' => 'boolean'
     ];
 
+    // Relations
     public function batches()
     {
         return $this->hasMany(Batch::class);
+    }
+
+    public function activeBatches()
+    {
+        return $this->hasMany(Batch::class)->whereIn('status', ['dibuka', 'diperpanjang', 'akan_dibuka']);
+    }
+
+    public function programSchemas()
+    {
+        return $this->hasMany(ProgramSchema::class);
+    }
+
+    public function activeSchemas()
+    {
+        return $this->hasMany(ProgramSchema::class)->where('status', 'aktif')->orderBy('sort_order');
     }
 
     public function applicants()
@@ -59,64 +79,74 @@ class Program extends Model
         return $this->hasMany(Applicant::class);
     }
 
-    public function currentBatch()
+    public function formFields()
     {
-        return $this->batches()->where('status', 'dibuka')->first();
+        return $this->hasMany(FormField::class);
     }
 
-    public function nextBatch()
+    // Scopes
+    public function scopeActive($query)
     {
-        return $this->batches()
-            ->where('status', 'akan_dibuka')
-            ->orderBy('tanggal_buka', 'asc')
-            ->first();
+        return $query->where('status', 'aktif');
     }
 
-    /**
-     * Accessor: parse teks benefit menjadi array baris bersih.
-     * Mendukung format: "- Item" atau "✓ Item" atau plain text per baris.
-     * Gunakan: $program->benefitItems (otomatis locale-aware via HasTranslations)
-     *
-     * @return array<int, string>
-     */
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order');
+    }
+
+    // Helpers
+    public function currentOpenBatch()
+    {
+        return $this->batches()->whereIn('status', ['dibuka', 'diperpanjang'])->first();
+    }
+
+    public function latestAvailableBatch()
+    {
+        return $this->activeBatches()->orderBy('tanggal_buka', 'asc')->first() 
+            ?? $this->batches()->latest('created_at')->first();
+    }
+
+    public function hasActiveSchemas()
+    {
+        return $this->has_schema && $this->activeSchemas()->count() > 0;
+    }
+
+    public function registrationStatusLabel()
+    {
+        $batch = $this->latestAvailableBatch();
+        return $batch ? $batch->frontendStatusLabel() : 'Ditutup';
+    }
+
+    public function registrationStatusClass()
+    {
+        $batch = $this->latestAvailableBatch();
+        return $batch ? $batch->frontendStatusClass() : 'bg-gray-100 text-gray-800';
+    }
+
+    public function isRegistrationOpen()
+    {
+        $batch = $this->latestAvailableBatch();
+        return $batch ? $batch->isRegistrationEnabled() : false;
+    }
+
+    // Accessors
     public function getBenefitItemsAttribute(): array
     {
         $raw = $this->getTranslation('benefit', app()->getLocale());
-
-        if (empty($raw)) {
-            return [];
-        }
-
-        $lines = explode("\n", str_replace(['-', '✓'], '', $raw));
-
-        return array_values(
-            array_filter(
-                array_map('trim', $lines)
-            )
-        );
+        if (empty($raw)) return [];
+        return array_values(array_filter(array_map('trim', explode("\n", str_replace(['-', '✓'], '', $raw)))));
     }
 
-    /**
-     * Accessor: parse teks alur_seleksi menjadi array baris bersih.
-     * Mendukung format: "- Step" atau "> Step" atau plain text per baris.
-     * Gunakan: $program->alurSeleksiItems
-     *
-     * @return array<int, string>
-     */
     public function getAlurSeleksiItemsAttribute(): array
     {
         $raw = $this->getTranslation('alur_seleksi', app()->getLocale());
-
-        if (empty($raw)) {
-            return [];
-        }
-
-        $lines = explode("\n", str_replace(['-', '>'], '', $raw));
-
-        return array_values(
-            array_filter(
-                array_map('trim', $lines)
-            )
-        );
+        if (empty($raw)) return [];
+        return array_values(array_filter(array_map('trim', explode("\n", str_replace(['-', '>'], '', $raw)))));
     }
 }

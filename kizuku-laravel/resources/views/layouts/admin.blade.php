@@ -118,6 +118,14 @@
           <span class="material-symbols-outlined text-[22px]">layers</span>
           <span class="font-medium text-sm">Batch Pendaftaran</span>
         </a>
+        <a href="{{ route('admin.program-schemas.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.program-schemas.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">account_tree</span>
+          <span class="font-medium text-sm">Skema Program</span>
+        </a>
+        <a href="{{ route('admin.form-fields.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.form-fields.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">dynamic_form</span>
+          <span class="font-medium text-sm">Form Builder</span>
+        </a>
         <div class="pt-2 pb-1 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem</div>
         <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.settings.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">settings</span>

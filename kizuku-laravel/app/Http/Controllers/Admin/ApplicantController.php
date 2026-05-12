@@ -44,9 +44,16 @@ class ApplicantController extends Controller
      */
     public function show(Applicant $applicant)
     {
-        $applicant->load(['program', 'batch', 'document']);
+        $applicant->load([
+            'program',
+            'batch',
+            'document',
+            'dynamicAnswers',
+            'dynamicFiles',
+        ]);
         return view('admin.applicants.show', compact('applicant'));
     }
+
 
     /**
      * Update the applicant's selection status.

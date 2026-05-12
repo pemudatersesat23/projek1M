@@ -14,6 +14,25 @@
     @if($batch->exists) @method('PUT') @endif
 
     <div class="lg:col-span-2 space-y-6">
+      {{-- Handling Validation Errors --}}
+      @if ($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <span class="material-symbols-outlined text-red-500">error</span>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">Terdapat kesalahan saat menyimpan:</h3>
+              <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+        </div>
+      @endif
+
       {{-- Informasi Batch --}}
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
@@ -46,6 +65,7 @@
               <select name="cta_type" id="cta_type" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
                 <option value="internal_form" {{ old('cta_type', $batch->cta_type ?? '') === 'internal_form' ? 'selected' : '' }}>Formulir Website</option>
                 <option value="whatsapp" {{ old('cta_type', $batch->cta_type ?? '') === 'whatsapp' ? 'selected' : '' }}>WhatsApp Langsung</option>
+                <option value="disabled" {{ old('cta_type', $batch->cta_type ?? '') === 'disabled' ? 'selected' : '' }}>Disabled (Tombol Mati)</option>
               </select>
             </div>
           </div>
@@ -113,6 +133,7 @@
             <select name="status" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
               <option value="akan_dibuka" {{ old('status', $batch->status ?? '') === 'akan_dibuka' ? 'selected' : '' }}>Akan Dibuka</option>
               <option value="dibuka" {{ old('status', $batch->status ?? '') === 'dibuka' ? 'selected' : '' }}>Dibuka (Aktif)</option>
+              <option value="diperpanjang" {{ old('status', $batch->status ?? '') === 'diperpanjang' ? 'selected' : '' }}>Diperpanjang</option>
               <option value="ditutup" {{ old('status', $batch->status ?? '') === 'ditutup' ? 'selected' : '' }}>Ditutup</option>
               <option value="berjalan" {{ old('status', $batch->status ?? '') === 'berjalan' ? 'selected' : '' }}>Sedang Berjalan</option>
               <option value="selesai" {{ old('status', $batch->status ?? '') === 'selesai' ? 'selected' : '' }}>Selesai</option>
