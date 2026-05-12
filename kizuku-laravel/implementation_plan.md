@@ -1781,4 +1781,4 @@ No Query in Blade QA
 Registration Compatibility QA
 ```
 
-Jangan masuk ke Dynamic Form Builder sebelum hasil audit phase ini dinyatakan aman.
+Jangan masuk ke Dynamic Form Builder sebelum hasil audit phase ini dinyatakan aman..
