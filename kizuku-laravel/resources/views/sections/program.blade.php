@@ -1,4 +1,9 @@
 <!-- ═══ PROGRAM ═══ -->
+{{--
+  $featuredPrograms dipersiapkan oleh HomeController::index().
+  Sudah ada fallback di controller: jika featured kosong, ambil semua aktif.
+  Blade ini hanya render — tidak ada query DB di sini.
+--}}
 <section id="program" class="section-pad">
   <div class="container" style="position: relative; z-index: 2;">
     <div class="sec-head reveal">
@@ -6,9 +11,10 @@
       <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.program_h2') !!}</h2>
       <p class="sec-p">{{ __('messages.home.program_p') }}</p>
     </div>
+
     <!-- Slider Wrapper -->
     <div class="program-wrapper reveal" style="position:relative;margin:0 auto;max-width: 1200px;">
-      
+
       <!-- Nav Buttons -->
       <button id="program-prev" class="program-nav-btn" aria-label="Previous">
         <span class="material-symbols-outlined">chevron_left</span>
@@ -19,54 +25,72 @@
 
       <!-- Carousel -->
       <div class="program-carousel" id="program-carousel">
-      @php
-        $programs = (isset($featuredPrograms) && $featuredPrograms->isNotEmpty()) ? $featuredPrograms : \App\Models\Program::where('status', 'aktif')->with(['batches' => function($q) {
-          $q->whereIn('status', ['dibuka', 'akan_dibuka']);
-        }])->get();
-        
-        $cardClasses = ['red', 'blue', 'dark', 'mix'];
-      @endphp
+        @php $cardClasses = ['red', 'blue', 'dark', 'mix']; @endphp
 
-      @foreach($programs as $index => $p)
-      <article class="prog-card {{ $cardClasses[$index % 4] }} reveal-d{{ ($index % 4) + 1 }}">
-        <div class="prog-glow" aria-hidden="true"></div>
-        <div class="prog-badge"><span class="bdot"></span><span class="dynamic-lang" data-id="{{ $p->getTranslation('nama_program', 'id') }}" data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">{{ $p->nama_program }}</span></div>
-        <h3 class="dynamic-lang" data-id="{{ $p->getTranslation('nama_program', 'id') }}" data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">{{ $p->nama_program }}</h3>
-        <p class="dynamic-lang" data-id="{{ Str::limit($p->getTranslation('deskripsi', 'id'), 120) }}" data-jp="{{ Str::limit($p->getTranslation('deskripsi', 'jp'), 120) }}">{{ Str::limit($p->deskripsi, 120) }}</p>
-        <ul class="feat-list">
-          @php 
-            $rawBenefit = $p->benefit; // Automatically translated by HasTranslations
-            $benefits = array_filter(explode("\n", str_replace('-', '', $rawBenefit)));
-          @endphp
-          @foreach(array_slice($benefits, 0, 4) as $b)
-            <li>{{ trim($b) }}</li>
-          @endforeach
-        </ul>
-        <div class="prog-footer">
-          @php 
-            $activeBatch = $p->batches->where('status', 'dibuka')->first(); 
-            $upcomingBatch = $p->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
+        @foreach($featuredPrograms as $index => $p)
+          @php
+            // Batch sudah di-eager-load di controller — tidak ada query DB di sini
+            $cardActiveBatch   = $p->batches->where('status', 'dibuka')->first();
+            $cardUpcomingBatch = $p->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
           @endphp
 
-          @if($activeBatch)
-            <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.enroll') }} {{ $activeBatch->nama_batch }}</a>
-            <span class="prog-note">⚡ {{ __('messages.program.batch.batch_open') }}</span>
-          @elseif($upcomingBatch)
-            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.see_schedule') }}</a>
-            <span class="prog-note">📅 {{ __('messages.program.batch.coming_soon') }}: {{ $upcomingBatch->tanggal_buka->format('d M') }}</span>
-          @else
-            <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">{{ __('messages.program.batch.details') }}</a>
-            <span class="prog-note">✦ {{ __('messages.program.batch.enroll_info') }}</span>
-          @endif
-        </div>
-      </article>
-      @endforeach
+          <article class="prog-card {{ $cardClasses[$index % 4] }} reveal-d{{ ($index % 4) + 1 }}">
+            <div class="prog-glow" aria-hidden="true"></div>
 
-      @if($programs->isEmpty())
-        <div style="flex: 0 0 100%; text-align: center; padding: 40px; background: white; border-radius: 24px; border: 1px dashed #cbd5e1;">
+            <div class="prog-badge">
+              <span class="bdot"></span>
+              <span class="dynamic-lang"
+                    data-id="{{ $p->getTranslation('nama_program', 'id') }}"
+                    data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">
+                {{ $p->nama_program }}
+              </span>
+            </div>
+
+            <h3 class="dynamic-lang"
+                data-id="{{ $p->getTranslation('nama_program', 'id') }}"
+                data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">
+              {{ $p->nama_program }}
+            </h3>
+
+            <p class="dynamic-lang"
+               data-id="{{ Str::limit($p->getTranslation('deskripsi', 'id'), 120) }}"
+               data-jp="{{ Str::limit($p->getTranslation('deskripsi', 'jp'), 120) }}">
+              {{ Str::limit($p->deskripsi, 120) }}
+            </p>
+
+            {{-- $p->benefitItems diparsing oleh Program::getBenefitItemsAttribute() --}}
+            <ul class="feat-list">
+              @foreach(array_slice($p->benefitItems, 0, 4) as $b)
+                <li>{{ $b }}</li>
+              @endforeach
+            </ul>
+
+            <div class="prog-footer">
+              @if($cardActiveBatch)
+                <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">
+                  {{ __('messages.program.batch.enroll') }} {{ $cardActiveBatch->nama_batch }}
+                </a>
+                <span class="prog-note">⚡ {{ __('messages.program.batch.batch_open') }}</span>
+              @elseif($cardUpcomingBatch)
+                <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">
+                  {{ __('messages.program.batch.see_schedule') }}
+                </a>
+                <span class="prog-note">📅 {{ __('messages.program.batch.coming_soon') }}: {{ $cardUpcomingBatch->tanggal_buka->format('d M') }}</span>
+              @else
+                <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">
+                  {{ __('messages.program.batch.details') }}
+                </a>
+                <span class="prog-note">✦ {{ __('messages.program.batch.enroll_info') }}</span>
+              @endif
+            </div>
+          </article>
+        @endforeach
+
+        @if($featuredPrograms->isEmpty())
+          <div style="flex: 0 0 100%; text-align: center; padding: 40px; background: white; border-radius: 24px; border: 1px dashed #cbd5e1;">
             <p class="text-slate-500">{{ __('messages.home.program_empty') }}</p>
-        </div>
-      @endif
+          </div>
+        @endif
       </div>
     </div>
   </div>
@@ -88,11 +112,9 @@
   .program-carousel::-webkit-scrollbar {
     display: none;
   }
-  
   .program-carousel .prog-card {
     flex: 0 0 calc(50% - 15px);
   }
-  
   .program-nav-btn {
     position: absolute;
     top: 50%;
@@ -127,9 +149,9 @@
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.getElementById('program-carousel');
-    const btnPrev = document.getElementById('program-prev');
-    const btnNext = document.getElementById('program-next');
-    
+    const btnPrev  = document.getElementById('program-prev');
+    const btnNext  = document.getElementById('program-next');
+
     if (!carousel || !btnPrev || !btnNext) return;
 
     let autoScrollInterval;
@@ -151,25 +173,11 @@
       }
     }
 
-    function startAutoScroll() {
-      autoScrollInterval = setInterval(scrollNext, scrollPace);
-    }
+    function startAutoScroll() { autoScrollInterval = setInterval(scrollNext, scrollPace); }
+    function resetAutoScroll()  { clearInterval(autoScrollInterval); startAutoScroll(); }
 
-    function resetAutoScroll() {
-      clearInterval(autoScrollInterval);
-      startAutoScroll();
-    }
-
-    btnNext.addEventListener('click', () => {
-      scrollNext();
-      resetAutoScroll();
-    });
-
-    btnPrev.addEventListener('click', () => {
-      scrollPrev();
-      resetAutoScroll();
-    });
-
+    btnNext.addEventListener('click', () => { scrollNext(); resetAutoScroll(); });
+    btnPrev.addEventListener('click', () => { scrollPrev(); resetAutoScroll(); });
     carousel.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
     carousel.addEventListener('mouseleave', startAutoScroll);
 

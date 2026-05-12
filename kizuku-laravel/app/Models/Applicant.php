@@ -17,28 +17,13 @@ class Applicant extends Model
         'phone',
         'email',
         'pendidikan',
-        'jurusan_ipk',
-        'pengalaman',
         'pengalaman_kerja',
-        'motivasi',
         'status_seleksi',
-        // New specialized fields
-        'tinggi_badan',
-        'berat_badan',
-        'kondisi_mata',
-        'tato',
-        'merokok',
-        'bidang_ssw',
-        'level_bahasa_jepang',
-        'ipk',
-        'shift_kursus',
         'additional_data'
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
-        'tato' => 'boolean',
-        'merokok' => 'boolean',
         'additional_data' => 'array',
     ];
 

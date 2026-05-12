@@ -9,7 +9,7 @@
     <h3 class="text-slate-800 font-bold text-2xl">{{ isset($program) ? 'Edit Program: ' . $program->nama_program : 'Buat Program Baru' }}</h3>
   </div>
 
-  <form action="{{ isset($program) ? route('admin.programs.update', $program) : route('admin.programs.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <form action="{{ isset($program) ? route('admin.programs.update', $program) : route('admin.programs.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     @csrf
     @if(isset($program)) @method('PUT') @endif
 
@@ -41,6 +41,15 @@
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Video URL (YouTube Embed)</label>
             <input type="url" name="video_url" value="{{ old('video_url', $program->video_url ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="https://www.youtube.com/embed/...">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Thumbnail Program</label>
+            <input type="file" name="thumbnail" accept="image/*" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 focus:border-primary focus:ring-primary/20 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+            @if(isset($program) && $program->thumbnail_path)
+              <div class="mt-2">
+                <img src="{{ asset('storage/' . $program->thumbnail_path) }}" alt="Thumbnail" class="h-20 w-auto object-cover rounded shadow-sm">
+              </div>
+            @endif
           </div>
         </div>
       </div>

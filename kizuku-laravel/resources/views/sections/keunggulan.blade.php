@@ -1,6 +1,3 @@
-@php
-    $keunggulans = \App\Models\Keunggulan::where('is_active', true)->orderBy('order', 'asc')->get();
-@endphp
 
 @if($keunggulans->count() > 0)
 <!-- ═══ KEUNGGULAN KIZUKU ═══ -->

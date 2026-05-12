@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Program;
+use App\Http\Requests\Admin\ProgramRequest;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProgramController extends Controller
 {
@@ -16,39 +16,21 @@ class ProgramController extends Controller
         return view('admin.programs.index', compact('programs'));
     }
 
-    /*
     public function create()
     {
         return view('admin.programs.create');
     }
 
-    public function store(Request $request)
+    public function store(ProgramRequest $request)
     {
-        $request->validate([
-            'nama_program' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'target_peserta' => 'nullable|string',
-            'durasi' => 'nullable|string',
-            'benefit' => 'nullable|string',
-            'alur_seleksi' => 'nullable|string',
-            'biaya' => 'nullable|string',
-            'faq' => 'nullable|array',
-            'focus' => 'nullable|string',
-            'output' => 'nullable|string',
-            'video_url' => 'nullable|string',
-            'status' => 'required|in:aktif,nonaktif',
-            'is_featured' => 'nullable|boolean',
-        ]);
-
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->nama_program);
-        $data['is_featured'] = $request->has('is_featured');
+        $validated = $request->validated();
+        
+        $data = $this->prepareProgramData($validated, $request);
 
         Program::create($data);
 
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil ditambahkan.');
     }
-    */
 
     public function show(Program $program)
     {
@@ -60,27 +42,11 @@ class ProgramController extends Controller
         return view('admin.programs.edit', compact('program'));
     }
 
-    public function update(Request $request, Program $program)
+    public function update(ProgramRequest $request, Program $program)
     {
-        $request->validate([
-            'nama_program' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'target_peserta' => 'nullable|string',
-            'durasi' => 'nullable|string',
-            'benefit' => 'nullable|string',
-            'alur_seleksi' => 'nullable|string',
-            'biaya' => 'nullable|string',
-            'faq' => 'nullable|array',
-            'focus' => 'nullable|string',
-            'output' => 'nullable|string',
-            'video_url' => 'nullable|string',
-            'status' => 'required|in:aktif,nonaktif',
-            'is_featured' => 'nullable|boolean',
-        ]);
-
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->nama_program);
-        $data['is_featured'] = $request->has('is_featured');
+        $validated = $request->validated();
+        
+        $data = $this->prepareProgramData($validated, $request, $program);
 
         $program->update($data);
 
@@ -89,7 +55,43 @@ class ProgramController extends Controller
 
     public function destroy(Program $program)
     {
+        if ($program->thumbnail_path && Storage::disk('public')->exists($program->thumbnail_path)) {
+            Storage::disk('public')->delete($program->thumbnail_path);
+        }
+        
         $program->delete();
+        
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil dihapus.');
     }
+    
+    /**
+     * Helper to prepare data for create and update.
+     * 
+     * @param array $validated
+     * @param ProgramRequest $request
+     * @param Program|null $program
+     * @return array
+     */
+    private function prepareProgramData(array $validated, ProgramRequest $request, ?Program $program = null): array
+    {
+        // Set fixed attributes
+        $validated['slug'] = Str::slug($validated['nama_program']);
+        $validated['is_featured'] = $request->has('is_featured');
+        
+        // Handle Thumbnail Upload
+        if ($request->hasFile('thumbnail')) {
+            // Delete old thumbnail if updating
+            if ($program && $program->thumbnail_path && Storage::disk('public')->exists($program->thumbnail_path)) {
+                Storage::disk('public')->delete($program->thumbnail_path);
+            }
+            
+            $validated['thumbnail_path'] = $request->file('thumbnail')->store('programs/thumbnails', 'public');
+        }
+        
+        // Remove thumbnail key so it doesn't cause Model fillable error if not needed
+        unset($validated['thumbnail']);
+        
+        return $validated;
+    }
 }
+

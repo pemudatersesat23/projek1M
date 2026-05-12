@@ -15,18 +15,62 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $beritas = Berita::published()->latest()->take(7)->get();
-        $campuses = \App\Models\PartnerCampus::latest()->get();
+        $beritas      = Berita::published()->latest()->take(7)->get();
+        $campuses     = \App\Models\PartnerCampus::latest()->get();
         $heroSections = \App\Models\HeroSection::where('is_active', true)->orderBy('sort_order')->get();
         $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
-        $featuredPrograms = \App\Models\Program::with(['batches' => function($q) {
-            $q->whereIn('status', ['dibuka', 'akan_dibuka']);
-        }])->where('is_featured', true)->where('status', 'aktif')->get();
-        $fasilitas = \App\Models\Fasilitas::orderBy('urutan')->get();
-        $galleries = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
+        $fasilitas    = \App\Models\Fasilitas::orderBy('urutan')->get();
+        $galleries    = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
 
-        return view('home', compact('beritas', 'campuses', 'heroSections', 'testimonials', 'featuredPrograms', 'fasilitas', 'galleries'));
+        // ── Programs ────────────────────────────────────────────────────────
+        // Ambil featured programs; jika tidak ada, fallback ke semua aktif.
+        // Sehingga blade TIDAK perlu melakukan query sendiri.
+        $batchQuery = fn ($q) => $q->whereIn('status', ['dibuka', 'akan_dibuka']);
+
+        $featuredPrograms = \App\Models\Program::with(['batches' => $batchQuery])
+            ->where('is_featured', true)
+            ->where('status', 'aktif')
+            ->get();
+
+        if ($featuredPrograms->isEmpty()) {
+            $featuredPrograms = \App\Models\Program::with(['batches' => $batchQuery])
+                ->where('status', 'aktif')
+                ->get();
+        }
+
+        // ── Site Stats ───────────────────────────────────────────────────────
+        // Satu query untuk semua setting stats (bukan 5 query terpisah di blade).
+        $statKeys    = ['stats_active', 'stats_alumni', 'stats_success', 'stats_years', 'stats_programs'];
+        $settingsMap = \App\Models\Setting::whereIn('key', $statKeys)->get()->keyBy('key');
+
+        $siteStats = [
+            'active'   => (bool) ($settingsMap->get('stats_active')?->value ?? 1),
+            'items'    => [
+                [
+                    'value'     => $settingsMap->get('stats_alumni')?->value   ?? '1000+',
+                    'label_key' => 'messages.home.stats.alumni',
+                ],
+                [
+                    'value'     => $settingsMap->get('stats_success')?->value  ?? '98%',
+                    'label_key' => 'messages.home.stats.success',
+                ],
+                [
+                    'value'     => $settingsMap->get('stats_years')?->value    ?? '10+',
+                    'label_key' => 'messages.home.stats.years',
+                ],
+                [
+                    'value'     => $settingsMap->get('stats_programs')?->value ?? '4',
+                    'label_key' => 'messages.home.stats.programs',
+                ],
+            ],
+        ];
+
+        return view('home', compact(
+            'beritas', 'campuses', 'heroSections', 'testimonials',
+            'featuredPrograms', 'fasilitas', 'galleries', 'siteStats'
+        ));
     }
+
 
 
     public function showProgram($slug)

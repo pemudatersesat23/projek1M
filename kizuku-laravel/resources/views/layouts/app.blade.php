@@ -379,7 +379,7 @@
             <a class="ft-soc" href="#" aria-label="Instagram">📸</a>
             <a class="ft-soc" href="#" aria-label="TikTok">🎵</a>
             <a class="ft-soc" href="#" aria-label="YouTube">▶️</a>
-            <a class="ft-soc" href="https://wa.me/{{ \App\Models\Setting::get('whatsapp_number', '6281217549529') }}" aria-label="WhatsApp">💬</a>
+            <a class="ft-soc" href="https://wa.me/{{ $appSettings['whatsapp_number'] }}" aria-label="WhatsApp">💬</a>
           </div>
         </div>
         <div class="ft-col">
@@ -578,7 +578,7 @@
             return;
         }
 
-        const phone = '{{ \App\Models\Setting::get("whatsapp_number", "6281217549529") }}';
+        const phone = '{{ $appSettings["whatsapp_number"] }}';
         const template = `Halo Admin, saya *${name}*. Saya ingin bertanya tentang program *${program}*.\n\nPertanyaan saya:\n${question}`;
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(template)}`;
         

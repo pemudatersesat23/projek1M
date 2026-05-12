@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
-use Illuminate\Http\Request;
+use App\Http\Requests\BeritaRequest;
 use Illuminate\Support\Facades\Storage;
 
 class BeritaController extends Controller
@@ -19,14 +19,9 @@ class BeritaController extends Controller
         return view('admin.berita.show', compact('berita'));
     }
 
-    public function store(Request $request)
+    public function store(BeritaRequest $request)
     {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'status_publish' => 'required|in:draft,published',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
-            'lokasi' => 'nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -34,12 +29,12 @@ class BeritaController extends Controller
         }
 
         Berita::create([
-            'judul'          => $request->judul,
-            'kategori'       => $request->kategori ?? 'kat-info',
+            'judul'          => $validated['judul'],
+            'kategori'       => $validated['kategori'] ?? 'kat-info',
             'image'          => $imagePath,
-            'lokasi'         => $request->lokasi,
-            'isi'            => $request->isi,
-            'status_publish' => $request->status_publish,
+            'lokasi'         => $validated['lokasi'] ?? null,
+            'isi'            => $validated['isi'] ?? null,
+            'status_publish' => $validated['status_publish'],
         ]);
 
         return redirect()->route('admin.berita.index')
@@ -51,21 +46,16 @@ class BeritaController extends Controller
         return view('admin.berita.edit', compact('berita'));
     }
 
-    public function update(Request $request, Berita $berita)
+    public function update(BeritaRequest $request, Berita $berita)
     {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'status_publish' => 'required|in:draft,published',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
-            'lokasi' => 'nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         $data = [
-            'judul'          => $request->judul,
-            'kategori'       => $request->kategori ?? 'kat-info',
-            'lokasi'         => $request->lokasi,
-            'isi'            => $request->isi,
-            'status_publish' => $request->status_publish,
+            'judul'          => $validated['judul'],
+            'kategori'       => $validated['kategori'] ?? 'kat-info',
+            'lokasi'         => $validated['lokasi'] ?? null,
+            'isi'            => $validated['isi'] ?? null,
+            'status_publish' => $validated['status_publish'],
         ];
 
         if ($request->hasFile('image')) {

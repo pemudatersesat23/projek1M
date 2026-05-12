@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
-use Illuminate\Http\Request;
+use App\Http\Requests\SiswaRequest;
 
 class SiswaController extends Controller
 {
@@ -42,33 +42,27 @@ class SiswaController extends Controller
         return view('admin.siswa.create');
     }
 
-    public function store(Request $request)
+    public function store(SiswaRequest $request)
     {
-        $request->validate([
-            'nama'    => 'required|string|max:255',
-            'wa'      => 'required|string|max:50',
-            'kota'    => 'required|string|max:255',
-            'program' => 'required|string|max:255',
-        ]);
-
+        $validated = $request->validated();
         $extraFields = $this->buildExtraFields($request);
 
         Siswa::create([
-            'nama'           => $request->nama,
-            'wa'             => $request->wa,
-            'email'          => $request->email,
-            'kota'           => $request->kota,
-            'program'        => $request->program,
-            'status'         => $request->status ?? 'Aktif',
-            'pendidikan'     => $request->pendidikan,
-            'catatan'        => $request->catatan,
-            'tgl_lahir'      => $request->tgl_lahir,
+            'nama'           => $validated['nama'],
+            'wa'             => $validated['wa'],
+            'email'          => $validated['email'] ?? null,
+            'kota'           => $validated['kota'],
+            'program'        => $validated['program'],
+            'status'         => $validated['status'] ?? 'Aktif',
+            'pendidikan'     => $validated['pendidikan'] ?? null,
+            'catatan'        => $validated['catatan'] ?? null,
+            'tgl_lahir'      => $validated['tgl_lahir'] ?? null,
             'extra_fields'   => $extraFields ? json_encode($extraFields) : null,
-            'payment_status' => $request->payment_status ?? 'Pending',
+            'payment_status' => $validated['payment_status'] ?? 'Pending',
         ]);
 
         return redirect()->route('admin.siswa.index')
-                         ->with('success', "Data \"{$request->nama}\" berhasil disimpan!");
+                         ->with('success', "Data \"{$validated['nama']}\" berhasil disimpan!");
     }
 
     public function show(Siswa $siswa)
@@ -81,27 +75,22 @@ class SiswaController extends Controller
         return view('admin.siswa.edit', compact('siswa'));
     }
 
-    public function update(Request $request, Siswa $siswa)
+    public function update(SiswaRequest $request, Siswa $siswa)
     {
-        $request->validate([
-            'nama'    => 'required|string|max:255',
-            'wa'      => 'required|string|max:50',
-            'kota'    => 'required|string|max:255',
-            'program' => 'required|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         $extraFields = $this->buildExtraFields($request);
 
         $data = [
-            'nama'       => $request->nama,
-            'wa'         => $request->wa,
-            'email'      => $request->email,
-            'kota'       => $request->kota,
-            'program'    => $request->program,
-            'status'     => $request->status ?? $siswa->status,
-            'pendidikan' => $request->pendidikan,
-            'catatan'    => $request->catatan,
-            'tgl_lahir'  => $request->tgl_lahir,
+            'nama'       => $validated['nama'],
+            'wa'         => $validated['wa'],
+            'email'      => $validated['email'] ?? null,
+            'kota'       => $validated['kota'],
+            'program'    => $validated['program'],
+            'status'     => $validated['status'] ?? $siswa->status,
+            'pendidikan' => $validated['pendidikan'] ?? null,
+            'catatan'    => $validated['catatan'] ?? null,
+            'tgl_lahir'  => $validated['tgl_lahir'] ?? null,
         ];
 
         if ($extraFields) {

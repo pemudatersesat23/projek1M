@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PartnerCampus;
-use Illuminate\Http\Request;
+use App\Http\Requests\PartnerCampusRequest;
+use Illuminate\Support\Facades\Storage;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class PartnerCampusController extends Controller
 {
@@ -21,39 +23,26 @@ class PartnerCampusController extends Controller
         return view('admin.partner.create');
     }
 
-    public function store(Request $request)
+    public function store(PartnerCampusRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'banner' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'description' => 'required|string|max:1000',
-        ]);
+        $validated = $request->validated();
 
-        $imageName = time() . '_logo.' . $request->logo->extension();
-        $request->logo->move(public_path('image/partner_campuses'), $imageName);
+        $logoPath   = $request->file('logo')->store('partner_campuses/logos', 'public');
+        $bannerPath = $request->file('banner')->store('partner_campuses/banners', 'public');
 
-        $bannerName = time() . '_banner.' . $request->banner->extension();
-        $request->banner->move(public_path('image/partner_campuses'), $bannerName);
-        
-        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate();
-        $tr->setSource('id');
-        $tr->setTarget('ja');
-        
-        $nameJp = $tr->translate($request->name);
-        $descJp = $tr->translate($request->description);
+        [$nameJp, $descJp] = $this->translateContent($validated['name'], $validated['description']);
 
         PartnerCampus::create([
             'name' => [
-                'id' => $request->name,
+                'id' => $validated['name'],
                 'jp' => $nameJp,
             ],
             'description' => [
-                'id' => $request->description,
+                'id' => $validated['description'],
                 'jp' => $descJp,
             ],
-            'logo' => 'image/partner_campuses/' . $imageName,
-            'banner' => 'image/partner_campuses/' . $bannerName,
+            'logo'   => $logoPath,
+            'banner' => $bannerPath,
         ]);
 
         return redirect()->route('admin.partner-campus.index')
@@ -65,54 +54,37 @@ class PartnerCampusController extends Controller
         return view('admin.partner.edit', compact('partnerCampus'));
     }
 
-    public function update(Request $request, PartnerCampus $partnerCampus)
+    public function update(PartnerCampusRequest $request, PartnerCampus $partnerCampus)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'description' => 'required|string|max:1000',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('logo')) {
-            $oldImagePath = public_path($partnerCampus->logo);
-            if (file_exists($oldImagePath) && \is_file($oldImagePath)) {
-                @unlink($oldImagePath);
+            // Delete old logo safely via Storage API
+            if ($partnerCampus->logo && Storage::disk('public')->exists($partnerCampus->logo)) {
+                Storage::disk('public')->delete($partnerCampus->logo);
             }
-
-            $imageName = time() . '_logo.' . $request->logo->extension();
-            $request->logo->move(public_path('image/partner_campuses'), $imageName);
-            $partnerCampus->logo = 'image/partner_campuses/' . $imageName;
+            $partnerCampus->logo = $request->file('logo')->store('partner_campuses/logos', 'public');
         }
 
         if ($request->hasFile('banner')) {
-            $oldBannerPath = public_path($partnerCampus->banner);
-            if ($oldBannerPath && file_exists($oldBannerPath) && \is_file($oldBannerPath)) {
-                @unlink($oldBannerPath);
+            // Delete old banner safely via Storage API
+            if ($partnerCampus->banner && Storage::disk('public')->exists($partnerCampus->banner)) {
+                Storage::disk('public')->delete($partnerCampus->banner);
             }
-
-            $bannerName = time() . '_banner.' . $request->banner->extension();
-            $request->banner->move(public_path('image/partner_campuses'), $bannerName);
-            $partnerCampus->banner = 'image/partner_campuses/' . $bannerName;
+            $partnerCampus->banner = $request->file('banner')->store('partner_campuses/banners', 'public');
         }
 
-        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate();
-        $tr->setSource('id');
-        $tr->setTarget('ja');
-        
-        $nameJp = $tr->translate($request->name);
-        $descJp = $tr->translate($request->description);
+        [$nameJp, $descJp] = $this->translateContent($validated['name'], $validated['description']);
 
         $partnerCampus->name = [
-            'id' => $request->name,
+            'id' => $validated['name'],
             'jp' => $nameJp,
         ];
-
         $partnerCampus->description = [
-            'id' => $request->description,
+            'id' => $validated['description'],
             'jp' => $descJp,
         ];
-        
+
         $partnerCampus->save();
 
         return redirect()->route('admin.partner-campus.index')
@@ -121,19 +93,37 @@ class PartnerCampusController extends Controller
 
     public function destroy(PartnerCampus $partnerCampus)
     {
-        $oldImagePath = public_path($partnerCampus->logo);
-        if (file_exists($oldImagePath) && \is_file($oldImagePath)) {
-            @unlink($oldImagePath);
+        // Delete images safely via Storage API (no public_path, no @unlink)
+        if ($partnerCampus->logo && Storage::disk('public')->exists($partnerCampus->logo)) {
+            Storage::disk('public')->delete($partnerCampus->logo);
         }
-
-        $oldBannerPath = public_path($partnerCampus->banner);
-        if ($oldBannerPath && file_exists($oldBannerPath) && \is_file($oldBannerPath)) {
-            @unlink($oldBannerPath);
+        if ($partnerCampus->banner && Storage::disk('public')->exists($partnerCampus->banner)) {
+            Storage::disk('public')->delete($partnerCampus->banner);
         }
 
         $partnerCampus->delete();
 
         return redirect()->route('admin.partner-campus.index')
                          ->with('success', 'Kampus partner berhasil dihapus.');
+    }
+
+    /**
+     * Translate content to Japanese using GoogleTranslate.
+     * Returns [$nameJp, $descJp].
+     */
+    private function translateContent(string $name, string $description): array
+    {
+        try {
+            $tr = new GoogleTranslate('ja');
+            $tr->setSource('id');
+            $nameJp = $tr->translate($name);
+            $descJp = $tr->translate($description);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('PartnerCampus translate error: ' . $e->getMessage());
+            $nameJp = $name;
+            $descJp = $description;
+        }
+
+        return [$nameJp, $descJp];
     }
 }

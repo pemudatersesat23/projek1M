@@ -71,4 +71,52 @@ class Program extends Model
             ->orderBy('tanggal_buka', 'asc')
             ->first();
     }
+
+    /**
+     * Accessor: parse teks benefit menjadi array baris bersih.
+     * Mendukung format: "- Item" atau "✓ Item" atau plain text per baris.
+     * Gunakan: $program->benefitItems (otomatis locale-aware via HasTranslations)
+     *
+     * @return array<int, string>
+     */
+    public function getBenefitItemsAttribute(): array
+    {
+        $raw = $this->getTranslation('benefit', app()->getLocale());
+
+        if (empty($raw)) {
+            return [];
+        }
+
+        $lines = explode("\n", str_replace(['-', '✓'], '', $raw));
+
+        return array_values(
+            array_filter(
+                array_map('trim', $lines)
+            )
+        );
+    }
+
+    /**
+     * Accessor: parse teks alur_seleksi menjadi array baris bersih.
+     * Mendukung format: "- Step" atau "> Step" atau plain text per baris.
+     * Gunakan: $program->alurSeleksiItems
+     *
+     * @return array<int, string>
+     */
+    public function getAlurSeleksiItemsAttribute(): array
+    {
+        $raw = $this->getTranslation('alur_seleksi', app()->getLocale());
+
+        if (empty($raw)) {
+            return [];
+        }
+
+        $lines = explode("\n", str_replace(['-', '>'], '', $raw));
+
+        return array_values(
+            array_filter(
+                array_map('trim', $lines)
+            )
+        );
+    }
 }
