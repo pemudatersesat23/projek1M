@@ -272,14 +272,14 @@ selesai
 
 #### Mapping status ke frontend
 
-| Internal Status | Label Frontend | CTA |
-|---|---|---|
-| `dibuka` | Aktif | Tombol daftar aktif |
-| `diperpanjang` | Diperpanjang | Tombol daftar aktif |
-| `akan_dibuka` | Segera Dibuka | Tombol disabled |
-| `ditutup` | Ditutup | Tombol disabled |
-| `berjalan` | Sedang Berjalan | Tombol disabled |
-| `selesai` | Selesai | Tombol disabled |
+| Internal Status | Label Frontend  | CTA                 |
+| --------------- | --------------- | ------------------- |
+| `dibuka`        | Aktif           | Tombol daftar aktif |
+| `diperpanjang`  | Diperpanjang    | Tombol daftar aktif |
+| `akan_dibuka`   | Segera Dibuka   | Tombol disabled     |
+| `ditutup`       | Ditutup         | Tombol disabled     |
+| `berjalan`      | Sedang Berjalan | Tombol disabled     |
+| `selesai`       | Selesai         | Tombol disabled     |
 
 #### CTA type
 

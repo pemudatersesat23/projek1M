@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Batch;
 use App\Models\Program;
+use App\Http\Requests\Admin\BatchRequest;
 
 class BatchController extends Controller
 {
@@ -19,28 +18,13 @@ class BatchController extends Controller
     public function create()
     {
         $programs = Program::where('status', 'aktif')->get();
-        $batch = new Batch(); // Inisialisasi objek kosong untuk form
+        $batch = new Batch();
         return view('admin.batches.create', compact('programs', 'batch'));
     }
 
-    public function store(Request $request)
+    public function store(BatchRequest $request)
     {
-        $request->validate([
-            'program_id' => 'required|exists:programs,id',
-            'nama_batch' => 'required|string|max:255',
-            'status' => 'required|in:akan_dibuka,dibuka,ditutup,berjalan,selesai',
-            'tanggal_buka' => 'nullable|date',
-            'tanggal_tutup' => 'nullable|date',
-            'tanggal_mulai' => 'nullable|date',
-            'tanggal_selesai' => 'nullable|date',
-            'tanggal_estimasi_selesai' => 'nullable|date',
-            'kuota' => 'nullable|integer',
-            'link_form' => 'nullable|url',
-            'cta_type' => 'required|in:internal_form,whatsapp',
-            'whatsapp_link' => 'nullable|url',
-        ]);
-
-        Batch::create($request->all());
+        Batch::create($request->validated());
         
         return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil ditambahkan.');
     }
@@ -56,24 +40,9 @@ class BatchController extends Controller
         return view('admin.batches.edit', compact('batch', 'programs'));
     }
 
-    public function update(Request $request, Batch $batch)
+    public function update(BatchRequest $request, Batch $batch)
     {
-        $request->validate([
-            'program_id' => 'required|exists:programs,id',
-            'nama_batch' => 'required|string|max:255',
-            'status' => 'required|in:akan_dibuka,dibuka,ditutup,berjalan,selesai',
-            'tanggal_buka' => 'nullable|date',
-            'tanggal_tutup' => 'nullable|date',
-            'tanggal_mulai' => 'nullable|date',
-            'tanggal_selesai' => 'nullable|date',
-            'tanggal_estimasi_selesai' => 'nullable|date',
-            'kuota' => 'nullable|integer',
-            'link_form' => 'nullable|url',
-            'cta_type' => 'required|in:internal_form,whatsapp',
-            'whatsapp_link' => 'nullable|url',
-        ]);
-
-        $batch->update($request->all());
+        $batch->update($request->validated());
 
         return redirect()->route('admin.batches.index')->with('success', 'Batch berhasil diperbarui.');
     }

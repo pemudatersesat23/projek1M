@@ -1,80 +1,185 @@
 {{--
   components/program/detail/batch-section.blade.php
-  Props: $activeBatch, $nextBatch
+  Props: $program
 --}}
+<div class="batch-section-wrapper" style="display: flex; flex-direction: column; gap: 24px;">
 
-<div class="batch-card reveal reveal-d2">
+  {{-- ── SCHEMA SELECTOR ── --}}
+  @if($program->hasActiveSchemas())
+    <div class="schema-selector-card reveal reveal-d2" style="background: white; border-radius: 24px; padding: 32px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); border: 1px solid #f1f5f9;">
+      <h3 style="font-size: 20px; font-weight: 900; color: #0f1c23; margin-bottom: 20px;">Pilih Skema Pendaftaran</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 24px; line-height: 1.6;">
+        Program ini memiliki beberapa skema pendaftaran. Silakan pilih skema yang sesuai dengan kualifikasi Anda.
+      </p>
 
-  @if($activeBatch)
-
-    <div class="batch-status-badge status-active-badge">{{ __('messages.program.enroll_open') }}</div>
-    <span class="batch-name">{{ $activeBatch->nama_batch }}</span>
-
-    <div class="batch-dates" style="margin: 32px 0; display: flex; flex-direction: column; gap: 16px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:16px 20px; border-radius:16px;">
-        <span style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase;">{{ __('messages.program.batch.pendaftaran') }}</span>
-        <span style="font-weight:800; color:#0f1c23;">{{ $activeBatch->tanggal_buka?->format('d M') }} – {{ $activeBatch->tanggal_tutup?->format('d M Y') }}</span>
+      <div class="schema-list" style="display: flex; flex-direction: column; gap: 16px;">
+        @foreach($program->activeSchemas as $schema)
+          <label class="schema-option" style="display: block; cursor: pointer;">
+            <input type="radio" name="schema_selection" value="{{ $schema->id }}" style="display: none;" onchange="selectSchema({{ $schema->id }})">
+            <div class="schema-box" id="schema-box-{{ $schema->id }}" style="padding: 20px; border: 2px solid #e2e8f0; border-radius: 16px; transition: all 0.3s;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div>
+                  <span style="display: inline-block; padding: 4px 10px; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
+                    {{ str_replace('_', ' ', $schema->tipe) }}
+                  </span>
+                  <h4 style="font-size: 16px; font-weight: 800; color: #0f1c23;">{{ $schema->getTranslation('nama_skema', app()->getLocale()) ?: $schema->nama_skema }}</h4>
+                </div>
+                <div class="schema-radio-circle" style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #cbd5e1; position: relative;">
+                  <div class="schema-radio-dot" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 10px; height: 10px; border-radius: 50%; background: var(--primary); transition: all 0.2s;"></div>
+                </div>
+              </div>
+              
+              <p style="font-size: 13px; color: #64748b; margin-bottom: 12px; line-height: 1.5;">
+                {{ $schema->getTranslation('deskripsi', app()->getLocale()) ?: $schema->deskripsi }}
+              </p>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 12px;">
+                <span style="font-size: 14px; font-weight: 900; color: var(--primary);">{{ $schema->formattedPrice() }}</span>
+                @if($schema->batch)
+                  <span style="font-size: 12px; font-weight: 700; color: #f59e0b;">🔥 Khusus: {{ $schema->batch->nama_batch }}</span>
+                @endif
+              </div>
+            </div>
+          </label>
+        @endforeach
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:16px 20px; border-radius:16px;">
-        <span style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase;">{{ __('messages.program.batch.mulai') }}</span>
-        <span style="font-weight:800; color:#0f1c23;">{{ $activeBatch->tanggal_mulai?->format('d M Y') }}</span>
-      </div>
-      @if($activeBatch->kuota)
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#f0fdf4; padding:16px 20px; border-radius:16px; border:1px solid #dcfce7;">
-          <span style="font-size:12px; font-weight:800; color:#059669; text-transform:uppercase;">{{ __('messages.program.batch.kuota') }}</span>
-          <span style="font-weight:900; color:#059669;">{{ $activeBatch->kuota ?? 'Fleksibel' }} {{ __('messages.program.batch.peserta') }}</span>
-        </div>
-        @if($activeBatch->tanggal_estimasi_selesai)
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:16px 20px; border-radius:16px;">
-            <span style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase;">{{ __('messages.program.batch.estimasi') }}</span>
-            <span style="font-weight:800; color:#0f1c23;">{{ $activeBatch->tanggal_estimasi_selesai->format('d M Y') }}</span>
-          </div>
-        @endif
-      @endif
     </div>
-
-    <div class="action-buttons">
-      @if($activeBatch->cta_type === 'whatsapp')
-        <a href="{{ $activeBatch->whatsapp_link ?? 'https://wa.me/6281212345678' }}"
-           target="_blank"
-           class="btn btn-primary"
-           style="width:100%; padding:18px; border-radius:16px; justify-content:center; display:flex; font-weight:900; font-size:16px; background:#25d366; border-color:#25d366; box-shadow: 0 10px 25px rgba(37,211,102,0.2);">
-          <svg style="width:20px; height:20px; margin-right:10px;" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-          </svg>
-          {{ __('messages.program.batch.wa_btn') }}
-        </a>
-      @else
-        <a href="#registration-section"
-           class="btn btn-primary"
-           style="width:100%; padding:18px; border-radius:16px; justify-content:center; display:flex; font-weight:900; font-size:16px; box-shadow: 0 10px 25px rgba(0,103,163,0.2);">
-          {{ __('messages.program.batch.enroll_btn') }}
-        </a>
-      @endif
-    </div>
-
-  @elseif($nextBatch)
-
-    <div class="batch-status-badge" style="background:rgba(217, 119, 6, 0.1); color:#d97706;">{{ __('messages.program.enroll_soon') }}</div>
-    <span class="batch-name">{{ $nextBatch->nama_batch }}</span>
-    <p class="text-slate-500 text-sm mb-8 mt-4 font-semibold leading-relaxed">
-      {{ app()->getLocale() === 'jp'
-        ? 'このバッチの登録は ' . $nextBatch->tanggal_buka?->format('Y年m月d日') . ' に開始されます。'
-        : 'Pendaftaran untuk batch ini akan dibuka pada ' . $nextBatch->tanggal_buka?->format('d F Y') . '.' }}
-    </p>
-    <a href="#kontak" class="btn btn-outline" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">
-      {{ __('messages.nav.kontak') }}
-    </a>
-
-  @else
-
-    <div class="batch-status-badge" style="background:#f1f5f9; color:#64748b;">{{ __('messages.program.enroll_closed') }}</div>
-    <span class="batch-name">{{ __('messages.program.no_schedule') }}</span>
-    <p class="text-slate-500 text-sm mb-8 mt-4 font-semibold leading-relaxed">{{ __('messages.program.no_schedule_p') }}</p>
-    <a href="#kontak" class="btn btn-primary" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:16px;">
-      {{ __('messages.program.ask_admin') }}
-    </a>
-
   @endif
 
+  {{-- ── BATCH LIST ── --}}
+  <div class="batch-list-wrapper reveal reveal-d3">
+    <h3 style="font-size: 20px; font-weight: 900; color: #0f1c23; margin-bottom: 20px;">Jadwal & Gelombang</h3>
+    
+    @forelse($program->activeBatches as $batch)
+      <div class="batch-card" style="background: white; border-radius: 24px; padding: 32px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; margin-bottom: 16px;">
+        <div class="batch-status-badge {{ $batch->frontendStatusClass() }}">{{ $batch->frontendStatusLabel() }}</div>
+        <span class="batch-name" style="display: block; font-size: 22px; font-weight: 900; color: #0f1c23; margin-top: 16px;">{{ $batch->nama_batch }}</span>
+
+        <div class="batch-dates" style="margin: 24px 0; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:12px;">
+            <span style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase;">Pendaftaran</span>
+            <span style="font-weight:800; color:#0f1c23; font-size: 14px;">{{ $batch->tanggal_buka?->format('d M') }} – {{ $batch->tanggal_tutup?->format('d M Y') }}</span>
+          </div>
+          @if($batch->tanggal_mulai)
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:12px;">
+            <span style="font-size:12px; font-weight:800; color:#94a3b8; text-transform:uppercase;">Mulai Kelas</span>
+            <span style="font-weight:800; color:#0f1c23; font-size: 14px;">{{ $batch->tanggal_mulai->format('d M Y') }}</span>
+          </div>
+          @endif
+          @if($batch->kuota)
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#f0fdf4; padding:12px 16px; border-radius:12px; border:1px solid #dcfce7;">
+              <span style="font-size:12px; font-weight:800; color:#059669; text-transform:uppercase;">Kuota</span>
+              <span style="font-weight:900; color:#059669; font-size: 14px;">{{ $batch->kuota }} Peserta</span>
+            </div>
+          @endif
+        </div>
+
+        <div class="action-buttons">
+          @if(!$batch->isRegistrationEnabled())
+            <button disabled class="btn" style="width:100%; padding:16px; border-radius:12px; justify-content:center; display:flex; font-weight:800; background:#e2e8f0; color:#94a3b8; cursor:not-allowed;">
+              Pendaftaran {{ $batch->frontendStatusLabel() }}
+            </button>
+          @elseif($batch->cta_type === 'disabled')
+            <button disabled class="btn" style="width:100%; padding:16px; border-radius:12px; justify-content:center; display:flex; font-weight:800; background:#e2e8f0; color:#94a3b8; cursor:not-allowed;">
+              Pendaftaran Tidak Tersedia
+            </button>
+          @elseif($batch->cta_type === 'whatsapp')
+            <a href="{{ $batch->whatsapp_link ?? 'https://wa.me/6281212345678' }}"
+               target="_blank"
+               class="btn btn-primary"
+               style="width:100%; padding:16px; border-radius:12px; justify-content:center; display:flex; font-weight:900; background:#25d366; border-color:#25d366; box-shadow: 0 10px 25px rgba(37,211,102,0.2);">
+              <span class="material-symbols-outlined" style="margin-right: 8px;">chat</span>
+              Daftar via WhatsApp
+            </a>
+          @else
+            <a href="#registration-section"
+               class="btn btn-primary btn-enroll-internal"
+               data-batch="{{ $batch->id }}"
+               style="width:100%; padding:16px; border-radius:12px; justify-content:center; display:flex; font-weight:900; box-shadow: 0 10px 25px rgba(0,103,163,0.2);">
+              Daftar Sekarang
+            </a>
+          @endif
+        </div>
+      </div>
+    @empty
+      <div class="batch-card" style="background: white; border-radius: 24px; padding: 32px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; text-align: center;">
+        <div class="batch-status-badge" style="background:#f1f5f9; color:#64748b; margin: 0 auto 16px auto;">Pendaftaran Ditutup</div>
+        <span class="batch-name" style="display: block; font-size: 18px; font-weight: 900; color: #0f1c23;">Belum Ada Jadwal</span>
+        <p class="text-slate-500 text-sm mb-6 mt-4 font-semibold leading-relaxed">Saat ini belum ada gelombang pendaftaran yang aktif.</p>
+        <a href="#kontak" class="btn btn-primary" style="width:100%; justify-content:center; display:flex; padding:16px; border-radius:12px;">
+          Tanya Admin
+        </a>
+      </div>
+    @endforelse
+  </div>
+
 </div>
+
+<style>
+  .batch-status-badge {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .schema-option input:checked + .schema-box {
+    border-color: var(--primary);
+    background: #f0f9ff;
+  }
+  .schema-option input:checked + .schema-box .schema-radio-circle {
+    border-color: var(--primary);
+  }
+  .schema-option input:checked + .schema-box .schema-radio-dot {
+    transform: translate(-50%, -50%) scale(1);
+  }
+</style>
+
+<script>
+  let selectedSchemaId = null;
+
+  function selectSchema(id) {
+    selectedSchemaId = id;
+    
+    // Set value into hidden input in the registration form
+    const schemaInput = document.getElementById('selected_schema_id');
+    if(schemaInput) {
+      schemaInput.value = id;
+    }
+    
+    // Update active state visuals
+    document.querySelectorAll('.schema-box').forEach(box => {
+      box.style.borderColor = '#e2e8f0';
+      box.style.background = 'transparent';
+    });
+    
+    const activeBox = document.getElementById('schema-box-' + id);
+    if(activeBox) {
+      activeBox.style.borderColor = 'var(--primary)';
+      activeBox.style.background = '#f0f9ff';
+    }
+  }
+
+  // Add click handler to scroll to internal form
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-enroll-internal').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const hasSchema = {{ $program->hasActiveSchemas() ? 'true' : 'false' }};
+        if (hasSchema && !selectedSchemaId) {
+          e.preventDefault();
+          alert('Silakan pilih skema pendaftaran terlebih dahulu.');
+          document.querySelector('.schema-selector-card').scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        
+        const batchId = this.getAttribute('data-batch');
+        const batchInput = document.querySelector('input[name="batch_id"]');
+        if (batchInput) {
+            batchInput.value = batchId;
+        }
+      });
+    });
+  });
+</script>

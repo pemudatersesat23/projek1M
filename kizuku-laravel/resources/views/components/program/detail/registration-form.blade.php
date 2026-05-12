@@ -43,6 +43,7 @@
         @csrf
         <input type="hidden" name="program_id" value="{{ $program->id }}">
         <input type="hidden" name="batch_id"   value="{{ $activeBatch->id }}">
+        <input type="hidden" name="schema_id"  id="selected_schema_id" value="">
 
         {{-- ── DATA PRIBADI (common) ── --}}
         <div class="form-section-label">

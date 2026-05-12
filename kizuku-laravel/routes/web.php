@@ -61,6 +61,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     // CRUD Programs & Batches
     Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
     Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
+    Route::resource('program-schemas', \App\Http\Controllers\Admin\ProgramSchemaController::class);
     Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->parameters([
         'fasilitas' => 'fasilitas'
     ]);

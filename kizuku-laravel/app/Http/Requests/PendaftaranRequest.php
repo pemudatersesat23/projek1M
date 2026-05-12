@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PendaftaranRequest extends FormRequest
 {
@@ -33,6 +34,15 @@ class PendaftaranRequest extends FormRequest
             'pengalaman_kerja' => 'nullable|string',
             'program_id' => 'required|exists:programs,id',
             'batch_id' => 'required|exists:batches,id',
+            'schema_id' => [
+                'nullable',
+                Rule::exists('program_schemas', 'id')->where(function ($query) {
+                    return $query
+                        ->where('program_id', $this->program_id)
+                        ->where('status', 'aktif')
+                        ->whereNull('deleted_at');
+                })
+            ],
             
             // Dynamic Fields (Stored in additional_data JSON column)
             'additional_data' => 'nullable|array',

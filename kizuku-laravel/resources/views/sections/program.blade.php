@@ -28,23 +28,19 @@
         @php $cardClasses = ['red', 'blue', 'dark', 'mix']; @endphp
 
         @foreach($featuredPrograms as $index => $p)
-          @php
-            // Batch sudah di-eager-load di controller — tidak ada query DB di sini
-            $cardActiveBatch   = $p->batches->where('status', 'dibuka')->first();
-            $cardUpcomingBatch = $p->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
-          @endphp
-
           <article class="prog-card {{ $cardClasses[$index % 4] }} reveal-d{{ ($index % 4) + 1 }}">
             <div class="prog-glow" aria-hidden="true"></div>
 
             <div class="prog-badge">
               <span class="bdot"></span>
-              <span class="dynamic-lang"
-                    data-id="{{ $p->getTranslation('nama_program', 'id') }}"
-                    data-jp="{{ $p->getTranslation('nama_program', 'jp') }}">
-                {{ $p->nama_program }}
+              <span>
+                {{ $p->registrationStatusLabel() }}
               </span>
             </div>
+            
+            @if($p->thumbnail_path)
+              <img src="{{ asset('storage/' . $p->thumbnail_path) }}" alt="{{ $p->nama_program }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 20px;" loading="lazy">
+            @endif
 
             <h3 class="dynamic-lang"
                 data-id="{{ $p->getTranslation('nama_program', 'id') }}"
@@ -66,20 +62,12 @@
             </ul>
 
             <div class="prog-footer">
-              @if($cardActiveBatch)
-                <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">
-                  {{ __('messages.program.batch.enroll') }} {{ $cardActiveBatch->nama_batch }}
-                </a>
-                <span class="prog-note">⚡ {{ __('messages.program.batch.batch_open') }}</span>
-              @elseif($cardUpcomingBatch)
-                <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">
-                  {{ __('messages.program.batch.see_schedule') }}
-                </a>
-                <span class="prog-note">📅 {{ __('messages.program.batch.coming_soon') }}: {{ $cardUpcomingBatch->tanggal_buka->format('d M') }}</span>
+              <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">
+                {{ __('messages.program.batch.details') }}
+              </a>
+              @if($p->isRegistrationOpen())
+                <span class="prog-note" style="color: #10b981;">✅ Pendaftaran Dibuka</span>
               @else
-                <a class="btn btn-outline" href="{{ route('programs.show', $p->slug) }}">
-                  {{ __('messages.program.batch.details') }}
-                </a>
                 <span class="prog-note">✦ {{ __('messages.program.batch.enroll_info') }}</span>
               @endif
             </div>
@@ -113,7 +101,7 @@
     display: none;
   }
   .program-carousel .prog-card {
-    flex: 0 0 calc(50% - 15px);
+    flex: 0 0 calc(33.333% - 20px);
   }
   .program-nav-btn {
     position: absolute;
@@ -140,6 +128,9 @@
   #program-prev { left: 0; }
   #program-next { right: 0; }
 
+  @media (max-width: 1024px) {
+    .program-carousel .prog-card { flex: 0 0 calc(50% - 15px); }
+  }
   @media (max-width: 768px) {
     .program-carousel .prog-card { flex: 0 0 calc(100%); }
     .program-wrapper { padding: 0 40px; }

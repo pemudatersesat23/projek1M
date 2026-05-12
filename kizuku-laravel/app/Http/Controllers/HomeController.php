@@ -22,19 +22,16 @@ class HomeController extends Controller
         $fasilitas    = \App\Models\Fasilitas::orderBy('urutan')->get();
         $galleries    = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
 
-        // ── Programs ────────────────────────────────────────────────────────
-        // Ambil featured programs; jika tidak ada, fallback ke semua aktif.
-        // Sehingga blade TIDAK perlu melakukan query sendiri.
-        $batchQuery = fn ($q) => $q->whereIn('status', ['dibuka', 'akan_dibuka']);
-
-        $featuredPrograms = \App\Models\Program::with(['batches' => $batchQuery])
-            ->where('is_featured', true)
-            ->where('status', 'aktif')
+        $featuredPrograms = \App\Models\Program::active()
+            ->featured()
+            ->ordered()
+            ->with(['activeBatches', 'activeSchemas'])
             ->get();
 
         if ($featuredPrograms->isEmpty()) {
-            $featuredPrograms = \App\Models\Program::with(['batches' => $batchQuery])
-                ->where('status', 'aktif')
+            $featuredPrograms = \App\Models\Program::active()
+                ->ordered()
+                ->with(['activeBatches', 'activeSchemas'])
                 ->get();
         }
 
@@ -75,16 +72,15 @@ class HomeController extends Controller
 
     public function showProgram($slug)
     {
-        $program = Program::where('slug', $slug)->firstOrFail();
-        
-        // Find active batch (dibuka) or next upcoming batch (akan_dibuka)
-        $activeBatch = $program->batches()->where('status', 'dibuka')->first();
-        $nextBatch = $program->batches()->where('status', 'akan_dibuka')->orderBy('tanggal_buka')->first();
-        
-        // Get batch history (history of previous and current batches)
-        $batchHistory = $program->batches()
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $program = Program::where('slug', $slug)
+            ->with(['batches' => function($q) {
+                $q->orderBy('created_at', 'desc');
+            }, 'activeBatches', 'activeSchemas'])
+            ->firstOrFail();
+
+        $activeBatch = $program->currentOpenBatch();
+        $nextBatch = $program->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
+        $batchHistory = $program->batches;
 
         return view('program-detail', compact('program', 'activeBatch', 'nextBatch', 'batchHistory'));
     }

@@ -14,6 +14,26 @@
     @if(isset($program)) @method('PUT') @endif
 
     <div class="lg:col-span-2 space-y-6">
+      
+      {{-- Handling Validation Errors --}}
+      @if ($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <span class="material-symbols-outlined text-red-500">error</span>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">Terdapat kesalahan saat menyimpan:</h3>
+              <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+        </div>
+      @endif
+
       {{-- Informasi Utama --}}
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
@@ -23,6 +43,11 @@
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Nama Program <span class="text-accent-red">*</span></label>
             <input type="text" name="nama_program" value="{{ old('nama_program', $program->nama_program ?? '') }}" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Tokutei Ginou (TG)">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Slug (Opsional)</label>
+            <input type="text" name="slug" value="{{ old('slug', $program->slug ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20 bg-slate-50" placeholder="Kosongkan untuk generate otomatis">
+            <p class="text-xs text-slate-400 mt-1">Hanya ubah jika Anda mengerti SEO. Biarkan kosong saat membuat baru.</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Deskripsi Program</label>
@@ -42,14 +67,25 @@
             <label class="block text-sm font-medium text-slate-700 mb-1">Video URL (YouTube Embed)</label>
             <input type="url" name="video_url" value="{{ old('video_url', $program->video_url ?? '') }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="https://www.youtube.com/embed/...">
           </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Thumbnail Program</label>
-            <input type="file" name="thumbnail" accept="image/*" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 focus:border-primary focus:ring-primary/20 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
-            @if(isset($program) && $program->thumbnail_path)
-              <div class="mt-2">
-                <img src="{{ asset('storage/' . $program->thumbnail_path) }}" alt="Thumbnail" class="h-20 w-auto object-cover rounded shadow-sm">
-              </div>
-            @endif
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Thumbnail Program</label>
+              <input type="file" name="thumbnail" accept="image/*" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 focus:border-primary focus:ring-primary/20 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+              @if(isset($program) && $program->thumbnail_path)
+                <div class="mt-2">
+                  <img src="{{ asset('storage/' . $program->thumbnail_path) }}" alt="Thumbnail" class="h-20 w-auto object-cover rounded shadow-sm">
+                </div>
+              @endif
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-1">File Brosur (PDF/DOC)</label>
+              <input type="file" name="brosur" accept=".pdf,.doc,.docx" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 focus:border-primary focus:ring-primary/20 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+              @if(isset($program) && $program->brosur)
+                <div class="mt-2">
+                  <a href="{{ asset('storage/' . $program->brosur) }}" target="_blank" class="text-primary text-sm hover:underline">Lihat Brosur Saat Ini</a>
+                </div>
+              @endif
+            </div>
           </div>
         </div>
       </div>
@@ -125,7 +161,7 @@
     <div class="space-y-6">
       {{-- Pengaturan --}}
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm sticky top-24">
-        <h4 class="font-bold text-slate-800 mb-6">Pengaturan</h4>
+        <h4 class="font-bold text-slate-800 mb-6">Pengaturan Publikasi</h4>
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Status Publikasi</label>
@@ -134,15 +170,27 @@
               <option value="nonaktif" {{ old('status', $program->status ?? '') === 'nonaktif' ? 'selected' : '' }}>Nonaktif (Sembunyikan)</option>
             </select>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Urutan Tampil (Sort Order)</label>
+            <input type="number" name="sort_order" value="{{ old('sort_order', $program->sort_order ?? 0) }}" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+            <p class="text-xs text-slate-400 mt-1">Angka lebih kecil tampil lebih dulu (0, 1, 2...)</p>
+          </div>
           <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
             <input type="checkbox" name="is_featured" value="1" id="is_featured" {{ old('is_featured', $program->is_featured ?? false) ? 'checked' : '' }} class="w-5 h-5 rounded text-primary focus:ring-primary/20 border-slate-300">
-            <label for="is_featured" class="text-sm font-bold text-slate-700">Tampilkan di Beranda</label>
+            <label for="is_featured" class="text-sm font-bold text-slate-700 cursor-pointer">Jadikan Program Unggulan</label>
           </div>
-          <div class="pt-4">
-            <button type="submit" class="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
+          <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+            <input type="checkbox" name="has_schema" value="1" id="has_schema" {{ old('has_schema', $program->has_schema ?? false) ? 'checked' : '' }} class="w-5 h-5 rounded text-primary focus:ring-primary/20 border-slate-300">
+            <label for="has_schema" class="text-sm font-bold text-slate-700 cursor-pointer">Gunakan Fitur Schema (Beasiswa dll)</label>
+          </div>
+          <div class="pt-4 flex gap-2">
+            <button type="submit" class="flex-1 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
               <span class="material-symbols-outlined">save</span>
-              Simpan Program
+              Simpan
             </button>
+            <a href="{{ route('admin.programs.index') }}" class="py-3 px-4 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center">
+              Batal
+            </a>
           </div>
         </div>
       </div>
@@ -170,7 +218,6 @@
       container.insertAdjacentHTML('beforeend', html);
     }
     
-    // Auto-expand textareas
     document.querySelectorAll('textarea').forEach(el => {
       el.addEventListener('input', function() {
         this.style.height = 'auto';
