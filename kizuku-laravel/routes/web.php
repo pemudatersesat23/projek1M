@@ -104,6 +104,23 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('program-schemas', \App\Http\Controllers\Admin\ProgramSchemaController::class);
     Route::resource('form-fields', \App\Http\Controllers\Admin\FormFieldController::class);
     Route::get('form-fields-schemas', [\App\Http\Controllers\Admin\FormFieldController::class, 'schemasForProgram'])->name('form-fields.schemas');
+
+    // New Google Forms-like Builder Routes
+    Route::get('forms', [\App\Http\Controllers\Admin\FormController::class, 'index'])->name('forms.index');
+    Route::get('forms/create', [\App\Http\Controllers\Admin\FormController::class, 'create'])->name('forms.create');
+    Route::post('forms', [\App\Http\Controllers\Admin\FormController::class, 'store'])->name('forms.store');
+    Route::get('forms/{form}/builder', [\App\Http\Controllers\Admin\FormController::class, 'builder'])->name('forms.builder');
+    Route::patch('forms/{form}', [\App\Http\Controllers\Admin\FormController::class, 'update'])->name('forms.update');
+    Route::get('forms/{form}/preview', [\App\Http\Controllers\Admin\FormController::class, 'preview'])->name('forms.preview');
+    Route::post('forms/{form}/publish', [\App\Http\Controllers\Admin\FormController::class, 'publish'])->name('forms.publish');
+    Route::post('forms/{form}/draft', [\App\Http\Controllers\Admin\FormController::class, 'draft'])->name('forms.draft');
+    Route::post('forms/{form}/archive', [\App\Http\Controllers\Admin\FormController::class, 'archive'])->name('forms.archive');
+
+    Route::post('forms/{form}/fields', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'store'])->name('forms.fields.store');
+    Route::patch('forms/{form}/fields/{field}', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'update'])->name('forms.fields.update');
+    Route::post('forms/{form}/fields/{field}/duplicate', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'duplicate'])->name('forms.fields.duplicate');
+    Route::delete('forms/{form}/fields/{field}', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'destroy'])->name('forms.fields.destroy');
+    Route::post('forms/{form}/fields/reorder', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'reorder'])->name('forms.fields.reorder');
     Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->parameters([
         'fasilitas' => 'fasilitas'
     ]);
