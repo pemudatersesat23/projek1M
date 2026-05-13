@@ -71,6 +71,11 @@
                    class="px-3 py-2 bg-white border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors font-medium text-sm">
                     Kembali ke Builder
                 </a>
+                <a href="{{ route('admin.forms.responses.export.csv', $form->id) }}"
+                   class="px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium text-sm inline-flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">download</span>
+                    Export CSV
+                </a>
                 <div class="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1">
                     <a href="{{ route('admin.forms.builder', $form->id) }}"
                        class="tab-btn px-4 py-1.5 rounded-md text-sm font-semibold flex items-center gap-1.5">

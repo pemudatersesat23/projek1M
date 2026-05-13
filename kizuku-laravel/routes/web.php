@@ -126,6 +126,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
 
     // Task 5E — Responses Management
     Route::get('forms/{form}/responses', [\App\Http\Controllers\Admin\FormResponseController::class, 'index'])->name('forms.responses.index');
+    Route::get('forms/{form}/responses/export/csv', [\App\Http\Controllers\Admin\FormResponseController::class, 'exportCsv'])->name('forms.responses.export.csv');
     Route::get('forms/{form}/responses/{applicant}', [\App\Http\Controllers\Admin\FormResponseController::class, 'show'])->name('forms.responses.show');
 
     Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->only(['index', 'store', 'edit', 'update', 'destroy'])->parameters([
