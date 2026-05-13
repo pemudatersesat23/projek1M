@@ -38,8 +38,10 @@ return new class extends Migration
                     }
                 }
 
-                // 2. Modify column to JSON type
-                DB::statement("ALTER TABLE {$table} MODIFY {$column} JSON");
+                // 2. Modify column to JSON type on databases that support MySQL's MODIFY syntax.
+                if (DB::connection()->getDriverName() !== 'sqlite') {
+                    DB::statement("ALTER TABLE {$table} MODIFY {$column} JSON");
+                }
             }
         }
     }

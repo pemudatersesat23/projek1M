@@ -242,7 +242,7 @@
         const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
         return `<option value="${escHtml(o.value)}">${escHtml(lbl)}</option>`;
       }).join('');
-      inputHtml = `<select name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input premium-select" ${reqAttr}><option value="" disabled selected>${f.placeholder || 'Pilih...'}</option>${opts}</select>`;
+      inputHtml = `<select name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input premium-select" ${reqAttr}><option value="" disabled selected>${escHtml(f.placeholder || 'Pilih...')}</option>${opts}</select>`;
     } else if (f.type === 'radio') {
       const opts = (f.options || []).map(o => {
         const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
@@ -258,13 +258,13 @@
     } else if (f.type === 'file') {
       const exts    = f.accepted_file_types || ['pdf','jpg','jpeg','png'];
       const maxMb   = ((f.max_file_size || 2048) / 1024).toFixed(1);
-      const accept  = exts.map(e => '.' + e).join(',');
-      const zoneId  = 'zone-dyn-ajax-' + f.field_name;
+      const accept  = exts.map(e => '.' + escHtml(e)).join(',');
+      const zoneId  = 'zone-dyn-ajax-' + escHtml(f.field_name);
       inputHtml = `<div class="upload-zone" id="${zoneId}">
         <input type="file" name="dynamic_files[${escHtml(f.field_name)}]" accept="${accept}" onchange="updateFileName(this,'${zoneId}')" ${reqAttr}>
         <div class="upload-icon"><span class="material-symbols-outlined">upload_file</span></div>
         <div class="upload-text text-[11px] font-bold">${escHtml(f.label)}</div>
-        <div class="file-name-display text-[10px]">Format: ${exts.join(', ')} | Maks: ${maxMb} MB</div>
+        <div class="file-name-display text-[10px]">Format: ${exts.map(e => escHtml(e)).join(', ')} | Maks: ${maxMb} MB</div>
       </div>`;
     }
 
@@ -302,4 +302,3 @@
     });
   });
 </script>
-

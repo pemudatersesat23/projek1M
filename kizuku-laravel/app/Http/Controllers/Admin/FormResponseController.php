@@ -21,6 +21,7 @@ class FormResponseController extends Controller
                 'program',
                 'batch',
                 'programSchema',
+                'form',
                 'dynamicAnswers.formField',
                 'dynamicFiles.formField',
             ]);

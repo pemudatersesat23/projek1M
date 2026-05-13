@@ -104,6 +104,10 @@ class FormBuilderFieldController extends Controller
         $label = $field->getTranslations('label');
         $label['id'] = ($label['id'] ?? '') . ' (Copy)';
 
+        FormField::where('form_id', $form->id)
+            ->where('sort_order', '>', $field->sort_order)
+            ->increment('sort_order');
+
         $newField = $field->replicate();
         $newField->field_name = $newName;
         $newField->label = $label;
@@ -111,12 +115,6 @@ class FormBuilderFieldController extends Controller
         $newField->is_locked = false;
         $newField->sort_order = $field->sort_order + 1;
         $newField->push();
-
-        // Increment sort_order of all subsequent fields
-        FormField::where('form_id', $form->id)
-            ->where('sort_order', '>=', $newField->sort_order)
-            ->where('id', '!=', $newField->id)
-            ->increment('sort_order');
 
         return response()->json([
             'message' => 'Pertanyaan berhasil diduplikasi',

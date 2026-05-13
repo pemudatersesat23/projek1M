@@ -55,6 +55,8 @@
                         <span class="text-slate-300">|</span>
                         <span>Schema: {{ $form->schema?->nama_skema ?? 'Umum' }}</span>
                         <span class="text-slate-300">|</span>
+                        <span>Batch: {{ $form->batch?->nama_batch ?? '-' }}</span>
+                        <span class="text-slate-300">|</span>
                         <span class="{{ $form->status === 'published' ? 'text-emerald-600' : ($form->status === 'draft' ? 'text-amber-600' : 'text-slate-500') }} font-medium">
                             {{ ucfirst($form->status) }}
                         </span>

@@ -23,7 +23,7 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'title' => 'nullable|string|max:255',
             'order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
@@ -49,7 +49,7 @@ class GalleryController extends Controller
     public function update(Request $request, Gallery $gallery)
     {
         $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'title' => 'nullable|string|max:255',
             'order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',

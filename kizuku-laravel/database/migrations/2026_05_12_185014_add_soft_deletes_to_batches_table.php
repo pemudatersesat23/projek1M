@@ -10,7 +10,9 @@ return new class extends Migration
     public function up(): void
     {
         // Update enum for status
-        DB::statement("ALTER TABLE batches MODIFY COLUMN status ENUM('akan_dibuka', 'dibuka', 'diperpanjang', 'ditutup', 'berjalan', 'selesai') NOT NULL DEFAULT 'akan_dibuka'");
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE batches MODIFY COLUMN status ENUM('akan_dibuka', 'dibuka', 'diperpanjang', 'ditutup', 'berjalan', 'selesai') NOT NULL DEFAULT 'akan_dibuka'");
+        }
 
         Schema::table('batches', function (Blueprint $table) {
             if (!Schema::hasColumn('batches', 'deleted_at')) {
@@ -28,6 +30,8 @@ return new class extends Migration
         });
         
         // Revert enum (may fail if there are 'diperpanjang' records, but it's okay for down)
-        DB::statement("ALTER TABLE batches MODIFY COLUMN status ENUM('akan_dibuka', 'dibuka', 'ditutup', 'berjalan', 'selesai') NOT NULL DEFAULT 'akan_dibuka'");
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE batches MODIFY COLUMN status ENUM('akan_dibuka', 'dibuka', 'ditutup', 'berjalan', 'selesai') NOT NULL DEFAULT 'akan_dibuka'");
+        }
     }
 };

@@ -93,18 +93,18 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // CRUD Berita
-    Route::resource('berita', \App\Http\Controllers\BeritaController::class)->parameters([
+    Route::resource('berita', \App\Http\Controllers\BeritaController::class)->except(['create'])->parameters([
         'berita' => 'berita'
     ]);
 
     // CRUD Partner Campus
-    Route::resource('partner-campus', \App\Http\Controllers\PartnerCampusController::class);
+    Route::resource('partner-campus', \App\Http\Controllers\PartnerCampusController::class)->except(['show']);
 
     // CRUD Programs & Batches
-    Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
-    Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class);
-    Route::resource('program-schemas', \App\Http\Controllers\Admin\ProgramSchemaController::class);
-    Route::resource('form-fields', \App\Http\Controllers\Admin\FormFieldController::class);
+    Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class)->except(['show']);
+    Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class)->except(['show']);
+    Route::resource('program-schemas', \App\Http\Controllers\Admin\ProgramSchemaController::class)->except(['show']);
+    Route::resource('form-fields', \App\Http\Controllers\Admin\FormFieldController::class)->except(['show']);
     Route::get('form-fields-schemas', [\App\Http\Controllers\Admin\FormFieldController::class, 'schemasForProgram'])->name('form-fields.schemas');
 
     // New Google Forms-like Builder Routes
@@ -128,19 +128,19 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::get('forms/{form}/responses', [\App\Http\Controllers\Admin\FormResponseController::class, 'index'])->name('forms.responses.index');
     Route::get('forms/{form}/responses/{applicant}', [\App\Http\Controllers\Admin\FormResponseController::class, 'show'])->name('forms.responses.show');
 
-    Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->parameters([
+    Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->only(['index', 'store', 'edit', 'update', 'destroy'])->parameters([
         'fasilitas' => 'fasilitas'
     ]);
 
     // CMS Hero & Testimonials
-    Route::resource('hero-sections', \App\Http\Controllers\Admin\HeroSectionController::class);
-    Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
-    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
-    Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
-    Route::resource('keunggulans', \App\Http\Controllers\Admin\KeunggulanController::class);
+    Route::resource('hero-sections', \App\Http\Controllers\Admin\HeroSectionController::class)->except(['show']);
+    Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class)->except(['show']);
+    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['show']);
+    Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class)->except(['show']);
+    Route::resource('keunggulans', \App\Http\Controllers\Admin\KeunggulanController::class)->except(['show']);
 
     // CRUD Applicants
-    Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class);
+    Route::resource('applicants', \App\Http\Controllers\Admin\ApplicantController::class)->only(['index', 'show', 'destroy']);
     Route::patch('applicants/{applicant}/status', [\App\Http\Controllers\Admin\ApplicantController::class, 'updateStatus'])->name('applicants.updateStatus');
 
     // Protected dynamic file download (admin only, IDOR-guarded)
@@ -148,6 +148,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
         'applicants/{applicant}/dynamic-files/{file}/download',
         [\App\Http\Controllers\Admin\ApplicantDynamicFileDownloadController::class, 'download']
     )->name('applicants.dynamic-files.download');
+    Route::get(
+        'applicants/{applicant}/documents/{document}/{field}/download',
+        [\App\Http\Controllers\Admin\ApplicantDocumentDownloadController::class, 'download']
+    )->name('applicants.documents.download');
 
 
     // Payment Settings

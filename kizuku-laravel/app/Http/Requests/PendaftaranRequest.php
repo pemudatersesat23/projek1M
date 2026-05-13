@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Services\DynamicFormService;
 
 class PendaftaranRequest extends FormRequest
 {
@@ -41,6 +42,7 @@ class PendaftaranRequest extends FormRequest
                     return $q->where('program_id', $this->input('program_id'))
                              ->where('status', 'published')
                              ->where('is_active', true)
+                             ->where('accepts_responses', true)
                              ->whereNull('deleted_at');
                 }),
             ],
@@ -50,6 +52,31 @@ class PendaftaranRequest extends FormRequest
             'dynamic_answers'   => 'nullable|array',
             'dynamic_files'     => 'nullable|array',
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            foreach (['program_id', 'batch_id', 'schema_id', 'form_id'] as $key) {
+                if ($validator->errors()->has($key)) {
+                    return;
+                }
+            }
+
+            if (! $this->filled('program_id') || ! $this->filled('batch_id') || ! $this->filled('form_id')) {
+                return;
+            }
+
+            $resolved = app(DynamicFormService::class)->resolveForm(
+                (int) $this->input('program_id'),
+                $this->filled('schema_id') ? (int) $this->input('schema_id') : null,
+                $this->filled('batch_id') ? (int) $this->input('batch_id') : null,
+            );
+
+            if (! $resolved || (int) $resolved->id !== (int) $this->input('form_id')) {
+                $validator->errors()->add('form_id', 'Formulir pendaftaran tidak sesuai dengan program, batch, atau skema yang dipilih.');
+            }
+        });
     }
 
     public function messages(): array

@@ -154,25 +154,25 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @php
               $docs = [
-                'KTP' => $applicant->document->ktp,
-                'KK' => $applicant->document->kk,
-                'Pas Foto' => $applicant->document->foto,
-                'Ijazah' => $applicant->document->ijazah,
-                'Sertifikat' => $applicant->document->sertifikat,
-                'CV' => $applicant->document->cv,
-                'Transkrip Nilai' => $applicant->document->transkrip,
-                'Bukti Sosmed' => $applicant->document->bukti_sosmed,
+                'ktp' => ['label' => 'KTP', 'path' => $applicant->document->ktp],
+                'kk' => ['label' => 'KK', 'path' => $applicant->document->kk],
+                'foto' => ['label' => 'Pas Foto', 'path' => $applicant->document->foto],
+                'ijazah' => ['label' => 'Ijazah', 'path' => $applicant->document->ijazah],
+                'sertifikat' => ['label' => 'Sertifikat', 'path' => $applicant->document->sertifikat],
+                'cv' => ['label' => 'CV', 'path' => $applicant->document->cv],
+                'transkrip' => ['label' => 'Transkrip Nilai', 'path' => $applicant->document->transkrip],
+                'bukti_sosmed' => ['label' => 'Bukti Sosmed', 'path' => $applicant->document->bukti_sosmed],
               ];
             @endphp
-            @foreach($docs as $label => $path)
-              @if($path)
+            @foreach($docs as $field => $doc)
+              @if($doc['path'])
                 <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                   <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-slate-400">description</span>
-                    <span class="text-sm font-bold text-slate-700">{{ $label }}</span>
+                    <span class="text-sm font-bold text-slate-700">{{ $doc['label'] }}</span>
                   </div>
-                  <a href="{{ Storage::url($path) }}" target="_blank" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
-                    Lihat <span class="material-symbols-outlined text-xs">open_in_new</span>
+                  <a href="{{ route('admin.applicants.documents.download', [$applicant, $applicant->document, $field]) }}" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                    Unduh <span class="material-symbols-outlined text-xs">download</span>
                   </a>
                 </div>
               @endif

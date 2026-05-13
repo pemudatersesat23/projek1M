@@ -157,11 +157,23 @@ class FormController extends Controller
             }
         }
 
-        // Increment version if it was ever published before? Just publish for now.
+        $blockedExts = config('dynamic_forms.blocked_file_extensions', []);
+        foreach ($activeFields->where('type', config('dynamic_forms.file_field_type', 'file')) as $f) {
+            $exts = $f->accepted_file_types ?? config('dynamic_forms.default_allowed_file_extensions', []);
+            $safeExts = array_filter($exts, fn ($ext) => ! in_array(strtolower($ext), $blockedExts, true));
+
+            if (empty($safeExts)) {
+                return response()->json(['message' => "Gagal publish: Pertanyaan '{$f->field_name}' tidak memiliki tipe file aman yang diizinkan."], 422);
+            }
+        }
+
+        $wasPublished = $form->published_at !== null;
+
         $form->update([
             'status' => 'published',
             'is_active' => true,
             'accepts_responses' => true,
+            'version' => $wasPublished ? $form->version + 1 : $form->version,
             'published_at' => now()
         ]);
 
