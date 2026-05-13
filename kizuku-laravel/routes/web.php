@@ -46,31 +46,33 @@ Route::get('/faq', [HomeController::class, 'faq'])->name('pages.faq');
 Route::post('/pendaftaran', [HomeController::class, 'storePendaftaran'])->name('pendaftaran.store');
 
 // AJAX: resolve dynamic fields for a program+schema combo (public, GET, read-only)
-// Returns ONLY schema-specific fields when schema_id is provided.
-// General (program-level) fields are always rendered SSR in registration-form.blade.php.
 Route::get('/api/dynamic-fields', function(\App\Services\DynamicFormService $svc) {
     $programId = request('program_id');
     $schemaId  = request('schema_id') ?: null;
+    $batchId   = request('batch_id') ?: null;
 
-    if (!$programId) return response()->json([]);
+    if (!$programId) return response()->json(['form_id' => null, 'fields' => []]);
 
     $locale = app()->getLocale();
-
-    if ($schemaId) {
-        // Return ONLY the schema-specific fields (schema_id not null)
-        // General fields are already rendered SSR — do not duplicate them
-        $fields = \App\Models\FormField::active()
-            ->where('program_id', (int)$programId)
-            ->where('schema_id', (int)$schemaId)
-            ->ordered()
-            ->get();
-    } else {
-        // No schema selected — return empty (general fields already visible SSR)
-        return response()->json([]);
+    
+    // Resolve form
+    $form = $svc->resolveForm((int)$programId, $schemaId ? (int)$schemaId : null, $batchId ? (int)$batchId : null);
+    
+    if (!$form) {
+        return response()->json(['form_id' => null, 'fields' => []]);
     }
 
-    return response()->json(
-        $fields->map(fn($f) => [
+    // If schemaId is provided, we return fields. 
+    // In Task 5D, we might want to return ALL fields if the form changed, 
+    // but the current frontend architecture expects only "additional" fields if general are SSR.
+    // However, since we are now 100% dynamic, maybe we should just replace everything?
+    // User request says: "dynamic fields harus diganti sesuai selected form, field dari schema lama harus hilang, tidak boleh duplicate field"
+    
+    $fields = $svc->getFieldsForForm($form);
+
+    return response()->json([
+        'form_id' => $form->id,
+        'fields'  => $fields->map(fn($f) => [
             'id'         => $f->id,
             'field_name' => $f->field_name,
             'type'       => $f->type,
@@ -82,7 +84,7 @@ Route::get('/api/dynamic-fields', function(\App\Services\DynamicFormService $svc
             'accepted_file_types' => $f->accepted_file_types,
             'max_file_size'       => $f->max_file_size,
         ])
-    );
+    ]);
 })->name('api.dynamic-fields');
 
 // ═══ PROTECTED ADMIN ROUTES (dengan role check untuk admin) ═══
@@ -121,6 +123,11 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::post('forms/{form}/fields/{field}/duplicate', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'duplicate'])->name('forms.fields.duplicate');
     Route::delete('forms/{form}/fields/{field}', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'destroy'])->name('forms.fields.destroy');
     Route::post('forms/{form}/fields/reorder', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'reorder'])->name('forms.fields.reorder');
+
+    // Task 5E — Responses Management
+    Route::get('forms/{form}/responses', [\App\Http\Controllers\Admin\FormResponseController::class, 'index'])->name('forms.responses.index');
+    Route::get('forms/{form}/responses/{applicant}', [\App\Http\Controllers\Admin\FormResponseController::class, 'show'])->name('forms.responses.show');
+
     Route::resource('fasilitas', \App\Http\Controllers\Admin\FasilitasController::class)->parameters([
         'fasilitas' => 'fasilitas'
     ]);

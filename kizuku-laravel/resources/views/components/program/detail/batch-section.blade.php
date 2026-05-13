@@ -166,10 +166,31 @@
   }
 
   function fetchDynamicFields(schemaId) {
-    const url = dynamicFieldsUrl + '?program_id=' + programId + (schemaId ? '&schema_id=' + schemaId : '');
+    // Also include batch_id if active
+    const batchInput = document.querySelector('input[name="batch_id"]');
+    const batchId    = batchInput ? batchInput.value : '';
+    
+    const url = dynamicFieldsUrl + '?program_id=' + programId + 
+                (schemaId ? '&schema_id=' + schemaId : '') +
+                (batchId ? '&batch_id=' + batchId : '');
+
     fetch(url)
       .then(r => r.json())
-      .then(fields => renderDynamicFields(fields))
+      .then(data => {
+          // Update form_id hidden input
+          const formInput = document.getElementById('selected_form_id');
+          if (formInput && data.form_id) {
+              formInput.value = data.form_id;
+          }
+
+          // Toggle SSR fields: if we have schemaId, hide SSR (general) fields, else show them
+          const ssrContainer = document.getElementById('ssr-fields-container');
+          if (ssrContainer) {
+              ssrContainer.style.display = schemaId ? 'none' : 'block';
+          }
+
+          renderDynamicFields(data.fields);
+      })
       .catch(() => {});
   }
 
@@ -270,7 +291,13 @@
 
         const batchId   = this.getAttribute('data-batch');
         const batchInput = document.querySelector('input[name="batch_id"]');
-        if (batchInput) batchInput.value = batchId;
+        if (batchInput) {
+            if (batchInput.value !== batchId) {
+                batchInput.value = batchId;
+                // Re-fetch form if batch changed
+                fetchDynamicFields(selectedSchemaId);
+            }
+        }
       });
     });
   });

@@ -15,18 +15,7 @@ class PendaftaranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // ── Fixed core fields ──────────────────────────────────────────
-            'nama'            => 'required|string|max:255',
-            'jenis_kelamin'   => 'required|in:L,P',
-            'tempat_lahir'    => 'required|string|max:255',
-            'tanggal_lahir'   => 'required|date',
-            'alamat'          => 'required|string',
-            'phone'           => 'required|string|max:20',
-            'email'           => 'required|email|max:255',
-            'pendidikan'      => 'required|string|max:255',
-            'pengalaman_kerja'=> 'nullable|string',
-
-            // ── Program / Batch / Schema ownership ────────────────────────
+            // ── System fields ──────────────────────────────────────────────
             'program_id' => ['required', Rule::exists('programs', 'id')->where('status', 'aktif')],
 
             'batch_id' => [
@@ -46,23 +35,20 @@ class PendaftaranRequest extends FormRequest
                 }),
             ],
 
-            // ── Legacy JSON dynamic (kept for backward compat) ───────────
-            'additional_data' => 'nullable|array',
+            'form_id' => [
+                'required',
+                Rule::exists('forms', 'id')->where(function ($q) {
+                    return $q->where('program_id', $this->input('program_id'))
+                             ->where('status', 'published')
+                             ->where('is_active', true)
+                             ->whereNull('deleted_at');
+                }),
+            ],
 
             // ── Dynamic Form Builder payload (structure only) ────────────
             // Detailed field-level validation is handled by DynamicValidationService
             'dynamic_answers'   => 'nullable|array',
             'dynamic_files'     => 'nullable|array',
-
-            // ── Fixed document uploads ────────────────────────────────────
-            'ktp'         => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'kk'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'foto'        => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
-            'ijazah'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'sertifikat'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'cv'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'transkrip'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'bukti_sosmed'=> 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ];
     }
 

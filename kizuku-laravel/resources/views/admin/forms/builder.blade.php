@@ -34,6 +34,20 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
+            {{-- Tab navigation: Questions / Responses --}}
+            <div class="hidden sm:flex items-center gap-1 bg-slate-100 border border-slate-200 rounded-lg p-1">
+                <a href="{{ route('admin.forms.builder', $form->id) }}"
+                   class="tab-nav-btn px-3 py-1.5 rounded-md text-sm font-semibold flex items-center gap-1.5
+                          bg-primary text-white shadow-sm">
+                    <span class="material-symbols-outlined text-[15px]">edit_note</span> Questions
+                </a>
+                <a href="{{ route('admin.forms.responses.index', $form->id) }}"
+                   class="tab-nav-btn px-3 py-1.5 rounded-md text-sm font-semibold flex items-center gap-1.5
+                          text-slate-500 hover:bg-white hover:text-slate-700 transition-colors">
+                    <span class="material-symbols-outlined text-[15px]">inbox</span> Responses
+                </a>
+            </div>
+            <div class="w-px h-6 bg-slate-200 mx-1"></div>
             <a href="{{ route('admin.forms.preview', $form->id) }}" target="_blank" class="p-2 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-full transition-colors tooltip" title="Preview Form">
                 <span class="material-symbols-outlined">visibility</span>
             </a>

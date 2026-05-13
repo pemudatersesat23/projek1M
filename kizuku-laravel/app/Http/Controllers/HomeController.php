@@ -83,15 +83,15 @@ class HomeController extends Controller
         $nextBatch    = $program->batches->where('status', 'akan_dibuka')->sortBy('tanggal_buka')->first();
         $batchHistory = $program->batches;
 
-        // Resolve dynamic form fields — schema_id null at page load (schema not yet chosen)
-        // All general fields are loaded here; schema-specific will merge if schema is pre-selected
-        $dynamicFields   = $dynamicFormService->getFieldsFor($program->id);
+        // Resolve dynamic form — fallback logic handled by service
+        $form            = $dynamicFormService->resolveForm($program->id, null, $activeBatch?->id);
+        $dynamicFields   = $form ? $dynamicFormService->getFieldsForForm($form) : collect();
         $hasDynamicFiles = $dynamicFormService->hasFileFields($dynamicFields);
         $currentLocale   = app()->getLocale();
 
         return view('program-detail', compact(
             'program', 'activeBatch', 'nextBatch', 'batchHistory',
-            'dynamicFields', 'hasDynamicFiles', 'currentLocale'
+            'form', 'dynamicFields', 'hasDynamicFiles', 'currentLocale'
         ));
     }
 
@@ -99,18 +99,16 @@ class HomeController extends Controller
 
     public function storePendaftaran(
         \App\Http\Requests\PendaftaranRequest $request,
-        \App\Services\FileUploadService $uploadService,
         \App\Services\DynamicForm\DynamicValidationService $dynValidator,
         \App\Services\DynamicForm\DynamicFileUploadService $dynUploader,
-        \App\Services\DynamicFormService $dynFormService
+        \App\Services\DynamicFormService $dynFormService,
+        \App\Services\DynamicForm\ApplicantIdentityMapper $identityMapper
     ) {
-        $fixedFileInputs = ['ktp', 'kk', 'foto', 'ijazah', 'sertifikat', 'cv', 'transkrip', 'bukti_sosmed'];
-        \Log::info('Pendaftaran started', $request->safe()->except(array_merge($fixedFileInputs, ['dynamic_files'])));
+        \Log::info('Pendaftaran started (100% Dynamic Mode)', $request->safe()->except(['dynamic_files']));
 
-        // 1. Resolve active form fields for this program/schema
-        $programId    = (int) $request->input('program_id');
-        $schemaId     = $request->input('schema_id') ? (int) $request->input('schema_id') : null;
-        $activeFields = $dynFormService->getFieldsFor($programId, $schemaId);
+        // 1. Resolve the specific form used for this submission
+        $form = \App\Models\Form::findOrFail($request->input('form_id'));
+        $activeFields = $dynFormService->getFieldsForForm($form);
 
         // 2. Validate dynamic payload (unknown-field guard + per-field rules)
         try {
@@ -125,33 +123,28 @@ class HomeController extends Controller
         try {
             $applicant = \Illuminate\Support\Facades\DB::transaction(
                 function () use (
-                    $request, $uploadService, $dynUploader,
-                    $fixedFileInputs, $activeFields, &$uploadedPaths
+                    $request, $dynUploader, $identityMapper,
+                    $form, $activeFields, &$uploadedPaths
                 ) {
-                    // 3a. Create Applicant (existing flow)
-                    $applicant = Applicant::create(
-                        $request->safe()->except(
-                            array_merge($fixedFileInputs, ['dynamic_answers', 'dynamic_files'])
-                        )
-                    );
-                    \Log::info('Applicant created', ['id' => $applicant->id]);
+                    $dynamicAnswers = $request->input('dynamic_answers', []);
 
-                    // 3b. Fixed document uploads (existing flow)
-                    $filesToUpload = [];
-                    foreach ($fixedFileInputs as $field) {
-                        if ($request->hasFile($field)) {
-                            $filesToUpload[$field] = $request->file($field);
-                        }
-                    }
-                    if (!empty($filesToUpload)) {
-                        $docs = $uploadService->uploadMultiple($filesToUpload);
-                        $docs['applicant_id'] = $applicant->id;
-                        ApplicantDocument::create($docs);
-                        \Log::info('Fixed documents saved');
-                    }
+                    // 3a. Map identity columns from dynamic answers
+                    $identityData = $identityMapper->map($activeFields, $dynamicAnswers);
+
+                    // 3b. Create Applicant with Snapshots
+                    $applicant = Applicant::create(array_merge($identityData, [
+                        'program_id'            => $request->input('program_id'),
+                        'batch_id'              => $request->input('batch_id'),
+                        'schema_id'             => $request->input('schema_id'),
+                        'form_id'               => $form->id,
+                        'form_version_snapshot' => $form->version,
+                        'form_title_snapshot'   => $form->getTranslations('title'),
+                        'status_seleksi'        => 'baru',
+                    ]));
+
+                    \Log::info('Applicant created', ['id' => $applicant->id, 'form_id' => $form->id]);
 
                     // 3c. Save dynamic answers
-                    $dynamicAnswers = $request->input('dynamic_answers', []);
                     foreach ($activeFields->filter(fn($f) => !$f->isFile()) as $field) {
                         $rawValue = $dynamicAnswers[$field->field_name] ?? null;
                         if ($rawValue === null && !$field->is_required) continue;
@@ -160,7 +153,7 @@ class HomeController extends Controller
                             'applicant_id'         => $applicant->id,
                             'form_field_id'        => $field->id,
                             'value'                => is_array($rawValue) ? $rawValue : (string) $rawValue,
-                            'field_label_snapshot' => $field->label,
+                            'field_label_snapshot' => $field->getTranslations('label'),
                             'field_type_snapshot'  => $field->type,
                         ]);
                     }
@@ -181,7 +174,7 @@ class HomeController extends Controller
                             'original_name'        => $meta['original_name'],
                             'mime_type'            => $meta['mime_type'],
                             'size'                 => $meta['size'],
-                            'field_label_snapshot' => $field->label,
+                            'field_label_snapshot' => $field->getTranslations('label'),
                             'field_type_snapshot'  => $field->type,
                         ]);
                     }

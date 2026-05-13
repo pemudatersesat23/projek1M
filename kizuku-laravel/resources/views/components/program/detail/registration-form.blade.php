@@ -51,142 +51,58 @@
         <input type="hidden" name="program_id" value="{{ $program->id }}">
         <input type="hidden" name="batch_id"   value="{{ $activeBatch->id }}">
         <input type="hidden" name="schema_id"  id="selected_schema_id" value="">
+        <input type="hidden" name="form_id"    id="selected_form_id"   value="{{ $form->id ?? '' }}">
 
-        {{-- ── DATA PRIBADI (common) ── --}}
-        <div class="form-section-label">
-          <span class="material-symbols-outlined">person</span>
-          <span class="section-text">{{ __('messages.form.sections.pribadi') }}</span>
-        </div>
+        @if($form && $dynamicFields->isNotEmpty())
+            {{-- Render all fields from the resolved form --}}
+            @php 
+                $nonFileFields = $dynamicFields->filter(fn($f) => !$f->isFile());
+                $fileFields    = $dynamicFields->filter(fn($f) => $f->isFile());
+            @endphp
 
-        <div class="form-group-custom form-half">
-          <span class="input-label">{{ __('messages.form.name') }} *</span>
-          <input type="text" name="nama" value="{{ old('nama') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.ktp') }}" required>
-        </div>
-        <div class="form-group-custom form-half">
-          <span class="input-label">{{ __('messages.form.gender') }} *</span>
-          <select name="jenis_kelamin" class="premium-input premium-select" required>
-            <option value="" disabled selected>{{ $isJp ? '性別を選択' : 'Pilih Jenis Kelamin' }}</option>
-            <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>{{ $isJp ? '男性' : 'Laki-laki' }}</option>
-            <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>{{ $isJp ? '女性' : 'Perempuan' }}</option>
-          </select>
-        </div>
-        <div class="form-group-custom form-half">
-          <span class="input-label">{{ $isJp ? '出生地' : 'Tempat Lahir' }} *</span>
-          <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="premium-input" placeholder="{{ __('messages.form.placeholders.pob') }}" required>
-        </div>
-        <div class="form-group-custom form-half">
-          <span class="input-label">{{ $isJp ? '生年月日' : 'Tanggal Lahir' }} *</span>
-          <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="premium-input" required>
-        </div>
-        <div class="form-group-custom form-full">
-          <span class="input-label">{{ __('messages.form.domicile') }} *</span>
-          <textarea name="alamat" rows="2" class="premium-input" placeholder="{{ __('messages.form.placeholders.address') }}" required>{{ old('alamat') }}</textarea>
-        </div>
-        <div class="form-group-custom form-half">
-          <span class="input-label">{{ __('messages.form.phone') }} *</span>
-          <input type="text" name="phone" value="{{ old('phone') }}" class="premium-input" placeholder="08XXXXXXXXXX" required>
-        </div>
-        <div class="form-group-custom form-half">
-          <span class="input-label">{{ __('messages.form.email') }} *</span>
-          <input type="email" name="email" value="{{ old('email') }}" class="premium-input" placeholder="nama@email.com" required>
-        </div>
-
-        {{-- ── FORM SPESIFIK PER PROGRAM (legacy hardcoded) ── --}}
-        @if($program->slug === 'tokutei-ginou-tg')
-          @include('components.program.detail.forms.tg-form')
-        @elseif($program->slug === 'engineer-jepang-gijinkoku')
-          @include('components.program.detail.forms.engineering-form')
-        @elseif($program->slug === 'kenshusei-jishussei-magang-jepang')
-          @include('components.program.detail.forms.magang-form')
-        @elseif($program->slug === 'kursus-bahasa-jepang-offline')
-          @include('components.program.detail.forms.kursus-form')
-        @elseif($program->slug === 'engineer-jepang-ex-internship')
-          @include('components.program.detail.forms.ex-internship-form')
-        @endif
-
-        {{-- ── DYNAMIC FIELDS (from Form Builder) ── --}}
-        @if($dynFields->isNotEmpty())
-          {{-- Non-file dynamic fields --}}
-          @php $nonFileFields = $dynFields->filter(fn($f) => !$f->isFile()); @endphp
-          @if($nonFileFields->isNotEmpty())
-            <div class="form-section-label form-full">
-              <span class="material-symbols-outlined">dynamic_form</span>
-              <span class="section-text">
-                {{ $dynLocale === 'jp' ? '追加情報' : 'Informasi Tambahan' }}
-              </span>
-            </div>
-            @foreach($nonFileFields as $dynField)
-              @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
-            @endforeach
-          @endif
-
-          {{-- File dynamic fields --}}
-          @php $fileFields = $dynFields->filter(fn($f) => $f->isFile()); @endphp
-          @if($fileFields->isNotEmpty())
-            <div class="form-section-label form-full">
-              <span class="material-symbols-outlined">cloud_upload</span>
-              <span class="section-text">
-                {{ $dynLocale === 'jp' ? '追加書類' : 'Dokumen Tambahan' }}
-              </span>
-            </div>
-            <div class="docs-grid form-full">
-              @foreach($fileFields as $dynField)
-                @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
-              @endforeach
-            </div>
-          @endif
-        @endif
-
-        {{-- ── SCHEMA-SPECIFIC DYNAMIC FIELDS (loaded via AJAX on schema selection) ── --}}
-        {{-- This div gets populated by fetchDynamicFields() in batch-section.blade.php --}}
-        <div id="dynamic-fields-container" class="contents"></div>
-
-        {{-- ── DOKUMEN (berdasarkan slug via config) ── --}}
-
-        <div class="form-section-label">
-          <span class="material-symbols-outlined">cloud_upload</span>
-          <span class="section-text">{{ __('messages.form.sections.dokumen') }}</span>
-        </div>
-
-        <div class="docs-grid form-full">
-          @foreach($docs as $name => $msgKey)
-            @php $label = __($msgKey); @endphp
-            <div class="form-group-custom">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block">
-                {{ $label }}
-                @if(!Str::contains(strtolower($label), ['jika ada', 'optional', '任意']) && $name !== 'sertifikat')
-                  <span class="text-red-500">*</span>
-                @endif
-              </label>
-              <div class="upload-zone"
-                   id="zone-{{ $name }}"
-                   data-selected-text="{{ __('messages.form.file_selected') }}"
-                   data-placeholder-text="{{ __('messages.form.upload_placeholder') }}">
-                <input type="file"
-                       name="{{ $name }}"
-                       onchange="updateFileName(this, 'zone-{{ $name }}')"
-                       @if(!Str::contains(strtolower($label), ['jika ada', 'optional', '任意']) && $name !== 'sertifikat') required @endif>
-                <div class="upload-icon">
-                  <span class="material-symbols-outlined">
-                    @if($name == 'foto') image
-                    @elseif(in_array($name, ['cv','transkrip','ijazah'])) description
-                    @else cloud_upload
-                    @endif
+        <div id="ssr-fields-container">
+            @if($nonFileFields->isNotEmpty())
+                @foreach($nonFileFields as $dynField)
+                  @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
+                @endforeach
+            @endif
+    
+            @if($fileFields->isNotEmpty())
+                <div class="form-section-label form-full">
+                  <span class="material-symbols-outlined">cloud_upload</span>
+                  <span class="section-text">
+                    {{ $isJp ? '必要書類' : 'Dokumen Persyaratan' }}
                   </span>
                 </div>
-                <div class="upload-text text-[11px] font-bold">{{ $label }}</div>
-                <div class="file-name-display text-[10px]"></div>
-              </div>
-            </div>
-          @endforeach
+                <div class="docs-grid form-full">
+                  @foreach($fileFields as $dynField)
+                    @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
+                  @endforeach
+                </div>
+            @endif
         </div>
 
-        {{-- ── SUBMIT ── --}}
-        <div class="form-full pt-6">
-          <button type="submit" class="btn btn-primary w-full py-4 rounded-xl text-lg font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-            {{ __('messages.form.submit') }}
-          </button>
-        </div>
+            {{-- ── SCHEMA-SPECIFIC DYNAMIC FIELDS (loaded via AJAX on schema selection) ── --}}
+            {{-- This div gets populated by fetchDynamicFields() in batch-section.blade.php --}}
+            <div id="dynamic-fields-container" class="contents"></div>
+
+            {{-- ── SUBMIT ── --}}
+            <div class="form-full pt-6">
+              <button type="submit" class="btn btn-primary w-full py-4 rounded-xl text-lg font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                {{ __('messages.form.submit') }}
+              </button>
+            </div>
+        @else
+            <div class="form-full py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                <span class="material-symbols-outlined text-5xl text-slate-300 mb-4">edit_off</span>
+                <p class="text-slate-500 font-medium">
+                    {{ $isJp ? 'このプログラムの登録フォームはまだ利用できません。' : 'Formulir pendaftaran untuk program ini belum tersedia.' }}
+                </p>
+                <p class="text-slate-400 text-sm mt-1">
+                    {{ $isJp ? '後でもう一度お試しください。' : 'Silakan hubungi admin atau coba lagi nanti.' }}
+                </p>
+            </div>
+        @endif
 
       </form>
     </div>

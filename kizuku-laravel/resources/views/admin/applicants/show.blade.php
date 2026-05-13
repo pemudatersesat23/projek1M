@@ -23,11 +23,11 @@
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Jenis Kelamin</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->jenis_kelamin ? ($applicant->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan') : '-' }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tempat, Tgl Lahir</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->tempat_lahir }}, {{ $applicant->tanggal_lahir->format('d/m/Y') }}</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->tempat_lahir ?: '-' }}, {{ $applicant->tanggal_lahir?->format('d/m/Y') ?? '-' }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pendidikan Terakhir</p>
@@ -280,21 +280,42 @@
         </form>
       </div>
 
-      {{-- Info Batch --}}
-      <div class="bg-primary/5 p-8 rounded-2xl border border-primary/10">
-        <h4 class="font-bold text-primary mb-4">Informasi Batch</h4>
-        <div class="space-y-4">
-          <div>
-            <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Program</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->program->nama_program }}</p>
+      {{-- Info Batch & Form --}}
+      <div class="bg-primary/5 p-8 rounded-2xl border border-primary/10 space-y-6">
+        <div>
+          <h4 class="font-bold text-primary mb-4">Informasi Batch</h4>
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Program</p>
+              <p class="text-slate-800 font-bold">{{ $applicant->program?->nama_program ?? '-' }}</p>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Gelombang / Batch</p>
+              <p class="text-slate-800 font-bold">{{ $applicant->batch?->nama_batch ?? '-' }}</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Gelombang / Batch</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->batch->nama_batch }}</p>
+        </div>
+
+        @if($applicant->form_id)
+        <div class="pt-6 border-t border-primary/10">
+          <h4 class="font-bold text-primary mb-4">Informasi Formulir</h4>
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Judul Formulir (Snapshot)</p>
+              <p class="text-slate-800 font-bold">
+                {{ is_array($applicant->form_title_snapshot) ? ($applicant->form_title_snapshot['id'] ?? ($applicant->form_title_snapshot['en'] ?? '—')) : ($applicant->form_title_snapshot ?: '—') }}
+              </p>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Versi</p>
+              <p class="text-slate-800 font-bold">v{{ $applicant->form_version_snapshot }}</p>
+            </div>
           </div>
-          <div class="pt-4 border-t border-primary/10">
-            <p class="text-xs text-primary/80 leading-relaxed font-medium">Pendaftar ini terdaftar pada batch yang sedang <strong>{{ $applicant->batch->status }}</strong>.</p>
-          </div>
+        </div>
+        @endif
+
+        <div class="pt-4 border-t border-primary/10">
+          <p class="text-xs text-primary/80 leading-relaxed font-medium">Pendaftar ini terdaftar pada batch yang sedang <strong>{{ $applicant->batch?->status ?? '-' }}</strong>.</p>
         </div>
       </div>
     </div>
