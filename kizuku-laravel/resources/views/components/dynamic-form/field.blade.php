@@ -30,13 +30,15 @@
 
 <div class="form-group-custom {{ in_array($type, ['textarea']) ? 'form-full' : 'form-half' }} dynamic-field-wrapper">
 
-  {{-- Label --}}
-  <span class="input-label">
-    {{ $label }}
-    @if($isRequired)
-      <span style="color:#E31E24">*</span>
-    @endif
-  </span>
+  {{-- Label (Hidden for section) --}}
+  @if($type !== 'section')
+    <span class="input-label">
+      {{ $label }}
+      @if($isRequired)
+        <span style="color:#E31E24">*</span>
+      @endif
+    </span>
+  @endif
 
   {{-- ── TEXT / EMAIL / PHONE / NUMBER / DATE ── --}}
   @if(in_array($type, ['text', 'email', 'phone', 'number', 'date']))
@@ -170,10 +172,19 @@
     @error('dynamic_files.' . $fieldKey)
       <p class="dynamic-field-error">{{ $message }}</p>
     @enderror
+
+  {{-- ── SECTION ── --}}
+  @elseif($type === 'section')
+    <div class="py-2">
+      <h3 class="text-xl font-bold text-purple-800">{{ $label }}</h3>
+      @if($description)
+        <p class="text-sm text-slate-600 mt-1 whitespace-pre-line">{{ $description }}</p>
+      @endif
+    </div>
   @endif
 
-  {{-- Description / Hint --}}
-  @if($description)
+  {{-- Description / Hint (Hidden for section as it is rendered above) --}}
+  @if($description && $type !== 'section')
     <p class="dynamic-field-hint">{{ $description }}</p>
   @endif
 

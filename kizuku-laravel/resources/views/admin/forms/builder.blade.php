@@ -9,219 +9,462 @@
     $formSuccessJp = $form->getTranslation('success_message', 'jp', false) ?: '';
 @endphp
 
-@section('admin-title', 'Form Builder - ' . ($formTitleId ?: 'Untitled'))
+@section('admin-title', 'Form Builder')
 
 @section('admin-styles')
 <style>
-    /* Google Forms Builder styles */
-    .builder-card { transition: all 0.2s; border-left: 4px solid transparent; }
-    .builder-card.active { border-left-color: #0067a3; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-    .drag-handle { cursor: grab; }
-    .drag-handle:active { cursor: grabbing; }
-    .option-row:hover .delete-option-btn { opacity: 1; }
+    /* Google Forms-like Aesthetics */
+    :root {
+        --google-purple: #673ab7;
+        --google-purple-light: #f0ebf8;
+        --google-bg: #f0ebf8;
+    }
+
+    body {
+        background-color: var(--google-bg) !important;
+    }
+
+    main {
+        background-color: var(--google-bg) !important;
+    }
+
+    .builder-container {
+        max-width: 770px;
+        margin: 0 auto;
+        position: relative; /* For sidebar positioning */
+    }
+
+    .google-card {
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #dadce0;
+        margin-bottom: 12px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        outline: none;
+    }
+
+    .google-card.active {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-left: 6px solid var(--google-purple);
+        z-index: 10;
+    }
+
+    .header-card {
+        border-top: 10px solid var(--google-purple);
+    }
+
+    .sticky-top-bar {
+        background: white;
+        border-bottom: 1px solid #dadce0;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        margin-left: -2rem;
+        margin-right: -2rem;
+        margin-top: -2rem;
+        padding: 0.5rem 1.5rem;
+    }
+
+    /* Sidebar Floating - Desktop */
+    .sidebar-floating {
+        position: absolute;
+        right: -60px;
+        top: 0;
+        width: 48px;
+        background: white;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        padding: 8px 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        z-index: 40;
+        transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @media (max-width: 1024px) {
+        .sidebar-floating {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: auto !important;
+            width: 100%;
+            height: 56px;
+            flex-direction: row;
+            justify-content: center;
+            border-radius: 0;
+            border-top: 1px solid #dadce0;
+            padding: 4px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 60;
+        }
+        .builder-container {
+            padding-bottom: 80px;
+        }
+    }
+
+    .sidebar-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        color: #70757a;
+        transition: all 0.2s;
+        position: relative;
+    }
+
+    .sidebar-btn:hover:not(:disabled) {
+        background-color: #f8f9fa;
+        color: var(--google-purple);
+    }
+
+    .sidebar-btn:disabled {
+        color: #e8eaed;
+        cursor: not-allowed;
+    }
+
+    /* Tooltip simple */
+    .sidebar-btn[title]::after {
+        content: attr(title);
+        position: absolute;
+        left: 54px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #3c4043;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s;
+        pointer-events: none;
+    }
+
+    .sidebar-btn[title]:hover::after {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    @media (max-width: 1024px) {
+        .sidebar-btn[title]::after {
+            display: none;
+        }
+    }
+
+    .drag-handle {
+        cursor: grab;
+        color: #dadce0;
+    }
+
+    .drag-handle:active {
+        cursor: grabbing;
+    }
+
+    /* Custom Inputs */
+    .google-input {
+        border: none;
+        border-bottom: 1px solid transparent;
+        padding: 4px 0;
+        width: 100%;
+        transition: border-bottom 0.2s;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .google-input:focus {
+        border-bottom: 2px solid var(--google-purple);
+    }
+
+    /* Card Views */
+    .card-inactive-view {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .card-active-view {
+        display: none;
+    }
+
+    .active .card-inactive-view {
+        display: none;
+    }
+
+    .active .card-active-view {
+        display: block;
+    }
+
+    .toast-container {
+        position: fixed;
+        bottom: 74px;
+        left: 24px;
+        z-index: 100;
+    }
 </style>
 @endsection
 
 @section('admin-content')
-<div class="max-w-4xl mx-auto pb-20" id="form-builder-app" data-form-id="{{ $form->id }}">
+<div class="relative min-h-screen">
     
-    <!-- Top Action Bar -->
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky top-[72px] z-20">
+    <!-- Top Bar Sticky -->
+    <div class="sticky-top-bar flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.forms.index') }}" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </a>
-            <div>
-                <h2 class="font-bold text-slate-800 text-lg leading-tight">{{ $formTitleId ?: 'Untitled' }}</h2>
-                <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                    <span id="status-badge" class="font-medium {{ $form->status === 'published' ? 'text-emerald-600' : ($form->status === 'draft' ? 'text-amber-600' : 'text-slate-500') }}">
-                        {{ ucfirst($form->status) }}
+            <div class="p-2 bg-purple-100 rounded-lg text-purple-700">
+                <span class="material-symbols-outlined text-[28px]">description</span>
+            </div>
+            <div class="max-w-[200px] sm:max-w-md">
+                <h1 class="text-lg font-medium text-slate-800 truncate">{{ $formTitleId ?: 'Untitled Form' }}</h1>
+                <div class="flex items-center gap-2">
+                    <span id="status-badge" class="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider
+                        {{ $form->status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
+                        {{ $form->status }}
                     </span>
-                    <span>&bull;</span>
-                    <span>Disimpan otomatis</span>
+                    <span class="text-[10px] text-slate-400">All changes saved</span>
                 </div>
             </div>
         </div>
-        <div class="flex items-center gap-2">
-            {{-- Tab navigation: Questions / Responses --}}
-            <div class="hidden sm:flex items-center gap-1 bg-slate-100 border border-slate-200 rounded-lg p-1">
-                <a href="{{ route('admin.forms.builder', $form->id) }}"
-                   class="tab-nav-btn px-3 py-1.5 rounded-md text-sm font-semibold flex items-center gap-1.5
-                          bg-primary text-white shadow-sm">
-                    <span class="material-symbols-outlined text-[15px]">edit_note</span> Questions
-                </a>
-                <a href="{{ route('admin.forms.responses.index', $form->id) }}"
-                   class="tab-nav-btn px-3 py-1.5 rounded-md text-sm font-semibold flex items-center gap-1.5
-                          text-slate-500 hover:bg-white hover:text-slate-700 transition-colors">
-                    <span class="material-symbols-outlined text-[15px]">inbox</span> Responses
-                </a>
-            </div>
+
+        <div class="flex items-center gap-1 sm:gap-2">
+            <a href="{{ route('admin.forms.index') }}" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors" title="Back">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
             <div class="w-px h-6 bg-slate-200 mx-1"></div>
-            <a href="{{ route('admin.forms.preview', $form->id) }}" target="_blank" class="p-2 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-full transition-colors tooltip" title="Preview Form">
+            <a href="{{ route('admin.forms.preview', $form->id) }}" target="_blank" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors" title="Preview">
                 <span class="material-symbols-outlined">visibility</span>
+            </a>
+            <a href="{{ route('admin.forms.responses.index', $form->id) }}" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors" title="Responses">
+                <span class="material-symbols-outlined">inbox</span>
             </a>
             <div class="w-px h-6 bg-slate-200 mx-1"></div>
             @if($form->status === 'published')
-                <button onclick="setFormStatus('draft')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium text-sm">
-                    Jadikan Draft
+                <button onclick="setFormStatus('draft')" class="px-3 sm:px-4 py-2 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-50 rounded-lg transition-colors">
+                    Draft
                 </button>
             @else
-                <button onclick="publishForm()" class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium text-sm flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[18px]">publish</span> Publish
+                <button onclick="publishForm()" class="px-4 sm:px-6 py-2 bg-purple-600 text-white font-bold text-xs sm:text-sm rounded-lg hover:bg-purple-700 transition-colors shadow-md">
+                    Kirim
                 </button>
             @endif
         </div>
     </div>
 
-    <!-- Form Metadata Header Card -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-6 border-t-8 border-t-primary builder-card active" id="meta-card" onclick="activateCard('meta-card')">
-        <div class="p-6 space-y-4">
-            <div>
-                <input type="text" id="form-title-id" value="{{ $formTitleId }}" class="w-full text-2xl md:text-3xl font-bold border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-2 transition-colors bg-transparent placeholder-slate-300" placeholder="Judul Formulir" onchange="saveMetadata()">
-            </div>
-            <div>
-                <textarea id="form-desc-id" rows="2" class="w-full text-sm text-slate-600 border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-1 transition-colors bg-transparent placeholder-slate-400 resize-none" placeholder="Deskripsi formulir" onchange="saveMetadata()">{{ $formDescriptionId }}</textarea>
+    <!-- Main Canvas -->
+    <div class="builder-container mt-8 pb-32 px-4 sm:px-0">
+        
+        <!-- Floating Sidebar -->
+        <div class="sidebar-floating" id="floating-sidebar">
+            <button onclick="addField()" class="sidebar-btn" title="Add Question">
+                <span class="material-symbols-outlined">add_circle</span>
+            </button>
+            <button onclick="addSection()" class="sidebar-btn" title="Add Section">
+                <span class="material-symbols-outlined">view_agenda</span>
+            </button>
+        </div>
+
+        <!-- Form Header Card -->
+        <div class="google-card header-card p-6 space-y-4 active" id="meta-card" onclick="activateCard(this)">
+            <div class="space-y-1">
+                <input type="text" id="form-title-id" value="{{ $formTitleId }}" 
+                       class="google-input google-title text-2xl sm:text-3xl" placeholder="Form Title" 
+                       onchange="saveMetadata()">
+                <textarea id="form-desc-id" class="google-input text-sm text-slate-600 h-auto resize-none" 
+                          placeholder="Form description" rows="1"
+                          oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                          onchange="saveMetadata()">{{ $formDescriptionId }}</textarea>
             </div>
             
-            <div class="mt-4 pt-4 border-t border-slate-100 hidden" id="meta-advanced">
-                <p class="text-xs font-bold text-slate-400 uppercase mb-3">Terjemahan Jepang & Pesan Sukses</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Judul (JP)</label>
-                        <input type="text" id="form-title-jp" value="{{ $formTitleJp }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Judul (Opsional)" onchange="saveMetadata()">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Deskripsi (JP)</label>
-                        <input type="text" id="form-desc-jp" value="{{ $formDescriptionJp }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Deskripsi (Opsional)" onchange="saveMetadata()">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Pesan Sukses (ID)</label>
-                        <input type="text" id="form-success-id" value="{{ $formSuccessId }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Terima kasih, data Anda telah kami terima." onchange="saveMetadata()">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Pesan Sukses (JP)</label>
-                        <input type="text" id="form-success-jp" value="{{ $formSuccessJp }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Terjemahan Jepang" onchange="saveMetadata()">
+            <div class="pt-4 border-t border-slate-100">
+                <button onclick="document.getElementById('meta-advanced').classList.toggle('hidden')" 
+                        class="text-[10px] font-bold text-purple-600 hover:underline uppercase tracking-wider">
+                    Advanced Settings (JP & Success Msg)
+                </button>
+                <div id="meta-advanced" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Title (JP)</label>
+                            <input type="text" id="form-title-jp" value="{{ $formTitleJp }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Desc (JP)</label>
+                            <input type="text" id="form-desc-jp" value="{{ $formDescriptionJp }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Success Msg (ID)</label>
+                            <input type="text" id="form-success-id" value="{{ $formSuccessId }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Success Msg (JP)</label>
+                            <input type="text" id="form-success-jp" value="{{ $formSuccessJp }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
+                        </div>
                     </div>
                 </div>
             </div>
-            <button onclick="document.getElementById('meta-advanced').classList.toggle('hidden')" class="text-xs text-primary hover:underline mt-2">Toggle Advanced Settings</button>
         </div>
-    </div>
 
-    <!-- Fields Container -->
-    <div id="fields-container" class="space-y-4 relative">
-        <!-- Cards will be injected here by JS -->
-    </div>
+        <!-- Question Cards Container -->
+        <div id="fields-container" class="space-y-4">
+            <!-- Cards injected by JS -->
+        </div>
 
-    <!-- Floating Action Button -->
-    <div class="fixed bottom-8 right-8 z-30">
-        <button onclick="addField()" class="w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 hover:scale-105 transition-all focus:outline-none focus:ring-4 focus:ring-primary/30">
-            <span class="material-symbols-outlined text-[28px]">add</span>
-        </button>
     </div>
-
 </div>
+
+<div class="toast-container" id="toast-container"></div>
 
 <!-- Template Card -->
 <template id="field-card-template">
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden builder-card field-card group relative" tabindex="0">
+    <div class="google-card field-card group" tabindex="0">
+        
         <!-- Drag handle -->
-        <div class="h-6 flex items-center justify-center cursor-grab drag-handle text-slate-300 hover:text-slate-500 bg-slate-50/50" title="Geser untuk mengurutkan">
+        <div class="h-6 flex items-center justify-center cursor-grab drag-handle text-slate-200 hover:text-slate-400 transition-colors">
             <span class="material-symbols-outlined text-[18px]">drag_indicator</span>
         </div>
+
+        <!-- Inactive View -->
+        <div class="card-inactive-view px-6 pb-6 pt-2">
+            <div class="flex justify-between items-start gap-4">
+                <div class="flex-1">
+                    <p class="field-label-text text-base text-slate-800"></p>
+                    <p class="field-summary-text text-xs text-slate-400 mt-1"></p>
+                </div>
+                <div class="field-type-badge text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded"></div>
+            </div>
+        </div>
         
-        <div class="p-6">
-            <div class="flex flex-col md:flex-row gap-4 items-start">
-                <!-- Label & Name -->
-                <div class="flex-1 space-y-3 w-full">
-                    <input type="text" class="field-label-id w-full text-base font-medium border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-1 transition-colors bg-slate-50/50 focus:bg-transparent" placeholder="Pertanyaan">
-                    <input type="text" class="field-name-input w-full text-xs font-mono text-slate-500 border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-0.5 transition-colors bg-transparent" placeholder="nama_variabel_db (A-Z, 0-9, _)">
+        <!-- Active View -->
+        <div class="card-active-view px-6 pb-4">
+            <div class="flex flex-col sm:flex-row gap-4 items-start">
+                <div class="flex-1 w-full space-y-4">
+                    <div class="relative">
+                        <input type="text" class="field-label-id google-input text-base font-medium py-2" placeholder="Question">
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[9px] font-mono text-slate-300">VARIABLE:</span>
+                            <input type="text" class="field-name-input text-[10px] font-mono text-slate-400 bg-transparent border-none focus:ring-0 p-0 w-32" placeholder="field_name">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="toggle-adv-meta text-[9px] font-bold text-slate-400 hover:text-purple-600 uppercase tracking-widest">
+                        + More Options (JP, Placeholder, Desc)
+                    </button>
+                    <div class="adv-meta-container hidden space-y-3 bg-slate-50 p-3 rounded border border-slate-100">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-bold text-slate-400 uppercase">Label (JP)</label>
+                                <input type="text" class="field-label-jp w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-bold text-slate-400 uppercase">Placeholder (ID)</label>
+                                <input type="text" class="field-placeholder-id w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-bold text-slate-400 uppercase">Description (ID)</label>
+                                <input type="text" class="field-description-id w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Type & Role Selectors -->
-                <div class="w-full md:w-64 space-y-3 shrink-0">
-                    <select class="field-type-select w-full text-sm border-slate-300 rounded-lg focus:border-primary focus:ring-primary bg-slate-50">
-                        <optgroup label="Teks">
-                            <option value="text">Jawaban Singkat (Text)</option>
-                            <option value="textarea">Paragraf (Textarea)</option>
-                            <option value="email">Email</option>
-                            <option value="phone">Telepon/WhatsApp</option>
-                            <option value="number">Angka (Number)</option>
-                        </optgroup>
-                        <optgroup label="Pilihan">
-                            <option value="select">Dropdown (Select)</option>
-                            <option value="radio">Pilihan Ganda (Radio)</option>
-                            <option value="checkbox">Kotak Centang (Checkbox)</option>
-                        </optgroup>
-                        <optgroup label="Lainnya">
-                            <option value="date">Tanggal (Date)</option>
-                            <option value="file">Upload File</option>
-                        </optgroup>
-                    </select>
-                    
-                    <select class="field-role-select w-full text-xs border-slate-200 rounded text-slate-600 focus:border-primary focus:ring-primary">
-                        <option value="none">-- Tanpa Role Spesifik --</option>
-                        <option value="applicant_name">Nama Pemohon Utama (Wajib 1)</option>
-                        <option value="applicant_email">Email Utama</option>
-                        <option value="applicant_phone">WhatsApp Utama</option>
-                        <option value="applicant_birth_date">Tanggal Lahir</option>
-                        <option value="applicant_address">Alamat</option>
-                        <option value="applicant_education">Pendidikan</option>
-                    </select>
+                <div class="w-full sm:w-52 shrink-0">
+                    <div class="relative">
+                        <select class="field-type-select w-full pl-10 pr-4 py-2.5 text-sm border-slate-200 rounded focus:border-purple-600 focus:ring-purple-100 appearance-none bg-white">
+                            <optgroup label="TEXT">
+                                <option value="text">Short Answer</option>
+                                <option value="textarea">Paragraph</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                                <option value="number">Number</option>
+                            </optgroup>
+                            <optgroup label="CHOICE">
+                                <option value="radio">Multiple Choice</option>
+                                <option value="checkbox">Checkboxes</option>
+                                <option value="select">Dropdown</option>
+                            </optgroup>
+                            <optgroup label="OTHER">
+                                <option value="date">Date</option>
+                                <option value="file">File Upload</option>
+                                <option value="section">Section</option>
+                            </optgroup>
+                        </select>
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <span class="material-symbols-outlined text-[20px] type-icon-display">subject</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Options Editor Container (Hidden by default) -->
-            <div class="options-container mt-6 hidden">
-                <p class="text-xs font-medium text-slate-500 mb-2">Opsi Pilihan:</p>
-                <div class="options-list space-y-2">
-                    <!-- Options injected here -->
-                </div>
-                <button type="button" class="add-option-btn mt-2 text-sm text-primary hover:underline flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[16px]">add_circle</span> Tambah Opsi
+            <div class="options-container mt-8 hidden border-t border-slate-50 pt-4">
+                <div class="options-list space-y-3"></div>
+                <button type="button" class="add-option-btn mt-4 text-sm text-purple-600 font-medium hover:bg-purple-50 px-3 py-1.5 rounded transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">add_circle</span> Add Option
                 </button>
             </div>
 
-            <!-- File Config Container (Hidden by default) -->
-            <div class="file-config-container mt-6 hidden bg-slate-50 p-4 rounded-lg border border-slate-200">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="file-config-container mt-8 hidden bg-slate-50 p-4 rounded-lg border border-slate-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <p class="text-xs font-medium text-slate-700 mb-2">Ekstensi Diizinkan:</p>
-                        <div class="flex flex-wrap gap-2 file-ext-checkboxes">
-                            <label class="inline-flex items-center text-sm"><input type="checkbox" value="pdf" class="rounded border-slate-300 text-primary focus:ring-primary mr-1"> PDF</label>
-                            <label class="inline-flex items-center text-sm"><input type="checkbox" value="jpg" class="rounded border-slate-300 text-primary focus:ring-primary mr-1"> JPG</label>
-                            <label class="inline-flex items-center text-sm"><input type="checkbox" value="jpeg" class="rounded border-slate-300 text-primary focus:ring-primary mr-1"> JPEG</label>
-                            <label class="inline-flex items-center text-sm"><input type="checkbox" value="png" class="rounded border-slate-300 text-primary focus:ring-primary mr-1"> PNG</label>
-                            <label class="inline-flex items-center text-sm"><input type="checkbox" value="doc" class="rounded border-slate-300 text-primary focus:ring-primary mr-1"> DOC</label>
-                            <label class="inline-flex items-center text-sm"><input type="checkbox" value="docx" class="rounded border-slate-300 text-primary focus:ring-primary mr-1"> DOCX</label>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Allowed Extensions</p>
+                        <div class="grid grid-cols-2 gap-2 file-ext-checkboxes">
+                            <label class="flex items-center text-xs p-2 bg-white border border-slate-200 rounded cursor-pointer hover:border-purple-300 transition-colors">
+                                <input type="checkbox" value="pdf" class="rounded text-purple-600 mr-2"> PDF
+                            </label>
+                            <label class="flex items-center text-xs p-2 bg-white border border-slate-200 rounded cursor-pointer hover:border-purple-300 transition-colors">
+                                <input type="checkbox" value="jpg" class="rounded text-purple-600 mr-2"> JPG
+                            </label>
+                            <label class="flex items-center text-xs p-2 bg-white border border-slate-200 rounded cursor-pointer hover:border-purple-300 transition-colors">
+                                <input type="checkbox" value="png" class="rounded text-purple-600 mr-2"> PNG
+                            </label>
+                            <label class="flex items-center text-xs p-2 bg-white border border-slate-200 rounded cursor-pointer hover:border-purple-300 transition-colors">
+                                <input type="checkbox" value="doc" class="rounded text-purple-600 mr-2"> DOC
+                            </label>
                         </div>
                     </div>
                     <div>
-                        <p class="text-xs font-medium text-slate-700 mb-2">Maksimal Ukuran (KB):</p>
-                        <input type="number" class="file-max-size w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" value="2048">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Max Size (KB)</p>
+                        <input type="number" class="file-max-size w-full text-sm border-slate-200 rounded p-2" value="2048">
                     </div>
                 </div>
             </div>
 
-            <!-- Footer Actions -->
-            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-medium text-slate-500 mr-2">Wajib diisi</span>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer field-required-toggle">
-                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                    </label>
+            <div class="error-area mt-4 hidden p-3 bg-red-50 border border-red-100 rounded text-red-600 text-xs font-medium space-y-1"></div>
+
+            <div class="mt-8 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-medium text-slate-500">Required</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer field-required-toggle">
+                            <div class="w-9 h-5 bg-slate-200 peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                    </div>
+                    <div class="w-px h-4 bg-slate-200"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">Role</span>
+                        <select class="field-role-select text-xs border-none bg-slate-50 text-slate-600 rounded focus:ring-0 py-1 pr-8">
+                            <option value="none">None</option>
+                            <option value="applicant_name">Full Name</option>
+                            <option value="applicant_email">Email</option>
+                            <option value="applicant_phone">WhatsApp</option>
+                            <option value="applicant_birth_date">Birth Date</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-                    <button class="save-field-btn p-2 text-emerald-600 hover:bg-emerald-50 rounded-full transition-colors tooltip" title="Simpan Perubahan">
-                        <span class="material-symbols-outlined text-[20px]">save</span>
+                
+                <div class="flex items-center gap-1">
+                    <button class="save-field-btn p-2.5 text-emerald-600 hover:bg-emerald-50 rounded-full transition-all" title="Save">
+                        <span class="material-symbols-outlined text-[22px]">check_circle</span>
                     </button>
-                    <div class="w-px h-4 bg-slate-200 mx-1"></div>
-                    <button class="duplicate-field-btn p-2 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-full transition-colors tooltip" title="Duplikasi">
-                        <span class="material-symbols-outlined text-[20px]">content_copy</span>
+                    <button class="duplicate-field-btn p-2.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-full transition-all" title="Duplicate">
+                        <span class="material-symbols-outlined text-[22px]">content_copy</span>
                     </button>
-                    <button class="delete-field-btn p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors tooltip" title="Hapus">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    <button class="delete-field-btn p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all" title="Delete">
+                        <span class="material-symbols-outlined text-[22px]">delete</span>
                     </button>
                 </div>
             </div>
@@ -237,228 +480,193 @@
     const formId = {{ $form->id }};
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
-    // Initial data from server
     let fields = @json($form->fields);
-    
     const container = document.getElementById('fields-container');
     const template = document.getElementById('field-card-template');
+    const sidebar = document.getElementById('floating-sidebar');
 
-    // Initialize Sortable
+    const typeIcons = {
+        'text': 'subject', 'textarea': 'notes', 'email': 'alternate_email', 'phone': 'call',
+        'number': '123', 'date': 'calendar_today', 'radio': 'radio_button_checked',
+        'checkbox': 'check_box', 'select': 'arrow_drop_down_circle', 'file': 'upload_file',
+        'section': 'view_agenda'
+    };
+
+    // Sortable
     new Sortable(container, {
-        animation: 150,
-        handle: '.drag-handle',
-        ghostClass: 'opacity-50',
-        onEnd: function (evt) {
+        animation: 150, handle: '.drag-handle', ghostClass: 'opacity-40',
+        onEnd: () => {
             reorderFields();
+            updateSidebarPosition();
         }
     });
 
-    // Helper: Find field object
-    function getFieldObj(id) {
-        return fields.find(f => f.id == id);
-    }
-
-    // Render all fields
     function renderAll() {
         container.innerHTML = '';
-        fields.sort((a,b) => a.sort_order - b.sort_order).forEach(field => {
-            renderCard(field);
-        });
+        fields.sort((a,b) => a.sort_order - b.sort_order).forEach(field => renderCard(field));
+        updateSidebarPosition();
     }
 
-    // Render single card
     function renderCard(field) {
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector('.field-card');
         card.dataset.id = field.id;
         
-        // Locked field visual
-        if (field.is_locked) {
-            card.classList.add('border-l-amber-400');
-            card.querySelector('.field-name-input').readOnly = true;
-            card.querySelector('.field-name-input').classList.add('bg-slate-100', 'cursor-not-allowed');
-            card.querySelector('.delete-field-btn').remove();
-        }
-
-        // Fill data
+        // Populate...
+        card.querySelector('.field-label-text').textContent = field.label?.id || '(No Question)';
+        card.querySelector('.field-type-badge').textContent = field.type;
         card.querySelector('.field-label-id').value = field.label?.id || '';
+        card.querySelector('.field-label-jp').value = field.label?.jp || '';
         card.querySelector('.field-name-input').value = field.field_name || '';
         card.querySelector('.field-type-select').value = field.type || 'text';
         card.querySelector('.field-role-select').value = field.field_role || 'none';
-        card.querySelector('.field-required-toggle').checked = field.is_required || false;
-
-        // Type Change Listener
-        const typeSelect = card.querySelector('.field-type-select');
-        typeSelect.addEventListener('change', (e) => toggleTypeUI(card, e.target.value));
-        toggleTypeUI(card, field.type); // Init UI
-
-        // Options specific
-        if (['select', 'radio', 'checkbox'].includes(field.type)) {
-            renderOptions(card, field.options || []);
+        card.querySelector('.field-required-toggle').checked = !!field.is_required;
+        card.querySelector('.field-placeholder-id').value = field.placeholder?.id || '';
+        card.querySelector('.field-description-id').value = field.description?.id || '';
+        
+        if (field.type === 'section') {
+            card.classList.add('section-card', 'border-l-8', 'border-l-purple-600');
+        } else {
+            card.classList.remove('section-card', 'border-l-8', 'border-l-purple-600');
         }
 
-        // File specific
-        if (field.type === 'file') {
-            const exts = field.accepted_file_types || [];
-            card.querySelectorAll('.file-ext-checkboxes input').forEach(cb => {
-                cb.checked = exts.includes(cb.value);
-            });
-            card.querySelector('.file-max-size').value = field.max_file_size || 2048;
+        if (field.is_locked) {
+            card.querySelector('.field-name-input').disabled = true;
+            card.querySelector('.delete-field-btn').remove();
         }
 
-        // Event Listeners
+        // Listeners
         card.addEventListener('click', () => activateCard(card));
         
-        card.querySelector('.add-option-btn').addEventListener('click', () => {
-            addOptionRow(card);
+        card.querySelector('.field-type-select').addEventListener('change', (e) => {
+            toggleTypeUI(card, e.target.value);
+            updateTypeIcon(card, e.target.value);
         });
 
-        card.querySelector('.save-field-btn').addEventListener('click', (e) => {
+        card.querySelector('.toggle-adv-meta').addEventListener('click', (e) => {
             e.stopPropagation();
-            saveField(card);
+            card.querySelector('.adv-meta-container').classList.toggle('hidden');
         });
 
-        card.querySelector('.duplicate-field-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            duplicateField(field.id);
-        });
+        card.querySelector('.add-option-btn').addEventListener('click', (e) => { e.stopPropagation(); addOptionRow(card); });
+        card.querySelector('.save-field-btn').addEventListener('click', (e) => { e.stopPropagation(); saveField(card); });
+        card.querySelector('.duplicate-field-btn').addEventListener('click', (e) => { e.stopPropagation(); duplicateField(field.id); });
 
         if (!field.is_locked) {
-            card.querySelector('.delete-field-btn')?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deleteField(field.id, card);
-            });
+            card.querySelector('.delete-field-btn')?.addEventListener('click', (e) => { e.stopPropagation(); deleteField(field.id, card); });
+        }
+
+        toggleTypeUI(card, field.type);
+        updateTypeIcon(card, field.type);
+        if (['radio', 'checkbox', 'select'].includes(field.type)) renderOptions(card, field.options || []);
+        if (field.type === 'file') {
+            const exts = field.accepted_file_types || [];
+            card.querySelectorAll('.file-ext-checkboxes input').forEach(cb => cb.checked = exts.includes(cb.value));
+            card.querySelector('.file-max-size').value = field.max_file_size || 2048;
         }
 
         container.appendChild(card);
     }
 
-    // Toggle Type UI (show/hide options or file config)
+    function activateCard(card) {
+        if (card.classList.contains('active')) return;
+        document.querySelectorAll('.google-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        updateSidebarPosition();
+    }
+
+    function updateSidebarPosition() {
+        if (window.innerWidth <= 1024) return;
+        const activeCard = document.querySelector('.google-card.active');
+        if (activeCard) {
+            const containerTop = document.querySelector('.builder-container').getBoundingClientRect().top + window.scrollY;
+            const cardTop = activeCard.getBoundingClientRect().top + window.scrollY;
+            sidebar.style.top = (cardTop - containerTop) + 'px';
+        } else {
+            sidebar.style.top = '0px';
+        }
+    }
+
+    // Update on scroll/resize
+    window.addEventListener('resize', updateSidebarPosition);
+
+    function updateTypeIcon(card, type) {
+        card.querySelector('.type-icon-display').textContent = typeIcons[type] || 'help';
+    }
+
     function toggleTypeUI(card, type) {
         const optsDiv = card.querySelector('.options-container');
         const fileDiv = card.querySelector('.file-config-container');
-        
         optsDiv.classList.add('hidden');
         fileDiv.classList.add('hidden');
-
-        if (['select', 'radio', 'checkbox'].includes(type)) {
+        if (['radio', 'checkbox', 'select'].includes(type)) {
             optsDiv.classList.remove('hidden');
-            if(optsDiv.querySelector('.options-list').children.length === 0){
-                addOptionRow(card, {value: 'opsi_1', label: {id: 'Opsi 1'}});
-            }
-        } else if (type === 'file') {
-            fileDiv.classList.remove('hidden');
+            if (optsDiv.querySelector('.options-list').children.length === 0) addOptionRow(card);
+        } else if (type === 'file') fileDiv.classList.remove('hidden');
+        
+        // Hide metadata for section
+        const metaFooter = card.querySelector('.border-t.border-slate-100');
+        if (type === 'section') {
+            metaFooter.classList.add('hidden');
+            card.classList.add('section-card', 'border-l-8', 'border-l-purple-600');
+        } else {
+            metaFooter.classList.remove('hidden');
+            card.classList.remove('section-card', 'border-l-8', 'border-l-purple-600');
         }
     }
 
-    // Render Options List
     function renderOptions(card, options) {
         const list = card.querySelector('.options-list');
         list.innerHTML = '';
-        if(!options || options.length === 0) {
-            addOptionRow(card, {value: 'opsi_1', label: {id: 'Opsi 1'}});
-            return;
-        }
-        options.forEach(opt => addOptionRow(card, opt));
+        if (options.length === 0) addOptionRow(card);
+        else options.forEach(opt => addOptionRow(card, opt));
     }
 
-    // Add Option Row
-    function addOptionRow(card, optData = null) {
+    function addOptionRow(card, data = null) {
         const list = card.querySelector('.options-list');
-        const count = list.children.length + 1;
-        const data = optData || {value: 'opsi_'+count, label: {id: 'Opsi '+count}};
-        
+        const opt = data || { value: 'option_' + (list.children.length + 1), label: { id: 'Option ' + (list.children.length + 1), jp: '' } };
         const row = document.createElement('div');
-        row.className = 'option-row flex items-center gap-2 group';
+        row.className = 'option-row flex items-start gap-2 group';
         row.innerHTML = `
-            <span class="material-symbols-outlined text-slate-300 text-[18px]">radio_button_unchecked</span>
-            <input type="text" class="opt-label flex-1 text-sm border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-1 bg-transparent" placeholder="Label Opsi" value="${data.label?.id || ''}">
-            <input type="text" class="opt-value w-24 text-xs font-mono text-slate-400 border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-1 bg-transparent" placeholder="value" value="${data.value || ''}">
-            <button type="button" class="delete-option-btn p-1 text-slate-400 hover:text-red-500 opacity-0 transition-opacity"><span class="material-symbols-outlined text-[18px]">close</span></button>
+            <div class="mt-2 text-slate-300"><span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span></div>
+            <div class="flex-1 space-y-2">
+                <div class="flex gap-2">
+                    <input type="text" class="opt-label-id flex-1 text-sm google-input" placeholder="Option Label (ID)" value="${opt.label?.id || ''}">
+                    <input type="text" class="opt-value w-24 text-[10px] font-mono text-slate-400 bg-slate-50 border-none rounded px-2" placeholder="val" value="${opt.value || ''}">
+                </div>
+                <input type="text" class="opt-label-jp w-full text-[10px] text-slate-400 google-input" placeholder="Option Label (JP - Optional)" value="${opt.label?.jp || ''}">
+            </div>
+            <button type="button" class="delete-option-btn p-1 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 mt-1"><span class="material-symbols-outlined text-[18px]">close</span></button>
         `;
-        
-        row.querySelector('.delete-option-btn').addEventListener('click', () => {
-            if(list.children.length > 1) row.remove();
-        });
-        
+        row.querySelector('.delete-option-btn').addEventListener('click', () => { if (list.children.length > 1) row.remove(); });
         list.appendChild(row);
     }
 
-    // Active Card Styling
-    function activateCard(activeElem) {
-        document.querySelectorAll('.builder-card').forEach(c => c.classList.remove('active'));
-        if(typeof activeElem === 'string') {
-            document.getElementById(activeElem).classList.add('active');
-        } else {
-            activeElem.classList.add('active');
-        }
-    }
-
-    // Generate random string for new field names
-    function generateId(length = 6) {
-        return Math.random().toString(36).substring(2, 2+length);
-    }
-
-    // Add New Field via AJAX
-    async function addField() {
-        const dummyName = 'q_' + generateId();
-        const payload = {
-            program_id: {{ $form->program_id }},
-            schema_id: {{ $form->schema_id ?? 'null' }},
-            label_id: 'Pertanyaan Baru',
-            field_name: dummyName,
-            type: 'text',
-            status: 'aktif'
-        };
-
-        try {
-            const res = await fetch(`/dashboard-admin/forms/${formId}/fields`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken},
-                body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-            if(res.ok) {
-                fields.push(data.field);
-                renderAll();
-                // scroll to bottom
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                showToast('Pertanyaan ditambahkan');
-            } else {
-                alert(data.message || 'Terjadi kesalahan.');
-            }
-        } catch(e) { console.error(e); }
-    }
-
-    // Save Existing Field via AJAX
     async function saveField(card) {
         const id = card.dataset.id;
         const type = card.querySelector('.field-type-select').value;
-        
+        const errArea = card.querySelector('.error-area');
+        errArea.classList.add('hidden'); errArea.innerHTML = '';
+
         const payload = {
-            program_id: {{ $form->program_id }},
-            schema_id: {{ $form->schema_id ?? 'null' }},
+            program_id: {{ $form->program_id }}, schema_id: {{ $form->schema_id ?? 'null' }},
             label_id: card.querySelector('.field-label-id').value || 'Untitled',
+            label_jp: card.querySelector('.field-label-jp').value,
+            placeholder_id: card.querySelector('.field-placeholder-id').value,
+            description_id: card.querySelector('.field-description-id').value,
             field_name: card.querySelector('.field-name-input').value,
-            type: type,
-            field_role: card.querySelector('.field-role-select').value,
-            is_required: card.querySelector('.field-required-toggle').checked ? 1 : 0,
-            status: 'aktif'
+            type: type, field_role: card.querySelector('.field-role-select').value,
+            is_required: card.querySelector('.field-required-toggle').checked ? 1 : 0, status: 'aktif'
         };
 
-        // Options logic
-        if (['select', 'radio', 'checkbox'].includes(type)) {
+        if (['radio', 'checkbox', 'select'].includes(type)) {
             const opts = [];
             card.querySelectorAll('.option-row').forEach(row => {
-                opts.push({
-                    value: row.querySelector('.opt-value').value,
-                    label: { id: row.querySelector('.opt-label').value }
-                });
+                opts.push({ value: row.querySelector('.opt-value').value, label: { id: row.querySelector('.opt-label-id').value, jp: row.querySelector('.opt-label-jp').value } });
             });
             payload.options = JSON.stringify(opts);
         }
 
-        // File logic
         if (type === 'file') {
             const exts = [];
             card.querySelectorAll('.file-ext-checkboxes input:checked').forEach(cb => exts.push(cb.value));
@@ -468,152 +676,153 @@
 
         try {
             const saveBtn = card.querySelector('.save-field-btn');
-            saveBtn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">refresh</span>';
-            
-            const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}`, {
-                method: 'PATCH',
-                headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken},
+            const originalIcon = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<span class="material-symbols-outlined text-[22px] animate-spin">sync</span>';
+            const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) });
+            const data = await res.json();
+            if (res.ok) {
+                const index = fields.findIndex(f => f.id == id);
+                if (index !== -1) fields[index] = data.field;
+                showToast('Field saved successfully');
+                card.querySelector('.field-label-text').textContent = data.field.label?.id || '(No Question)';
+                card.querySelector('.field-type-badge').textContent = data.field.type;
+            } else if (res.status === 422) {
+                errArea.classList.remove('hidden');
+                Object.values(data.errors).flat().forEach(err => { const p = document.createElement('p'); p.textContent = '• ' + err; errArea.appendChild(p); });
+            }
+            saveBtn.innerHTML = originalIcon;
+        } catch(e) { console.error(e); }
+    }
+
+    async function addSection() {
+        const payload = {
+            program_id: {{ $form->program_id }},
+            schema_id: {{ $form->schema_id ?? 'null' }},
+            label_id: 'Untitled Section',
+            field_name: 'section_' + Date.now(),
+            type: 'section',
+            is_required: 0,
+            status: 'aktif'
+        };
+
+        try {
+            const res = await fetch(`{{ route('admin.forms.fields.store', $form->id) }}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-            if(res.ok) {
-                const index = fields.findIndex(f => f.id == id);
-                if(index !== -1) fields[index] = data.field;
-                showToast('Berhasil disimpan');
+            if (res.ok) {
+                fields.push(data.field);
+                renderAll();
+                const newCard = document.querySelector(`.field-card[data-id="${data.field.id}"]`);
+                if (newCard) {
+                    activateCard(newCard);
+                    newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                showToast('Section added');
             } else {
-                alert(data.message || 'Validasi gagal.');
+                showToast(data.message || 'Error adding section', 'error');
             }
-            saveBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">save</span>';
+        } catch (e) {
+            showToast('Network error', 'error');
+        }
+    }
+
+    async function addField() {
+        const payload = {
+            program_id: {{ $form->program_id }}, schema_id: {{ $form->schema_id ?? 'null' }},
+            label_id: 'New Question', field_name: 'q_' + Math.random().toString(36).substring(2, 8),
+            type: 'text', status: 'aktif'
+        };
+
+        try {
+            const res = await fetch(`/dashboard-admin/forms/${formId}/fields`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) });
+            const data = await res.json();
+            if (res.ok) {
+                fields.push(data.field);
+                renderAll();
+                const newCard = container.lastElementChild;
+                activateCard(newCard);
+                newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                showToast('Question added');
+            }
         } catch(e) { console.error(e); }
     }
 
-    // Duplicate Field
     async function duplicateField(id) {
         try {
-            const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}/duplicate`, {
-                method: 'POST',
-                headers: {'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken}
-            });
+            const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}/duplicate`, { method: 'POST', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken } });
             const data = await res.json();
-            if(res.ok) {
-                const newField = data.field;
-                // Increment sort_order for local state consistency
-                fields.forEach(f => {
-                    if (f.sort_order >= newField.sort_order) {
-                        f.sort_order++;
-                    }
-                });
-                fields.push(newField);
+            if (res.ok) {
+                fields.push(data.field);
                 renderAll();
-                showToast('Pertanyaan diduplikasi');
+                // Find the new card (it will be after the original card in fields array but let's just find the last card for now or find by ID)
+                const newCard = Array.from(container.children).find(c => c.dataset.id == data.field.id);
+                if (newCard) {
+                    activateCard(newCard);
+                    newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                showToast('Question duplicated');
             }
         } catch(e) { console.error(e); }
     }
 
-    // Delete Field
     async function deleteField(id, card) {
-        if(!confirm('Yakin ingin menghapus pertanyaan ini?')) return;
+        if (!confirm('Delete this question?')) return;
         try {
-            const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}`, {
-                method: 'DELETE',
-                headers: {'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken}
-            });
-            if(res.ok) {
+            const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken } });
+            if (res.ok) {
+                const wasActive = card.classList.contains('active');
                 fields = fields.filter(f => f.id != id);
                 card.remove();
-                showToast('Pertanyaan dihapus');
-            } else {
-                const data = await res.json();
-                alert(data.message);
+                if (wasActive) {
+                    const firstCard = container.querySelector('.google-card') || document.getElementById('meta-card');
+                    if (firstCard) activateCard(firstCard);
+                }
+                showToast('Question deleted');
+                updateSidebarPosition();
             }
         } catch(e) { console.error(e); }
     }
 
-    // Reorder Fields
     async function reorderFields() {
-        const order = Array.from(container.children).map(card => card.dataset.id);
-        // update local state
-        order.forEach((id, index) => {
-            const f = fields.find(x => x.id == id);
-            if(f) f.sort_order = index + 1;
-        });
-
-        try {
-            await fetch(`/dashboard-admin/forms/${formId}/fields/reorder`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken},
-                body: JSON.stringify({order})
-            });
-            showToast('Urutan disimpan');
-        } catch(e) { console.error(e); }
+        const order = Array.from(container.children).map(c => c.dataset.id);
+        try { await fetch(`/dashboard-admin/forms/${formId}/fields/reorder`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify({ order }) }); showToast('Order updated'); } catch(e) { console.error(e); }
     }
 
-    // Save Metadata
-    let metaTimeout;
-    function saveMetadata() {
-        clearTimeout(metaTimeout);
-        metaTimeout = setTimeout(async () => {
-            const payload = {
-                program_id: {{ $form->program_id }},
-                schema_id: {{ $form->schema_id ?? 'null' }},
-                title_id: document.getElementById('form-title-id').value || 'Untitled',
-                title_jp: document.getElementById('form-title-jp').value,
-                description_id: document.getElementById('form-desc-id').value,
-                description_jp: document.getElementById('form-desc-jp').value,
-                success_message_id: document.getElementById('form-success-id').value,
-                success_message_jp: document.getElementById('form-success-jp').value,
-            };
-
-            try {
-                await fetch(`/dashboard-admin/forms/${formId}`, {
-                    method: 'PATCH',
-                    headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken},
-                    body: JSON.stringify(payload)
-                });
-                showToast('Metadata disimpan');
-            } catch(e) { console.error(e); }
-        }, 1000); // debounce 1s
-    }
-
-    // Publish logic
     async function publishForm() {
         try {
-            const res = await fetch(`/dashboard-admin/forms/${formId}/publish`, {
-                method: 'POST',
-                headers: {'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken}
-            });
+            const res = await fetch(`/dashboard-admin/forms/${formId}/publish`, { method: 'POST', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken } });
             const data = await res.json();
-            if(res.ok) {
-                alert('Success! Form published.');
-                location.reload();
-            } else {
-                alert(data.message || 'Gagal mempublish form.');
-            }
+            if (res.ok) { showToast('Form published!'); setTimeout(() => location.reload(), 1000); } else alert(data.message || 'Validation failed.');
         } catch(e) { console.error(e); }
     }
 
     async function setFormStatus(status) {
-        try {
-            const res = await fetch(`/dashboard-admin/forms/${formId}/${status}`, {
-                method: 'POST',
-                headers: {'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken}
-            });
-            if(res.ok) {
-                location.reload();
-            }
-        } catch(e) { console.error(e); }
+        try { const res = await fetch(`/dashboard-admin/forms/${formId}/${status}`, { method: 'POST', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken } }); if (res.ok) location.reload(); } catch(e) { console.error(e); }
     }
 
-    // Simple Toast notification
+    function saveMetadata() {
+        const payload = {
+            program_id: {{ $form->program_id }}, schema_id: {{ $form->schema_id ?? 'null' }},
+            title_id: document.getElementById('form-title-id').value, title_jp: document.getElementById('form-title-jp').value,
+            description_id: document.getElementById('form-desc-id').value, description_jp: document.getElementById('form-desc-jp').value,
+            success_message_id: document.getElementById('form-success-id').value, success_message_jp: document.getElementById('form-success-jp').value,
+        };
+        fetch(`/dashboard-admin/forms/${formId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) }).then(() => showToast('Form metadata saved'));
+    }
+
     function showToast(msg) {
+        const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg z-50 transition-opacity duration-300';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2000);
+        toast.className = 'bg-slate-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-xl mb-3 translate-y-10 opacity-0 transition-all duration-300 flex items-center gap-2';
+        toast.innerHTML = `<span class="material-symbols-outlined text-[18px] text-emerald-400">check_circle</span> ${msg}`;
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
+        setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
-    // Initial render
     renderAll();
 </script>
 @endsection

@@ -1,0 +1,9 @@
+@echo off
+cd /d "%~dp0"
+echo Mengatur registry npm ke public npm...
+npm config set registry https://registry.npmjs.org/
+echo Menginstall dependency...
+npm install
+echo Menjalankan Vite dev server...
+npm run dev
+pause
