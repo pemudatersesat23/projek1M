@@ -63,6 +63,13 @@ class FormFieldController extends Controller
     {
         $data = $request->validated();
 
+        if (isset($data['options']) && is_string($data['options'])) {
+            $data['options'] = json_decode($data['options'], true);
+        }
+        if (isset($data['accepted_file_types']) && is_string($data['accepted_file_types'])) {
+            $data['accepted_file_types'] = json_decode($data['accepted_file_types'], true);
+        }
+
         // Normalise: clear options/file fields for irrelevant types
         if (!in_array($data['type'], config('dynamic_forms.choice_field_types'))) {
             $data['options'] = null;
@@ -98,6 +105,13 @@ class FormFieldController extends Controller
     public function update(FormFieldRequest $request, FormField $formField)
     {
         $data = $request->validated();
+
+        if (isset($data['options']) && is_string($data['options'])) {
+            $data['options'] = json_decode($data['options'], true);
+        }
+        if (isset($data['accepted_file_types']) && is_string($data['accepted_file_types'])) {
+            $data['accepted_file_types'] = json_decode($data['accepted_file_types'], true);
+        }
 
         // field_name is immutable — prevent HTTP manipulation even if readonly in UI
         unset($data['field_name']);

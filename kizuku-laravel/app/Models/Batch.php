@@ -54,6 +54,11 @@ class Batch extends Model
         return $this->hasMany(Applicant::class);
     }
 
+    public function forms()
+    {
+        return $this->hasMany(Form::class);
+    }
+
     // Helpers
     public function isOpen()
     {
@@ -116,7 +121,7 @@ class Batch extends Model
             return $this->whatsapp_link;
         }
         if ($this->isRegistrationEnabled() && $this->program) {
-            return route('program.detail', $this->program->slug) . '#registration-form';
+            return route('programs.show', $this->program->slug) . '#registration-section';
         }
         return '#';
     }

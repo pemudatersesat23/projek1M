@@ -77,12 +77,14 @@
               <div class="flex flex-col">
                 <span class="text-sm font-bold text-slate-800">{{ $a->nama }}</span>
                 <span class="text-xs text-slate-400">{{ $a->email }}</span>
+                <span class="text-xs text-slate-400">{{ $a->phone }}</span>
               </div>
             </td>
             <td class="px-6 py-4">
               <div class="flex flex-col">
-                <span class="text-sm font-medium text-slate-700">{{ $a->program->nama_program }}</span>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{{ $a->batch->nama_batch }}</span>
+                <span class="text-sm font-medium text-slate-700">{{ $a->program?->nama_program ?? '-' }}</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{{ $a->batch?->nama_batch ?? '-' }}</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{{ $a->programSchema?->nama_skema ?? 'Umum' }}</span>
               </div>
             </td>
             <td class="px-6 py-4">

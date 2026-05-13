@@ -41,7 +41,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex flex-col">
-                    <span class="text-sm text-slate-700">{{ $schema->program->nama_program }}</span>
+                    <span class="text-sm text-slate-700">{{ $schema->program?->nama_program ?? 'Program tidak tersedia' }}</span>
                     @if($schema->batch)
                         <span class="text-xs text-blue-600">Khusus: {{ $schema->batch->nama_batch }}</span>
                     @else

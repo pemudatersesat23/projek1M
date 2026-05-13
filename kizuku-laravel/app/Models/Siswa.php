@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
+    // Legacy model retained for backward compatibility. New registration data uses Applicant.
     protected $fillable = [
         'nama', 'wa', 'email', 'kota', 'program', 'batch_id',
         'status', 'pendidikan', 'catatan', 'tgl_lahir',

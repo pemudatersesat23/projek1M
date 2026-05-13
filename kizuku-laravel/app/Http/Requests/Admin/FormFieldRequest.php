@@ -14,14 +14,16 @@ class FormFieldRequest extends FormRequest
 
     public function rules(): array
     {
-        $formFieldId = $this->route('form_field')?->id;
+        $formFieldId = $this->route('form_field')?->id ?? $this->route('field')?->id;
         $programId   = $this->input('program_id');
         $schemaId    = $this->input('schema_id') ?: null;
         $type        = $this->input('type');
         $choiceTypes = config('dynamic_forms.choice_field_types', ['select', 'radio', 'checkbox']);
         $blocked     = config('dynamic_forms.blocked_file_extensions', []);
+        $formId      = $this->route('form')?->id ?? $this->input('form_id');
 
         $rules = [
+            'form_id'    => ['nullable', 'exists:forms,id'],
             'program_id' => ['required', 'exists:programs,id'],
             'schema_id'  => [
                 'nullable',
@@ -45,36 +47,62 @@ class FormFieldRequest extends FormRequest
                 'string',
                 'max:64',
                 'regex:/^[a-z][a-z0-9_]*$/',
-                // Uniqueness: field umum (schema_id null) or schema field — no collision with program-level fields
-                function ($attribute, $value, $fail) use ($formFieldId, $programId, $schemaId) {
-                    // 1. Check uniqueness within same scope (program + schema_id)
-                    $existsInScope = \App\Models\FormField::withTrashed()
-                        ->where('program_id', $programId)
-                        ->where('field_name', $value)
-                        ->when($schemaId, fn($q) => $q->where('schema_id', $schemaId),
-                                          fn($q) => $q->whereNull('schema_id'))
-                        ->when($formFieldId, fn($q) => $q->where('id', '!=', $formFieldId))
-                        ->exists();
-
-                    if ($existsInScope) {
-                        $fail('Field name "' . $value . '" sudah digunakan dalam lingkup program dan skema yang sama.');
-                        return;
-                    }
-
-                    // 2. If this is a schema-specific field, also check against program-level fields
-                    if ($schemaId) {
-                        $existsInProgram = \App\Models\FormField::withTrashed()
-                            ->where('program_id', $programId)
+                function ($attribute, $value, $fail) use ($formFieldId, $programId, $schemaId, $formId) {
+                    if ($formId) {
+                        // Task 5C logic: Check uniqueness within the exact same form_id
+                        $existsInForm = \App\Models\FormField::withTrashed()
+                            ->where('form_id', $formId)
                             ->where('field_name', $value)
-                            ->whereNull('schema_id')
                             ->when($formFieldId, fn($q) => $q->where('id', '!=', $formFieldId))
                             ->exists();
 
-                        if ($existsInProgram) {
-                            $fail('Field name "' . $value . '" sudah digunakan sebagai field umum program. Tidak boleh bentrok.');
+                        if ($existsInForm) {
+                            $fail('Field name "' . $value . '" sudah digunakan di dalam form ini.');
+                        }
+                    } else {
+                        // Legacy logic (Task 4C backward compatibility)
+                        $existsInScope = \App\Models\FormField::withTrashed()
+                            ->where('program_id', $programId)
+                            ->where('field_name', $value)
+                            ->when($schemaId, fn($q) => $q->where('schema_id', $schemaId),
+                                              fn($q) => $q->whereNull('schema_id'))
+                            ->when($formFieldId, fn($q) => $q->where('id', '!=', $formFieldId))
+                            ->exists();
+
+                        if ($existsInScope) {
+                            $fail('Field name "' . $value . '" sudah digunakan dalam lingkup program dan skema yang sama.');
+                            return;
+                        }
+
+                        if ($schemaId) {
+                            $existsInProgram = \App\Models\FormField::withTrashed()
+                                ->where('program_id', $programId)
+                                ->where('field_name', $value)
+                                ->whereNull('schema_id')
+                                ->when($formFieldId, fn($q) => $q->where('id', '!=', $formFieldId))
+                                ->exists();
+
+                            if ($existsInProgram) {
+                                $fail('Field name "' . $value . '" sudah digunakan sebagai field umum program. Tidak boleh bentrok.');
+                            }
                         }
                     }
                 },
+            ],
+            'field_role' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($formFieldId, $formId) {
+                    if ($value && $value !== 'none' && $formId) {
+                        $exists = \App\Models\FormField::where('form_id', $formId)
+                            ->where('field_role', $value)
+                            ->when($formFieldId, fn($q) => $q->where('id', '!=', $formFieldId))
+                            ->exists();
+                        if ($exists) {
+                            $fail("Role field '{$value}' hanya boleh digunakan satu kali dalam form ini.");
+                        }
+                    }
+                }
             ],
 
             'type'       => ['required', Rule::in(config('dynamic_forms.allowed_field_types'))],

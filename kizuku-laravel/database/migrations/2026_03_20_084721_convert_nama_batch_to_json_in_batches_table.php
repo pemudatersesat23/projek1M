@@ -28,9 +28,10 @@ return new class extends Migration
                 }
             }
 
-            // 2. Modify column to JSON type
-            // On Windows/MariaDB/MySQL, we use MODIFY.
-            DB::statement("ALTER TABLE {$table} MODIFY {$column} JSON");
+            // 2. Modify column to JSON type where MySQL's MODIFY syntax is supported.
+            if (DB::connection()->getDriverName() !== 'sqlite') {
+                DB::statement("ALTER TABLE {$table} MODIFY {$column} JSON");
+            }
         }
     }
 

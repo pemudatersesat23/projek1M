@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Siswa;
+use App\Models\Applicant;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -10,54 +10,64 @@ class ExportController extends Controller
 {
     public function index()
     {
-        $totalSiswa = Siswa::count();
-        $previewSiswas = Siswa::latest()->take(5)->get();
+        $totalApplicants = Applicant::count();
+        $previewApplicants = Applicant::with(['program', 'batch', 'programSchema'])
+            ->latest()
+            ->take(5)
+            ->get();
 
-        return view('admin.export', compact('totalSiswa', 'previewSiswas'));
+        return view('admin.export', compact('totalApplicants', 'previewApplicants'));
     }
 
     public function download(Request $request)
     {
-        $query = Siswa::query();
+        $query = Applicant::with(['program', 'batch', 'programSchema']);
 
-        if ($request->filled('program')) {
-            $query->where('program', $request->program);
+        if ($request->filled('program_id')) {
+            $query->where('program_id', $request->program_id);
         }
+
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('status_seleksi', $request->status);
         }
 
-        $siswas = $query->latest()->get();
+        $applicants = $query->latest()->get();
 
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="data_siswa_' . date('Y-m-d') . '.csv"',
+            'Content-Disposition' => 'attachment; filename="data_applicants_' . date('Y-m-d') . '.csv"',
         ];
 
-        $callback = function() use ($siswas) {
+        $callback = function () use ($applicants) {
             $file = fopen('php://output', 'w');
-            // BOM for Excel UTF-8
             fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-            // Header
-            fputcsv($file, ['No', 'Nama', 'WhatsApp', 'Email', 'Kota', 'Program', 'Status', 'Pendidikan', 'Status Bayar', 'Tgl Daftar', 'Catatan']);
+            fputcsv($file, [
+                'No',
+                'Nama',
+                'WhatsApp',
+                'Email',
+                'Program',
+                'Batch',
+                'Schema',
+                'Status Seleksi',
+                'Tanggal Daftar',
+            ]);
 
-            // Data
-            foreach ($siswas as $i => $s) {
+            foreach ($applicants as $i => $applicant) {
                 fputcsv($file, [
                     $i + 1,
-                    $s->nama,
-                    $s->wa,
-                    $s->email ?? '-',
-                    $s->kota,
-                    $s->program,
-                    $s->status,
-                    $s->pendidikan ?? '-',
-                    $s->payment_status ?? 'Pending',
-                    $s->created_at->format('d/m/Y'),
-                    $s->catatan ?? '-',
+                    $applicant->nama ?? '-',
+                    $applicant->phone ?? '-',
+                    $applicant->email ?? '-',
+                    $applicant->program?->nama_program ?? '-',
+                    $applicant->batch?->nama_batch ?? '-',
+                    $applicant->programSchema?->nama_skema ?? '-',
+                    $applicant->status_seleksi ?? '-',
+                    $applicant->created_at?->format('d/m/Y H:i') ?? '-',
                 ]);
             }
+
             fclose($file);
         };
 

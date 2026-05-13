@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SiswaRequest extends FormRequest
 {
+    // Legacy request retained for the old Siswa flow. New registration data uses Applicant.
     public function authorize(): bool
     {
         return true;

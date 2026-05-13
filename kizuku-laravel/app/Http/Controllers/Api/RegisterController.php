@@ -4,20 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PendaftaranRequest;
-use App\Models\Applicant;
-use Illuminate\Http\Request;
+use App\Services\RegistrationService;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
-    /**
-     * Handle the incoming registration request.
-     */
-    public function register(PendaftaranRequest $request)
+    public function register(PendaftaranRequest $request, RegistrationService $registrationService)
     {
         try {
-            // Create applicant from validated data
-            // Note: PendaftaranRequest already handles validation for program_id, batch_id, etc.
-            $applicant = Applicant::create($request->validated());
+            $applicant = $registrationService->register($request);
 
             return response()->json([
                 'success' => true,
@@ -25,15 +20,22 @@ class RegisterController extends Controller
                 'data' => [
                     'id' => $applicant->id,
                     'nama' => $applicant->nama,
-                    'status_seleksi' => $applicant->status_seleksi
-                ]
+                    'status_seleksi' => $applicant->status_seleksi,
+                    'form_id' => $applicant->form_id,
+                ],
             ], 201);
-
-        } catch (\Exception $e) {
-            \Log::error('API Registration Error: ' . $e->getMessage());
+        } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan pada server. Silakan coba lagi nanti.'
+                'message' => 'Validasi pendaftaran gagal.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+            \Log::error('API Registration Error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan pada server. Silakan coba lagi nanti.',
             ], 500);
         }
     }

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Http\Requests\SiswaRequest;
+use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
+    // Legacy controller retained for backward compatibility. No active routes should point here.
     public function index(Request $request)
     {
         $query = Siswa::query();

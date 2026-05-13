@@ -11,6 +11,10 @@ class FormField extends Model
     use SoftDeletes, HasTranslations;
 
     protected $fillable = [
+        'form_id',
+        'field_role',
+        'is_locked',
+        'settings',
         'program_id',
         'schema_id',
         'label',
@@ -35,10 +39,17 @@ class FormField extends Model
     protected $casts = [
         'options' => 'array',
         'accepted_file_types' => 'array',
-        'is_required' => 'boolean'
+        'is_required' => 'boolean',
+        'is_locked' => 'boolean',
+        'settings' => 'array',
     ];
 
     // Relations
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
+
     public function program()
     {
         return $this->belongsTo(Program::class);

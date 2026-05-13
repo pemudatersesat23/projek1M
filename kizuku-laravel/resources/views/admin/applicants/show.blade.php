@@ -23,11 +23,11 @@
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Jenis Kelamin</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->jenis_kelamin ? ($applicant->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan') : '-' }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tempat, Tgl Lahir</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->tempat_lahir }}, {{ $applicant->tanggal_lahir->format('d/m/Y') }}</p>
+            <p class="text-slate-800 font-bold">{{ $applicant->tempat_lahir ?: '-' }}, {{ $applicant->tanggal_lahir?->format('d/m/Y') ?? '-' }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pendidikan Terakhir</p>
@@ -154,25 +154,25 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @php
               $docs = [
-                'KTP' => $applicant->document->ktp,
-                'KK' => $applicant->document->kk,
-                'Pas Foto' => $applicant->document->foto,
-                'Ijazah' => $applicant->document->ijazah,
-                'Sertifikat' => $applicant->document->sertifikat,
-                'CV' => $applicant->document->cv,
-                'Transkrip Nilai' => $applicant->document->transkrip,
-                'Bukti Sosmed' => $applicant->document->bukti_sosmed,
+                'ktp' => ['label' => 'KTP', 'path' => $applicant->document->ktp],
+                'kk' => ['label' => 'KK', 'path' => $applicant->document->kk],
+                'foto' => ['label' => 'Pas Foto', 'path' => $applicant->document->foto],
+                'ijazah' => ['label' => 'Ijazah', 'path' => $applicant->document->ijazah],
+                'sertifikat' => ['label' => 'Sertifikat', 'path' => $applicant->document->sertifikat],
+                'cv' => ['label' => 'CV', 'path' => $applicant->document->cv],
+                'transkrip' => ['label' => 'Transkrip Nilai', 'path' => $applicant->document->transkrip],
+                'bukti_sosmed' => ['label' => 'Bukti Sosmed', 'path' => $applicant->document->bukti_sosmed],
               ];
             @endphp
-            @foreach($docs as $label => $path)
-              @if($path)
+            @foreach($docs as $field => $doc)
+              @if($doc['path'])
                 <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                   <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-slate-400">description</span>
-                    <span class="text-sm font-bold text-slate-700">{{ $label }}</span>
+                    <span class="text-sm font-bold text-slate-700">{{ $doc['label'] }}</span>
                   </div>
-                  <a href="{{ Storage::url($path) }}" target="_blank" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
-                    Lihat <span class="material-symbols-outlined text-xs">open_in_new</span>
+                  <a href="{{ route('admin.applicants.documents.download', [$applicant, $applicant->document, $field]) }}" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                    Unduh <span class="material-symbols-outlined text-xs">download</span>
                   </a>
                 </div>
               @endif
@@ -280,21 +280,46 @@
         </form>
       </div>
 
-      {{-- Info Batch --}}
-      <div class="bg-primary/5 p-8 rounded-2xl border border-primary/10">
-        <h4 class="font-bold text-primary mb-4">Informasi Batch</h4>
-        <div class="space-y-4">
-          <div>
-            <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Program</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->program->nama_program }}</p>
+      {{-- Info Batch & Form --}}
+      <div class="bg-primary/5 p-8 rounded-2xl border border-primary/10 space-y-6">
+        <div>
+          <h4 class="font-bold text-primary mb-4">Informasi Batch</h4>
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Program</p>
+              <p class="text-slate-800 font-bold">{{ $applicant->program?->nama_program ?? '-' }}</p>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Gelombang / Batch</p>
+              <p class="text-slate-800 font-bold">{{ $applicant->batch?->nama_batch ?? '-' }}</p>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Skema</p>
+              <p class="text-slate-800 font-bold">{{ $applicant->programSchema?->nama_skema ?? 'Umum' }}</p>
+            </div>
           </div>
-          <div>
-            <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Gelombang / Batch</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->batch->nama_batch }}</p>
+        </div>
+
+        @if($applicant->form_id)
+        <div class="pt-6 border-t border-primary/10">
+          <h4 class="font-bold text-primary mb-4">Informasi Formulir</h4>
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Judul Formulir (Snapshot)</p>
+              <p class="text-slate-800 font-bold">
+                {{ is_array($applicant->form_title_snapshot) ? ($applicant->form_title_snapshot['id'] ?? ($applicant->form_title_snapshot['en'] ?? '—')) : ($applicant->form_title_snapshot ?: '—') }}
+              </p>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Versi</p>
+              <p class="text-slate-800 font-bold">v{{ $applicant->form_version_snapshot }}</p>
+            </div>
           </div>
-          <div class="pt-4 border-t border-primary/10">
-            <p class="text-xs text-primary/80 leading-relaxed font-medium">Pendaftar ini terdaftar pada batch yang sedang <strong>{{ $applicant->batch->status }}</strong>.</p>
-          </div>
+        </div>
+        @endif
+
+        <div class="pt-4 border-t border-primary/10">
+          <p class="text-xs text-primary/80 leading-relaxed font-medium">Pendaftar ini terdaftar pada batch yang sedang <strong>{{ $applicant->batch?->status ?? '-' }}</strong>.</p>
         </div>
       </div>
     </div>

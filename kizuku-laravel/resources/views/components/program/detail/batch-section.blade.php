@@ -166,10 +166,31 @@
   }
 
   function fetchDynamicFields(schemaId) {
-    const url = dynamicFieldsUrl + '?program_id=' + programId + (schemaId ? '&schema_id=' + schemaId : '');
+    // Also include batch_id if active
+    const batchInput = document.querySelector('input[name="batch_id"]');
+    const batchId    = batchInput ? batchInput.value : '';
+    
+    const url = dynamicFieldsUrl + '?program_id=' + programId + 
+                (schemaId ? '&schema_id=' + schemaId : '') +
+                (batchId ? '&batch_id=' + batchId : '');
+
     fetch(url)
       .then(r => r.json())
-      .then(fields => renderDynamicFields(fields))
+      .then(data => {
+          // Update form_id hidden input
+          const formInput = document.getElementById('selected_form_id');
+          if (formInput) {
+              formInput.value = data.form_id || '';
+          }
+
+          // Toggle SSR fields: if we have schemaId, hide SSR (general) fields, else show them
+          const ssrContainer = document.getElementById('ssr-fields-container');
+          if (ssrContainer) {
+              ssrContainer.style.display = schemaId ? 'none' : 'block';
+          }
+
+          renderDynamicFields(data.fields);
+      })
       .catch(() => {});
   }
 
@@ -221,7 +242,7 @@
         const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
         return `<option value="${escHtml(o.value)}">${escHtml(lbl)}</option>`;
       }).join('');
-      inputHtml = `<select name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input premium-select" ${reqAttr}><option value="" disabled selected>${f.placeholder || 'Pilih...'}</option>${opts}</select>`;
+      inputHtml = `<select name="dynamic_answers[${escHtml(f.field_name)}]" class="premium-input premium-select" ${reqAttr}><option value="" disabled selected>${escHtml(f.placeholder || 'Pilih...')}</option>${opts}</select>`;
     } else if (f.type === 'radio') {
       const opts = (f.options || []).map(o => {
         const lbl = (o.label && (o.label[currentLocale] || o.label['id'])) || o.value;
@@ -237,13 +258,13 @@
     } else if (f.type === 'file') {
       const exts    = f.accepted_file_types || ['pdf','jpg','jpeg','png'];
       const maxMb   = ((f.max_file_size || 2048) / 1024).toFixed(1);
-      const accept  = exts.map(e => '.' + e).join(',');
-      const zoneId  = 'zone-dyn-ajax-' + f.field_name;
+      const accept  = exts.map(e => '.' + escHtml(e)).join(',');
+      const zoneId  = 'zone-dyn-ajax-' + escHtml(f.field_name);
       inputHtml = `<div class="upload-zone" id="${zoneId}">
         <input type="file" name="dynamic_files[${escHtml(f.field_name)}]" accept="${accept}" onchange="updateFileName(this,'${zoneId}')" ${reqAttr}>
         <div class="upload-icon"><span class="material-symbols-outlined">upload_file</span></div>
         <div class="upload-text text-[11px] font-bold">${escHtml(f.label)}</div>
-        <div class="file-name-display text-[10px]">Format: ${exts.join(', ')} | Maks: ${maxMb} MB</div>
+        <div class="file-name-display text-[10px]">Format: ${exts.map(e => escHtml(e)).join(', ')} | Maks: ${maxMb} MB</div>
       </div>`;
     }
 
@@ -270,9 +291,14 @@
 
         const batchId   = this.getAttribute('data-batch');
         const batchInput = document.querySelector('input[name="batch_id"]');
-        if (batchInput) batchInput.value = batchId;
+        if (batchInput) {
+            if (batchInput.value !== batchId) {
+                batchInput.value = batchId;
+                // Re-fetch form if batch changed
+                fetchDynamicFields(selectedSchemaId);
+            }
+        }
       });
     });
   });
 </script>
-

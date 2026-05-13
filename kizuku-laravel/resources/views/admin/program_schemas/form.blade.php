@@ -43,7 +43,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Program <span class="text-accent-red">*</span></label>
-              <select name="program_id" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+              <select name="program_id" id="schema_program_id" required class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
                 <option value="">-- Pilih Program --</option>
                 @foreach($programs as $p)
                   <option value="{{ $p->id }}" {{ old('program_id', $schema->program_id ?? '') == $p->id ? 'selected' : '' }}>{{ $p->nama_program }}</option>
@@ -52,10 +52,10 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Batch (Opsional)</label>
-              <select name="batch_id" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
+              <select name="batch_id" id="schema_batch_id" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">
                 <option value="">-- Berlaku Semua Batch --</option>
                 @foreach($batches as $b)
-                  <option value="{{ $b->id }}" {{ old('batch_id', $schema->batch_id ?? '') == $b->id ? 'selected' : '' }}>{{ $b->nama_batch }} ({{ $b->program->nama_program }})</option>
+                  <option value="{{ $b->id }}" data-program-id="{{ $b->program_id }}" {{ old('batch_id', $schema->batch_id ?? '') == $b->id ? 'selected' : '' }}>{{ $b->nama_batch }} ({{ $b->program?->nama_program ?? 'Program tidak tersedia' }})</option>
                 @endforeach
               </select>
               <p class="text-xs text-slate-400 mt-1">Kosongkan jika berlaku umum untuk program tersebut.</p>
@@ -127,4 +127,32 @@
       </div>
     </div>
   </form>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const programSelect = document.getElementById('schema_program_id');
+      const batchSelect = document.getElementById('schema_batch_id');
+
+      function filterBatches() {
+        const programId = programSelect.value;
+        let selectedStillVisible = !batchSelect.value;
+
+        batchSelect.querySelectorAll('option[data-program-id]').forEach(option => {
+          const visible = !programId || option.dataset.programId === programId;
+          option.hidden = !visible;
+          option.disabled = !visible;
+
+          if (visible && option.selected) {
+            selectedStillVisible = true;
+          }
+        });
+
+        if (!selectedStillVisible) {
+          batchSelect.value = '';
+        }
+      }
+
+      programSelect.addEventListener('change', filterBatches);
+      filterBatches();
+    });
+  </script>
 @endsection

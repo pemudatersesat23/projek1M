@@ -51,7 +51,7 @@
                 </h1>
 
                 <div class="berita-content" style="color: #475569; line-height: 1.8; font-size: 16px; white-space: pre-line;">
-                    {!! $berita->getTranslation('isi', app()->getLocale()) ?: $berita->isi !!}
+                    {!! nl2br(e($berita->getTranslation('isi', app()->getLocale()) ?: $berita->isi)) !!}
                 </div>
             </div>
         </article>

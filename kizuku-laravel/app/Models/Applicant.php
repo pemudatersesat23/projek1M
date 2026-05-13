@@ -20,12 +20,16 @@ class Applicant extends Model
         'pendidikan',
         'pengalaman_kerja',
         'status_seleksi',
-        'additional_data'
+        'additional_data',
+        'form_id',
+        'form_version_snapshot',
+        'form_title_snapshot'
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
         'additional_data' => 'array',
+        'form_title_snapshot' => 'array',
     ];
 
     public function program()
@@ -56,5 +60,10 @@ class Applicant extends Model
     public function dynamicFiles()
     {
         return $this->hasMany(ApplicantDynamicFile::class);
+    }
+
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
     }
 }

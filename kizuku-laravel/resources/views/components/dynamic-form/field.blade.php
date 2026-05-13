@@ -20,7 +20,7 @@
   $fieldKey    = $field->field_name;
   $isRequired  = $field->is_required;
   $type        = $field->type;
-  $options     = $field->options ?? [];
+  $options     = is_array($field->options) ? $field->options : (json_decode($field->options, true) ?: []);
 
   // Old value helpers
   $oldAnswerKey = 'dynamic_answers.' . $fieldKey;
@@ -143,7 +143,8 @@
   {{-- ── FILE ── --}}
   @elseif($type === 'file')
     @php
-      $acceptedTypes = $field->accepted_file_types ?? config('dynamic_forms.default_allowed_file_extensions');
+      $rawTypes      = $field->accepted_file_types;
+      $acceptedTypes = is_array($rawTypes) ? $rawTypes : (json_decode($rawTypes, true) ?: config('dynamic_forms.default_allowed_file_extensions'));
       $maxSizeKb     = $field->max_file_size ?? config('dynamic_forms.default_max_file_size');
       $acceptStr     = implode(',', array_map(fn($e) => '.' . $e, $acceptedTypes));
     @endphp
