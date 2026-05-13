@@ -84,6 +84,11 @@ class Program extends Model
         return $this->hasMany(FormField::class);
     }
 
+    public function forms()
+    {
+        return $this->hasMany(Form::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {

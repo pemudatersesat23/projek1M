@@ -54,6 +54,11 @@ class Batch extends Model
         return $this->hasMany(Applicant::class);
     }
 
+    public function forms()
+    {
+        return $this->hasMany(Form::class);
+    }
+
     // Helpers
     public function isOpen()
     {
