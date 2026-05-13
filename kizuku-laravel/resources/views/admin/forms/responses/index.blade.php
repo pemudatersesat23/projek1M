@@ -1,6 +1,10 @@
 @extends('layouts.admin')
 
-@section('admin-title', 'Responses - ' . ($form->title['id'] ?? 'Untitled'))
+@php
+    $formTitleId = $form->getTranslation('title', 'id', false) ?: 'Untitled';
+@endphp
+
+@section('admin-title', 'Responses - ' . $formTitleId)
 
 @section('admin-styles')
 <style>
@@ -34,7 +38,7 @@
     <div class="flex items-center gap-2 text-sm text-slate-400">
         <a href="{{ route('admin.forms.index') }}" class="hover:text-primary transition-colors">Form Builder</a>
         <span class="material-symbols-outlined text-xs">chevron_right</span>
-        <span class="text-slate-600 font-medium truncate max-w-[240px]">{{ $form->title['id'] ?? 'Untitled' }}</span>
+        <span class="text-slate-600 font-medium truncate max-w-[240px]">{{ $formTitleId }}</span>
         <span class="material-symbols-outlined text-xs">chevron_right</span>
         <span class="text-slate-800 font-semibold">Responses</span>
     </div>
@@ -48,7 +52,7 @@
                 </a>
                 <div class="min-w-0">
                     <h2 class="font-bold text-slate-800 text-base leading-tight truncate">
-                        {{ $form->title['id'] ?? 'Untitled' }}
+                        {{ $formTitleId }}
                     </h2>
                     <div class="flex flex-wrap items-center gap-2 mt-0.5 text-xs text-slate-500">
                         <span>Program: {{ $form->program?->nama_program ?? '-' }}</span>

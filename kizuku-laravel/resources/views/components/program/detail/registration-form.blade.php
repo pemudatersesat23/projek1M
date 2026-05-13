@@ -23,6 +23,7 @@
   $dynFields    = $dynamicFields ?? collect();
   $dynHasFiles  = $hasDynamicFiles ?? false;
   $dynLocale    = $currentLocale  ?? $locale;
+  $shouldRenderDynamicForm = ($form && $dynFields->isNotEmpty()) || $program->hasActiveSchemas();
 @endphp
 
 <section id="registration-section" class="registration-section reveal">
@@ -53,21 +54,21 @@
         <input type="hidden" name="schema_id"  id="selected_schema_id" value="">
         <input type="hidden" name="form_id"    id="selected_form_id"   value="{{ $form->id ?? '' }}">
 
-        @if($form && $dynamicFields->isNotEmpty())
+        @if($shouldRenderDynamicForm)
             {{-- Render all fields from the resolved form --}}
             @php 
-                $nonFileFields = $dynamicFields->filter(fn($f) => !$f->isFile());
-                $fileFields    = $dynamicFields->filter(fn($f) => $f->isFile());
+                $nonFileFields = $dynFields->filter(fn($f) => !$f->isFile());
+                $fileFields    = $dynFields->filter(fn($f) => $f->isFile());
             @endphp
 
         <div id="ssr-fields-container">
-            @if($nonFileFields->isNotEmpty())
+            @if($form && $nonFileFields->isNotEmpty())
                 @foreach($nonFileFields as $dynField)
                   @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
                 @endforeach
             @endif
     
-            @if($fileFields->isNotEmpty())
+            @if($form && $fileFields->isNotEmpty())
                 <div class="form-section-label form-full">
                   <span class="material-symbols-outlined">cloud_upload</span>
                   <span class="section-text">

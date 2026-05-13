@@ -293,6 +293,10 @@
               <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Gelombang / Batch</p>
               <p class="text-slate-800 font-bold">{{ $applicant->batch?->nama_batch ?? '-' }}</p>
             </div>
+            <div>
+              <p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1">Skema</p>
+              <p class="text-slate-800 font-bold">{{ $applicant->programSchema?->nama_skema ?? 'Umum' }}</p>
+            </div>
           </div>
         </div>
 

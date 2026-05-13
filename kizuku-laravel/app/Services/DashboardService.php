@@ -6,7 +6,6 @@ use App\Models\Applicant;
 use App\Models\Program;
 use App\Models\Batch;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
@@ -88,18 +87,17 @@ class DashboardService
         $laporanBulanan = [];
         $sixMonthsAgo = Carbon::now()->subMonths(5)->startOfMonth();
 
-        // Optimized query to get stats for the last 6 months in one go
-        $monthlyStats = Applicant::select(
-                DB::raw('YEAR(created_at) as year'),
-                DB::raw('MONTH(created_at) as month'),
-                DB::raw('COUNT(*) as total'),
-                DB::raw('SUM(CASE WHEN status_seleksi = "lolos" THEN 1 ELSE 0 END) as lolos')
-            )
+        $monthlyStats = Applicant::select(['created_at', 'status_seleksi'])
             ->where('created_at', '>=', $sixMonthsAgo)
-            ->groupBy('year', 'month')
             ->get()
-            ->keyBy(function ($item) {
-                return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
+            ->groupBy(function ($applicant) {
+                return $applicant->created_at->format('Y-m');
+            })
+            ->map(function ($items) {
+                return [
+                    'total' => $items->count(),
+                    'lolos' => $items->where('status_seleksi', 'lolos')->count(),
+                ];
             });
 
         for ($i = 0; $i < 6; $i++) {
@@ -110,8 +108,8 @@ class DashboardService
                 $stat = $monthlyStats->get($key);
                 $laporanBulanan[] = [
                     'bulan' => $date->translatedFormat('F Y'),
-                    'total' => (int) $stat->total,
-                    'lolos' => (int) $stat->lolos,
+                    'total' => (int) $stat['total'],
+                    'lolos' => (int) $stat['lolos'],
                 ];
             }
         }

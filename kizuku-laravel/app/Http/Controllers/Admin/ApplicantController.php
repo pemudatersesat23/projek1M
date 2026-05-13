@@ -15,7 +15,7 @@ class ApplicantController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Applicant::with(['program', 'batch']);
+        $query = Applicant::with(['program', 'batch', 'programSchema']);
 
         // Filter by program
         if ($request->has('program_id') && $request->program_id != '') {
@@ -47,6 +47,8 @@ class ApplicantController extends Controller
         $applicant->load([
             'program',
             'batch',
+            'programSchema',
+            'form',
             'document',
             'dynamicAnswers',
             'dynamicFiles',

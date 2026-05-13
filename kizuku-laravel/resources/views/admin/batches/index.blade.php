@@ -32,7 +32,7 @@
               <tr class="hover:bg-slate-50/50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">{{ $batch->nama_batch }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
-                  {{ $batch->program->getTranslation('nama_program', app()->getLocale()) ?: $batch->program->nama_program }}
+                  {{ $batch->program?->getTranslation('nama_program', app()->getLocale(), false) ?: 'Program tidak tersedia' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                   {{ $batch->tanggal_buka?->format('d/m/Y') }} - {{ $batch->tanggal_tutup?->format('d/m/Y') }}

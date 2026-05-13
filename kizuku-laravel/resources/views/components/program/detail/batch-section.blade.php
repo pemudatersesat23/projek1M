@@ -179,8 +179,8 @@
       .then(data => {
           // Update form_id hidden input
           const formInput = document.getElementById('selected_form_id');
-          if (formInput && data.form_id) {
-              formInput.value = data.form_id;
+          if (formInput) {
+              formInput.value = data.form_id || '';
           }
 
           // Toggle SSR fields: if we have schemaId, hide SSR (general) fields, else show them

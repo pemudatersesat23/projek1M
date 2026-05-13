@@ -1,6 +1,15 @@
 @extends('layouts.admin')
 
-@section('admin-title', 'Form Builder - ' . ($form->title['id'] ?? 'Untitled'))
+@php
+    $formTitleId = $form->getTranslation('title', 'id', false) ?: '';
+    $formTitleJp = $form->getTranslation('title', 'jp', false) ?: '';
+    $formDescriptionId = $form->getTranslation('description', 'id', false) ?: '';
+    $formDescriptionJp = $form->getTranslation('description', 'jp', false) ?: '';
+    $formSuccessId = $form->getTranslation('success_message', 'id', false) ?: '';
+    $formSuccessJp = $form->getTranslation('success_message', 'jp', false) ?: '';
+@endphp
+
+@section('admin-title', 'Form Builder - ' . ($formTitleId ?: 'Untitled'))
 
 @section('admin-styles')
 <style>
@@ -23,7 +32,7 @@
                 <span class="material-symbols-outlined">arrow_back</span>
             </a>
             <div>
-                <h2 class="font-bold text-slate-800 text-lg leading-tight">{{ $form->title['id'] ?? 'Untitled' }}</h2>
+                <h2 class="font-bold text-slate-800 text-lg leading-tight">{{ $formTitleId ?: 'Untitled' }}</h2>
                 <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
                     <span id="status-badge" class="font-medium {{ $form->status === 'published' ? 'text-emerald-600' : ($form->status === 'draft' ? 'text-amber-600' : 'text-slate-500') }}">
                         {{ ucfirst($form->status) }}
@@ -68,10 +77,10 @@
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-6 border-t-8 border-t-primary builder-card active" id="meta-card" onclick="activateCard('meta-card')">
         <div class="p-6 space-y-4">
             <div>
-                <input type="text" id="form-title-id" value="{{ $form->title['id'] ?? '' }}" class="w-full text-2xl md:text-3xl font-bold border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-2 transition-colors bg-transparent placeholder-slate-300" placeholder="Judul Formulir" onchange="saveMetadata()">
+                <input type="text" id="form-title-id" value="{{ $formTitleId }}" class="w-full text-2xl md:text-3xl font-bold border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-2 transition-colors bg-transparent placeholder-slate-300" placeholder="Judul Formulir" onchange="saveMetadata()">
             </div>
             <div>
-                <textarea id="form-desc-id" rows="2" class="w-full text-sm text-slate-600 border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-1 transition-colors bg-transparent placeholder-slate-400 resize-none" placeholder="Deskripsi formulir" onchange="saveMetadata()">{{ $form->description['id'] ?? '' }}</textarea>
+                <textarea id="form-desc-id" rows="2" class="w-full text-sm text-slate-600 border-0 border-b border-transparent hover:border-slate-300 focus:border-primary focus:ring-0 px-0 py-1 transition-colors bg-transparent placeholder-slate-400 resize-none" placeholder="Deskripsi formulir" onchange="saveMetadata()">{{ $formDescriptionId }}</textarea>
             </div>
             
             <div class="mt-4 pt-4 border-t border-slate-100 hidden" id="meta-advanced">
@@ -79,19 +88,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-500 mb-1">Judul (JP)</label>
-                        <input type="text" id="form-title-jp" value="{{ $form->title['jp'] ?? '' }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Judul (Opsional)" onchange="saveMetadata()">
+                        <input type="text" id="form-title-jp" value="{{ $formTitleJp }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Judul (Opsional)" onchange="saveMetadata()">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-500 mb-1">Deskripsi (JP)</label>
-                        <input type="text" id="form-desc-jp" value="{{ $form->description['jp'] ?? '' }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Deskripsi (Opsional)" onchange="saveMetadata()">
+                        <input type="text" id="form-desc-jp" value="{{ $formDescriptionJp }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Deskripsi (Opsional)" onchange="saveMetadata()">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-500 mb-1">Pesan Sukses (ID)</label>
-                        <input type="text" id="form-success-id" value="{{ $form->success_message['id'] ?? '' }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Terima kasih, data Anda telah kami terima." onchange="saveMetadata()">
+                        <input type="text" id="form-success-id" value="{{ $formSuccessId }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Terima kasih, data Anda telah kami terima." onchange="saveMetadata()">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-500 mb-1">Pesan Sukses (JP)</label>
-                        <input type="text" id="form-success-jp" value="{{ $form->success_message['jp'] ?? '' }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Terjemahan Jepang" onchange="saveMetadata()">
+                        <input type="text" id="form-success-jp" value="{{ $formSuccessJp }}" class="w-full text-sm border-slate-300 rounded focus:border-primary focus:ring-primary" placeholder="Terjemahan Jepang" onchange="saveMetadata()">
                     </div>
                 </div>
             </div>

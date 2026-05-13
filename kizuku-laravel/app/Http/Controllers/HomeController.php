@@ -107,7 +107,12 @@ class HomeController extends Controller
             $applicant = $registrationService->register($request);
             \Log::info('Pendaftaran complete', ['applicant_id' => $applicant->id]);
 
-            return redirect()->back()->with('success', __('messages.form.registration_success'));
+            $applicant->loadMissing('form');
+            $successMessage = $applicant->form?->getTranslation('success_message', app()->getLocale(), false)
+                ?: $applicant->form?->getTranslation('success_message', 'id', false)
+                ?: __('messages.form.registration_success');
+
+            return redirect()->back()->with('success', $successMessage);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {

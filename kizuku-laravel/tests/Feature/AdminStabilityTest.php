@@ -6,6 +6,7 @@ use App\Models\Applicant;
 use App\Models\Batch;
 use App\Models\Form;
 use App\Models\Program;
+use App\Models\ProgramSchema;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
@@ -71,6 +72,41 @@ class AdminStabilityTest extends TestCase
             ->assertSee('Belum ada response untuk form ini.');
     }
 
+    public function test_admin_can_create_form_from_dashboard(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [$program] = $this->createProgramAndBatch('engineering-jepang-test');
+
+        $schema = ProgramSchema::create([
+            'program_id' => $program->id,
+            'nama_skema' => ['id' => 'Reguler'],
+            'slug' => 'reguler',
+            'tipe' => 'reguler',
+            'status' => 'aktif',
+            'harga' => 15000000,
+            'sort_order' => 1,
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('admin.forms.store'), [
+            'program_id' => $program->id,
+            'schema_id' => $schema->id,
+            'title_id' => 'Form Pendaftaran Engineering Jepang - Reguler',
+            'title_jp' => '',
+        ]);
+
+        $form = Form::where('program_id', $program->id)
+            ->where('schema_id', $schema->id)
+            ->firstOrFail();
+
+        $response->assertRedirect(route('admin.forms.builder', $form));
+
+        $this->assertSame('draft', $form->status);
+        $this->assertTrue((bool) $form->is_active);
+        $this->assertFalse((bool) $form->accepts_responses);
+        $this->assertSame(1, $form->version);
+        $this->assertSame('Form Pendaftaran Engineering Jepang - Reguler', $form->getTranslation('title', 'id'));
+    }
+
     public function test_response_detail_rejects_applicant_from_different_form_or_without_form(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
@@ -92,6 +128,74 @@ class AdminStabilityTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.forms.responses.show', [$formA, $legacyApplicant]))
             ->assertForbidden();
+    }
+
+    public function test_admin_pages_tolerate_soft_deleted_program_or_batch_relations(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [$program, $batch] = $this->createProgramAndBatch('orphan-relation-test');
+
+        $schema = ProgramSchema::create([
+            'program_id' => $program->id,
+            'batch_id' => $batch->id,
+            'nama_skema' => ['id' => 'Reguler Orphan'],
+            'slug' => 'reguler-orphan',
+            'tipe' => 'reguler',
+            'status' => 'aktif',
+            'harga' => 1000,
+            'sort_order' => 1,
+        ]);
+
+        $form = Form::create([
+            'program_id' => $program->id,
+            'schema_id' => $schema->id,
+            'batch_id' => $batch->id,
+            'title' => ['id' => 'Form Orphan'],
+            'status' => 'published',
+            'is_active' => true,
+            'accepts_responses' => true,
+            'version' => 1,
+            'published_at' => now(),
+        ]);
+
+        $applicant = $this->createApplicant($program, $batch, $form, 'Applicant Orphan');
+
+        $program->delete();
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Applicant Orphan')
+            ->assertSee('Program tidak tersedia')
+            ->assertSee('Batch Test');
+
+        $this->actingAs($admin)
+            ->get(route('admin.batches.index'))
+            ->assertOk()
+            ->assertSee('Program tidak tersedia');
+
+        $this->actingAs($admin)
+            ->get(route('admin.program-schemas.index'))
+            ->assertOk()
+            ->assertSee('Program tidak tersedia');
+
+        $this->actingAs($admin)
+            ->get(route('admin.forms.index'))
+            ->assertOk()
+            ->assertSee('Form Orphan');
+
+        $this->actingAs($admin)
+            ->get(route('admin.applicants.show', $applicant))
+            ->assertOk()
+            ->assertSee('Applicant Orphan');
+
+        $batch->delete();
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Applicant Orphan')
+            ->assertSee('Batch tidak tersedia');
     }
 
     private function createProgramAndBatch(string $slug = 'program-test'): array

@@ -155,11 +155,37 @@ class FormController extends Controller
             if (empty($f->options) || !is_array($f->options)) {
                 return response()->json(['message' => "Gagal publish: Pertanyaan '{$f->field_name}' tidak memiliki opsi pilihan yang valid."], 422);
             }
+
+            $values = [];
+            foreach ($f->options as $index => $option) {
+                $value = $option['value'] ?? null;
+                $label = $option['label'] ?? null;
+
+                if ($value === null || $value === '') {
+                    return response()->json(['message' => "Gagal publish: Opsi ke-" . ($index + 1) . " pada pertanyaan '{$f->field_name}' tidak memiliki value."], 422);
+                }
+
+                if (empty($label)) {
+                    return response()->json(['message' => "Gagal publish: Opsi ke-" . ($index + 1) . " pada pertanyaan '{$f->field_name}' tidak memiliki label."], 422);
+                }
+
+                if (in_array($value, $values, true)) {
+                    return response()->json(['message' => "Gagal publish: Pertanyaan '{$f->field_name}' memiliki option value duplikat '{$value}'."], 422);
+                }
+
+                $values[] = $value;
+            }
         }
 
         $blockedExts = config('dynamic_forms.blocked_file_extensions', []);
         foreach ($activeFields->where('type', config('dynamic_forms.file_field_type', 'file')) as $f) {
             $exts = $f->accepted_file_types ?? config('dynamic_forms.default_allowed_file_extensions', []);
+            $blockedInField = array_filter($exts, fn ($ext) => in_array(strtolower($ext), $blockedExts, true));
+
+            if (! empty($blockedInField)) {
+                return response()->json(['message' => "Gagal publish: Pertanyaan '{$f->field_name}' memiliki ekstensi file yang diblokir."], 422);
+            }
+
             $safeExts = array_filter($exts, fn ($ext) => ! in_array(strtolower($ext), $blockedExts, true));
 
             if (empty($safeExts)) {

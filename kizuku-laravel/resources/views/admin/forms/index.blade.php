@@ -60,10 +60,13 @@
             </thead>
             <tbody class="divide-y divide-slate-200">
                 @forelse($forms as $form)
+                @php
+                    $formTitle = $form->getTranslation('title', 'id', false) ?: 'Untitled';
+                @endphp
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="py-3 px-4">
-                        <div class="font-medium text-slate-900">{{ $form->title['id'] ?? 'Untitled' }}</div>
-                        <div class="text-xs text-slate-500 mt-1">{{ $form->program->nama_program ?? '-' }}</div>
+                        <div class="font-medium text-slate-900">{{ $formTitle }}</div>
+                        <div class="text-xs text-slate-500 mt-1">{{ $form->program?->nama_program ?? '-' }}</div>
                     </td>
                     <td class="py-3 px-4">
                         <div class="text-slate-600">
@@ -108,6 +111,9 @@
                             </a>
                             <a href="{{ route('admin.forms.builder', $form->id) }}" class="p-1.5 text-primary hover:bg-primary/10 rounded transition-colors" title="Buka Builder">
                                 <span class="material-symbols-outlined text-[20px]">edit</span>
+                            </a>
+                            <a href="{{ route('admin.forms.responses.index', $form->id) }}" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Responses">
+                                <span class="material-symbols-outlined text-[20px]">inbox</span>
                             </a>
                         </div>
                     </td>

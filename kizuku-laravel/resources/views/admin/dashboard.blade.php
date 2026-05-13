@@ -155,8 +155,8 @@
               <span class="font-medium text-sm">{{ $a->nama }}</span>
             </td>
             <td class="px-6 py-3 text-sm text-slate-600">
-              {{ $a->program->nama_program }}<br>
-              <span class="text-[10px] text-slate-400 font-bold uppercase">{{ $a->batch->nama_batch }}</span>
+              {{ $a->program?->nama_program ?? 'Program tidak tersedia' }}<br>
+              <span class="text-[10px] text-slate-400 font-bold uppercase">{{ $a->batch?->nama_batch ?? 'Batch tidak tersedia' }}</span>
             </td>
             <td class="px-6 py-3">
               <span class="px-2 py-1 rounded-full {{ $statusClass[$a->status_seleksi] ?? 'bg-slate-100 text-slate-600' }} text-[10px] font-bold uppercase tracking-wide">{{ str_replace('_', ' ', $a->status_seleksi) }}</span>

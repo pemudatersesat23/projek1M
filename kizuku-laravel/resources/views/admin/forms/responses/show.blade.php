@@ -58,7 +58,7 @@
         <span class="material-symbols-outlined text-xs">chevron_right</span>
         <a href="{{ route('admin.forms.responses.index', $form->id) }}"
            class="hover:text-primary transition-colors truncate max-w-[180px]">
-            {{ $form->title['id'] ?? 'Untitled' }}
+            {{ $form->getTranslation('title', 'id', false) ?: 'Untitled' }}
         </a>
         <span class="material-symbols-outlined text-xs">chevron_right</span>
         <span class="text-slate-800 font-semibold">{{ $applicant->nama ?: 'Detail Response' }}</span>

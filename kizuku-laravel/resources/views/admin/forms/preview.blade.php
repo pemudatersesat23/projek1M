@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
-@section('admin-title', 'Preview: ' . ($form->title['id'] ?? 'Untitled'))
+@php
+    $formTitleId = $form->getTranslation('title', 'id', false) ?: 'Untitled Form';
+    $formDescriptionId = $form->getTranslation('description', 'id', false) ?: '';
+@endphp
+
+@section('admin-title', 'Preview: ' . $formTitleId)
 
 @section('admin-content')
 <div class="max-w-3xl mx-auto pb-20">
@@ -24,9 +29,9 @@
         
         <!-- Header -->
         <div class="p-8 border-b border-slate-200">
-            <h1 class="text-3xl font-bold text-slate-800 mb-2">{{ $form->title['id'] ?? 'Untitled Form' }}</h1>
-            @if(!empty($form->description['id']))
-                <p class="text-slate-600 whitespace-pre-line">{{ $form->description['id'] }}</p>
+            <h1 class="text-3xl font-bold text-slate-800 mb-2">{{ $formTitleId }}</h1>
+            @if($formDescriptionId !== '')
+                <p class="text-slate-600 whitespace-pre-line">{{ $formDescriptionId }}</p>
             @endif
             <div class="mt-4 text-xs font-medium text-red-500">* Menunjukkan pertanyaan yang wajib diisi</div>
         </div>
