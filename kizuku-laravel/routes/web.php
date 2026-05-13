@@ -104,8 +104,6 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class)->except(['show']);
     Route::resource('batches', \App\Http\Controllers\Admin\BatchController::class)->except(['show']);
     Route::resource('program-schemas', \App\Http\Controllers\Admin\ProgramSchemaController::class)->except(['show']);
-    Route::resource('form-fields', \App\Http\Controllers\Admin\FormFieldController::class)->except(['show']);
-    Route::get('form-fields-schemas', [\App\Http\Controllers\Admin\FormFieldController::class, 'schemasForProgram'])->name('form-fields.schemas');
 
     // New Google Forms-like Builder Routes
     Route::get('forms', [\App\Http\Controllers\Admin\FormController::class, 'index'])->name('forms.index');

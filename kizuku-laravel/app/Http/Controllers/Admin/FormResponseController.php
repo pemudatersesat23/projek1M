@@ -58,6 +58,7 @@ class FormResponseController extends Controller
 
         $fields = $form->fields()
             ->where('status', 'aktif')
+            ->where('type', '!=', 'section')
             ->orderBy('sort_order')
             ->orderBy('id')
             ->get();

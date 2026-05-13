@@ -16,7 +16,7 @@ class DynamicValidationService
     {
         $rules = [];
 
-        foreach ($fields->filter(fn($f) => !$f->isFile()) as $field) {
+        foreach ($fields->filter(fn($f) => !$f->isFile() && $f->type !== 'section') as $field) {
             $key = 'dynamic_answers.' . $field->field_name;
             $req = $field->is_required ? 'required' : 'nullable';
 
@@ -91,7 +91,7 @@ class DynamicValidationService
      */
     public function validateUnknownFields(Request $request, Collection $fields): void
     {
-        $validAnswerKeys = $fields->filter(fn($f) => !$f->isFile())->pluck('field_name')->all();
+        $validAnswerKeys = $fields->filter(fn($f) => !$f->isFile() && $f->type !== 'section')->pluck('field_name')->all();
         $validFileKeys   = $fields->filter(fn($f) =>  $f->isFile())->pluck('field_name')->all();
 
         $submittedAnswers = array_keys((array) $request->input('dynamic_answers', []));

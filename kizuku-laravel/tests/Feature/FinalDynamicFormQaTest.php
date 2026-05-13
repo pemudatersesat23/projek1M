@@ -176,7 +176,6 @@ class FinalDynamicFormQaTest extends TestCase
             ->assertSee('Batch Pendaftaran')
             ->assertSee('Skema Program')
             ->assertSee('Form Builder Baru')
-            ->assertSee('Advanced Fields')
             ->assertSee('Data Pendaftar');
 
         $this->get(route('admin.programs.index'))->assertOk()->assertSee('Engineering Jepang');
@@ -588,7 +587,7 @@ class FinalDynamicFormQaTest extends TestCase
         $this->assertNotSame($program->id, $otherProgram->id);
     }
 
-    public function test_dynamic_download_idor_is_rejected_and_advanced_fields_route_still_works(): void
+    public function test_dynamic_download_idor_is_rejected(): void
     {
         Storage::fake('local');
 
@@ -613,10 +612,6 @@ class FinalDynamicFormQaTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.applicants.dynamic-files.download', [$applicantB, $file]))
             ->assertForbidden();
-
-        $this->actingAs($admin)
-            ->get(route('admin.form-fields.index'))
-            ->assertOk();
     }
 
     private function createEngineeringProgramGraph(): array

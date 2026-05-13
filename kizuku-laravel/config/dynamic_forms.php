@@ -21,6 +21,7 @@ return [
         'radio',
         'checkbox',
         'file',
+        'section',
     ],
 
     /*
