@@ -129,6 +129,14 @@
     .upload-icon {
         color: #5f6368;
     }
+
+    .section-card {
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        margin-top: 24px;
+    }
 </style>
 @endsection
 
@@ -172,9 +180,14 @@
 
         <!-- Field Cards -->
         <form onsubmit="event.preventDefault(); alert('Ini adalah mode pratinjau. Form tidak dapat dikirim.');">
-            @forelse($form->fields as $field)
+            @forelse($form->fields()->ordered()->get() as $field)
                 @if($field->status === 'aktif')
-                    <div class="google-card {{ $field->type === 'section' ? 'section-card border-l-8 border-l-purple-600' : '' }}">
+                    @php
+                        $settings = is_array($field->settings) ? $field->settings : (json_decode($field->settings, true) ?: []);
+                        $accentColor = $settings['section_color'] ?? '#673ab7';
+                    @endphp
+                    <div class="google-card {{ $field->type === 'section' ? 'section-card' : '' }}" 
+                         style="{{ $field->type === 'section' ? '' : 'border-left: 0;' }}">
                         @include('components.dynamic-form.field', ['field' => $field, 'locale' => 'id'])
                     </div>
                 @endif

@@ -63,7 +63,7 @@ class AdminStabilityTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.forms.builder', $form))
             ->assertOk()
-            ->assertSee('Questions')
+            ->assertSee('Add Question')
             ->assertSee('Responses');
 
         $this->actingAs($admin)
