@@ -56,30 +56,12 @@
 
         @if($shouldRenderDynamicForm)
             {{-- Render all fields from the resolved form --}}
-            @php 
-                $nonFileFields = $dynFields->filter(fn($f) => !$f->isFile());
-                $fileFields    = $dynFields->filter(fn($f) => $f->isFile());
-            @endphp
 
-        <div id="ssr-fields-container">
-            @if($form && $nonFileFields->isNotEmpty())
-                @foreach($nonFileFields as $dynField)
+        <div id="ssr-fields-container" class="form-grid contents">
+            @if($form && $dynFields->isNotEmpty())
+                @foreach($dynFields as $dynField)
                   @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
                 @endforeach
-            @endif
-    
-            @if($form && $fileFields->isNotEmpty())
-                <div class="form-section-label form-full">
-                  <span class="material-symbols-outlined">cloud_upload</span>
-                  <span class="section-text">
-                    {{ $isJp ? '必要書類' : 'Dokumen Persyaratan' }}
-                  </span>
-                </div>
-                <div class="docs-grid form-full">
-                  @foreach($fileFields as $dynField)
-                    @include('components.dynamic-form.field', ['field' => $dynField, 'locale' => $dynLocale])
-                  @endforeach
-                </div>
             @endif
         </div>
 

@@ -431,11 +431,27 @@
                     </div>
                 </div>
             </div>
+            <div class="section-config-container mt-8 hidden bg-slate-50 p-4 rounded-lg border border-slate-100">
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Section Icon</p>
+                        <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 section-icon-selector">
+                            <!-- Icons injected by JS -->
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Section Accent Color</p>
+                        <div class="flex flex-wrap gap-2 section-color-selector">
+                            <!-- Colors injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="error-area mt-4 hidden p-3 bg-red-50 border border-red-100 rounded text-red-600 text-xs font-medium space-y-1"></div>
 
             <div class="mt-8 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
+                <div class="field-settings-bar flex items-center gap-4">
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-medium text-slate-500">Required</span>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -492,6 +508,15 @@
         'section': 'view_agenda'
     };
 
+    const iconList = [
+        'info', 'person', 'school', 'work', 'language', 'cloud_upload', 'description',
+        'checklist', 'calendar', 'phone', 'email', 'location_on', 'payments',
+        'verified', 'medical_services', 'trophy', 'engineering', 'flight_takeoff',
+        'apartment', 'groups'
+    ];
+
+    const colorList = ['#673ab7', '#3f51b5', '#2196f3', '#009688', '#4caf50', '#ff9800', '#f44336', '#e91e63', '#9c27b0', '#607d8b'];
+
     // Sortable
     new Sortable(container, {
         animation: 150, handle: '.drag-handle', ghostClass: 'opacity-40',
@@ -524,11 +549,19 @@
         card.querySelector('.field-placeholder-id').value = field.placeholder?.id || '';
         card.querySelector('.field-description-id').value = field.description?.id || '';
         
-        if (field.type === 'section') {
-            card.classList.add('section-card', 'border-l-8', 'border-l-purple-600');
-        } else {
-            card.classList.remove('section-card', 'border-l-8', 'border-l-purple-600');
-        }
+        // Real-time label update for inactive view
+        card.querySelector('.field-label-id').addEventListener('input', (e) => {
+            const inactiveLabel = card.querySelector('.field-label-text');
+            if (field.type === 'section') {
+                const iconName = card.dataset.sectionIcon || field.settings?.section_icon || 'info';
+                const color = card.dataset.sectionColor || field.settings?.section_color || '#673ab7';
+                inactiveLabel.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${color}">${iconName}</span> ${e.target.value || 'Untitled Section'}`;
+            } else {
+                inactiveLabel.textContent = e.target.value || '(No Question)';
+            }
+        });
+
+        refreshInactiveView(card, field);
 
         if (field.is_locked) {
             card.querySelector('.field-name-input').disabled = true;
@@ -563,6 +596,9 @@
             const exts = field.accepted_file_types || [];
             card.querySelectorAll('.file-ext-checkboxes input').forEach(cb => cb.checked = exts.includes(cb.value));
             card.querySelector('.file-max-size').value = field.max_file_size || 2048;
+        }
+        if (field.type === 'section') {
+            renderSectionSelectors(card, field.settings || {});
         }
 
         container.appendChild(card);
@@ -605,14 +641,88 @@
         } else if (type === 'file') fileDiv.classList.remove('hidden');
         
         // Hide metadata for section
-        const metaFooter = card.querySelector('.border-t.border-slate-100');
+        const settingsBar = card.querySelector('.field-settings-bar');
+        const sectionDiv = card.querySelector('.section-config-container');
+        
         if (type === 'section') {
-            metaFooter.classList.add('hidden');
-            card.classList.add('section-card', 'border-l-8', 'border-l-purple-600');
+            settingsBar.classList.add('hidden');
+            sectionDiv.classList.remove('hidden');
+            card.classList.add('section-card', 'border-l-8');
+            if (!card.style.borderLeftColor) card.style.borderLeftColor = '#673ab7';
         } else {
-            metaFooter.classList.remove('hidden');
-            card.classList.remove('section-card', 'border-l-8', 'border-l-purple-600');
+            settingsBar.classList.remove('hidden');
+            sectionDiv.classList.add('hidden');
+            card.classList.remove('section-card', 'border-l-8');
+            card.style.borderLeftColor = '';
         }
+    }
+
+    function refreshInactiveView(card, field) {
+        const labelText = card.querySelector('.field-label-text');
+        const typeBadge = card.querySelector('.field-type-badge');
+        
+        if (field.type === 'section') {
+            card.classList.add('section-card', 'border-l-8');
+            card.style.borderLeftColor = field.settings?.section_color || '#673ab7';
+            const iconName = field.settings?.section_icon || 'info';
+            labelText.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${field.settings?.section_color || '#673ab7'}">${iconName}</span> ${field.label?.id || 'Untitled Section'}`;
+        } else {
+            card.classList.remove('section-card', 'border-l-8');
+            card.style.borderLeftColor = '';
+            labelText.textContent = field.label?.id || '(No Question)';
+        }
+        
+        typeBadge.textContent = field.type;
+    }
+
+    function renderSectionSelectors(card, settings) {
+        const iconContainer = card.querySelector('.section-icon-selector');
+        const colorContainer = card.querySelector('.section-color-selector');
+        const currentIcon = settings.section_icon || 'info';
+        const currentColor = settings.section_color || '#673ab7';
+
+        iconContainer.innerHTML = '';
+        iconList.forEach(icon => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `p-2 rounded hover:bg-slate-200 transition-colors ${icon === currentIcon ? 'bg-purple-100 text-purple-600 ring-1 ring-purple-600' : 'text-slate-400'}`;
+            btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">${icon}</span>`;
+            btn.onclick = () => {
+                iconContainer.querySelectorAll('button').forEach(b => b.className = 'p-2 rounded hover:bg-slate-200 transition-colors text-slate-400');
+                btn.className = 'p-2 rounded bg-purple-100 text-purple-600 ring-1 ring-purple-600 transition-colors';
+                card.dataset.sectionIcon = icon;
+                
+                // Real-time inactive view update
+                const labelText = card.querySelector('.field-label-text');
+                const color = card.dataset.sectionColor || '#673ab7';
+                const labelValue = card.querySelector('.field-label-id').value || 'Untitled Section';
+                labelText.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${color}">${icon}</span> ${labelValue}`;
+            };
+            iconContainer.appendChild(btn);
+        });
+        card.dataset.sectionIcon = currentIcon;
+
+        colorContainer.innerHTML = '';
+        colorList.forEach(color => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `w-6 h-6 rounded-full border-2 transition-all ${color === currentColor ? 'border-slate-800 scale-110' : 'border-transparent hover:scale-105'}`;
+            btn.style.backgroundColor = color;
+            btn.onclick = () => {
+                colorContainer.querySelectorAll('button').forEach(b => b.className = 'w-6 h-6 rounded-full border-2 border-transparent hover:scale-105 transition-all');
+                btn.className = 'w-6 h-6 rounded-full border-2 border-slate-800 scale-110 transition-all';
+                card.dataset.sectionColor = color;
+                card.style.borderLeftColor = color;
+
+                // Real-time inactive view update
+                const labelText = card.querySelector('.field-label-text');
+                const iconName = card.dataset.sectionIcon || 'info';
+                const labelValue = card.querySelector('.field-label-id').value || 'Untitled Section';
+                labelText.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${color}">${iconName}</span> ${labelValue}`;
+            };
+            colorContainer.appendChild(btn);
+        });
+        card.dataset.sectionColor = currentColor;
     }
 
     function renderOptions(card, options) {
@@ -674,6 +784,15 @@
             payload.max_file_size = card.querySelector('.file-max-size').value;
         }
 
+        if (type === 'section') {
+            payload.settings = {
+                section_icon: card.dataset.sectionIcon || 'info',
+                section_color: card.dataset.sectionColor || '#673ab7'
+            };
+            payload.field_role = 'none';
+            payload.is_required = 0;
+        }
+
         try {
             const saveBtn = card.querySelector('.save-field-btn');
             const originalIcon = saveBtn.innerHTML;
@@ -684,8 +803,7 @@
                 const index = fields.findIndex(f => f.id == id);
                 if (index !== -1) fields[index] = data.field;
                 showToast('Field saved successfully');
-                card.querySelector('.field-label-text').textContent = data.field.label?.id || '(No Question)';
-                card.querySelector('.field-type-badge').textContent = data.field.type;
+                refreshInactiveView(card, data.field);
             } else if (res.status === 422) {
                 errArea.classList.remove('hidden');
                 Object.values(data.errors).flat().forEach(err => { const p = document.createElement('p'); p.textContent = '• ' + err; errArea.appendChild(p); });
@@ -702,7 +820,11 @@
             field_name: 'section_' + Date.now(),
             type: 'section',
             is_required: 0,
-            status: 'aktif'
+            status: 'aktif',
+            settings: {
+                section_icon: 'info',
+                section_color: '#673ab7'
+            }
         };
 
         try {

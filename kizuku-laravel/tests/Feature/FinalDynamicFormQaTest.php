@@ -34,7 +34,7 @@ class FinalDynamicFormQaTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.forms.builder', $form))
             ->assertOk()
-            ->assertSee('Questions')
+            ->assertSee('Add Question')
             ->assertSee('Responses')
             ->assertSee('Nama Lengkap');
 

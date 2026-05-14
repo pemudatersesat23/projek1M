@@ -40,6 +40,7 @@ class FormBuilderFieldController extends Controller
             'max_file_size' => $validated['max_file_size'] ?? null,
             'is_required' => $validated['is_required'] ?? false,
             'status' => $validated['status'] ?? 'aktif',
+            'settings' => $validated['settings'] ?? null,
             'sort_order' => $maxOrder + 1,
         ]);
 
@@ -75,6 +76,10 @@ class FormBuilderFieldController extends Controller
         
         $field->is_required = $validated['is_required'] ?? false;
         $field->status = $validated['status'] ?? 'aktif';
+
+        if ($request->has('settings')) {
+            $field->settings = $validated['settings'];
+        }
 
         if (!$field->is_locked && $request->has('field_name')) {
             $field->field_name = $validated['field_name'];

@@ -202,21 +202,16 @@
 
     if (!fields || !fields.length) return;
 
-    const nonFile = fields.filter(f => f.type !== 'file');
-    const fileF   = fields.filter(f => f.type === 'file');
-
-    if (nonFile.length) {
-      container.insertAdjacentHTML('beforeend', buildSectionLabel('dynamic_form', currentLocale === 'jp' ? '追加情報' : 'Informasi Tambahan (Skema)'));
-      nonFile.forEach(f => container.insertAdjacentHTML('beforeend', buildFieldHtml(f)));
-    }
-
-    if (fileF.length) {
-      container.insertAdjacentHTML('beforeend', buildSectionLabel('cloud_upload', currentLocale === 'jp' ? '追加書類 (スキーマ)' : 'Dokumen Tambahan (Skema)'));
-      const grid = document.createElement('div');
-      grid.className = 'docs-grid form-full';
-      fileF.forEach(f => grid.insertAdjacentHTML('beforeend', buildFieldHtml(f)));
-      container.appendChild(grid);
-    }
+    // Use single loop to maintain order
+    fields.forEach(f => {
+        if (f.type === 'file') {
+            // For files, we might still want a grid or specific wrapper if needed, 
+            // but let's follow the builder's order.
+            container.insertAdjacentHTML('beforeend', buildFieldHtml(f));
+        } else {
+            container.insertAdjacentHTML('beforeend', buildFieldHtml(f));
+        }
+    });
   }
 
   function buildSectionLabel(icon, text) {
@@ -268,8 +263,29 @@
       </div>`;
     }
 
+    if (f.type === 'section') {
+      const settings = f.settings || {};
+      const icon = settings.section_icon || 'info';
+      const color = settings.section_color || '#673ab7';
+      const desc = f.description ? `<p class="text-sm text-slate-500 mt-1 pl-[52px] whitespace-pre-line leading-relaxed">${escHtml(f.description)}</p>` : '';
+      
+      return `
+        <div class="form-full py-6 mt-4 border-t border-slate-100 first:border-t-0 first:mt-0">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm" style="background-color: ${color}20; color: ${color};">
+              <span class="material-symbols-outlined" style="font-size: 24px; color: ${color}; vertical-align: middle;">${icon}</span>
+            </div>
+            <h3 class="text-xl font-bold" style="color: ${color};">${escHtml(f.label)}</h3>
+          </div>
+          ${desc}
+        </div>
+      `;
+    }
+
     const hint = f.description ? `<p class="dynamic-field-hint">${escHtml(f.description)}</p>` : '';
-    return `<div class="${wrapper}"><span class="input-label">${escHtml(f.label)} ${req}</span>${inputHtml}${hint}</div>`;
+    const labelHtml = f.type === 'section' ? '' : `<span class="input-label">${escHtml(f.label)} ${req}</span>`;
+    
+    return `<div class="${wrapper}">${labelHtml}${inputHtml}${hint}</div>`;
   }
 
   function escHtml(s) {

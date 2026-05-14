@@ -110,6 +110,9 @@ class FormFieldRequest extends FormRequest
             'status'     => ['required', Rule::in(['aktif', 'nonaktif'])],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'max_file_size' => ['nullable', 'integer', 'min:1'],
+            'settings' => ['nullable', 'array'],
+            'settings.section_icon' => ['nullable', 'string', 'max:50'],
+            'settings.section_color' => ['nullable', 'string', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
         ];
 
         // Type-specific rules
