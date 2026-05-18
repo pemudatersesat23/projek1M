@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $defaultSettings = [
             'whatsapp_number' => '6281217549529',
             'admin_email' => 'info@kizuku-academy.com',
-            'office_address' => 'Jl. Contoh No. 123, Kota Anda, Indonesia',
+            'office_address' => 'Jl. Bontotangnga, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
             'office_hours' => 'Senin - Sabtu, 08.00 - 17.00 WIB',
         ];
 

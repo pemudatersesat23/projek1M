@@ -26,7 +26,7 @@
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow">
       <div class="flex flex-col items-center gap-4 text-center">
         <div class="w-32 h-32 flex items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100">
-          <img src="{{ asset($campus->logo) }}" alt="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" class="max-w-full max-h-full object-contain">
+          <img src="{{ Storage::url($campus->logo) }}" alt="{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}" class="max-w-full max-h-full object-contain">
         </div>
         <div class="flex-1 min-w-0 w-full">
           <h5 class="font-bold text-base text-slate-800 mb-4 truncate">{{ $campus->getTranslation('name', 'id', false) ?: $campus->name }}</h5>

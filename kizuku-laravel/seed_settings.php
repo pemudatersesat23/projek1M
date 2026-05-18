@@ -21,7 +21,7 @@ $settings = [
     ],
     [
         'key' => 'office_address',
-        'value' => 'Jl. Contoh No. 123, Kota Anda, Indonesia',
+        'value' => 'Jl. Bontotangnga, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
         'label' => 'Alamat Kantor',
         'type' => 'textarea'
     ]

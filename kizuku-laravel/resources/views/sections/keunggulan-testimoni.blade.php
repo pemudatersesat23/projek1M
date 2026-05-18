@@ -18,7 +18,7 @@
               <!-- Banner -->
               <div class="kampus-banner">
                 @if($campus->banner)
-                  <img src="{{ asset($campus->banner) }}" alt="Banner {{ $campus->name }}">
+                  <img src="{{ Storage::url($campus->banner) }}" alt="Banner {{ $campus->name }}">
                 @else
                   <div class="kampus-banner-empty">No Banner</div>
                 @endif
@@ -26,7 +26,7 @@
               
               <!-- Overlapping Logo -->
               <div class="kampus-logo-wrapper">
-                <img src="{{ asset($campus->logo) }}" alt="{{ $campus->name }}">
+                <img src="{{ Storage::url($campus->logo) }}" alt="{{ $campus->name }}">
               </div>
 
               <!-- Content -->
