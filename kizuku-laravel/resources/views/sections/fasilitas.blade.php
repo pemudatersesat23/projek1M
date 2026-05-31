@@ -1,5 +1,5 @@
 <!-- ═══ FASILITAS KAMI ═══ -->
-<section id="fasilitas" class="section-pad" style="background-color: #f8f9fa;">
+<section id="fasilitas" class="section-pad" style="background: linear-gradient(180deg, #ffffff 0%, rgba(225, 6, 0, 0.10) 15%, rgba(225, 6, 0, 0.15) 50%, rgba(225, 6, 0, 0.10) 85%, #ffffff 100%), radial-gradient(ellipse at 85% 50%, rgba(225, 6, 0, 0.12) 0%, transparent 55%), radial-gradient(ellipse at 15% 50%, rgba(255, 80, 60, 0.08) 0%, transparent 55%); position: relative; overflow: hidden;">
   <div class="container relative">
     <div class="sec-head reveal" style="text-align:center;max-width:560px;margin:0 auto 44px;">
       <div class="sec-tag dynamic-lang" data-id="{{ __('messages.home.fasilitas_tag', [], 'id') }}" data-jp="{{ __('messages.home.fasilitas_tag', [], 'jp') }}" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.fasilitas_tag') }}</div>

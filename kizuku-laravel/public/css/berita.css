@@ -1,6 +1,14 @@
 /* ═══════════════ BERITA ═══════════════ */
 #berita {
-    background: #fff;
+    background:
+        linear-gradient(180deg,
+            #ffffff 0%,
+            rgba(15, 76, 129, 0.12) 15%,
+            rgba(15, 76, 129, 0.18) 50%,
+            rgba(15, 76, 129, 0.12) 85%,
+            #ffffff 100%),
+        radial-gradient(ellipse at 85% 50%, rgba(15, 76, 129, 0.15) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 50%, rgba(31, 162, 201, 0.1) 0%, transparent 55%);
 }
 
 .berita-featured {

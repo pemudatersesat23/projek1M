@@ -41,13 +41,16 @@
                 
                 <div class="kampus-divider"></div>
                 
-                <p class="kampus-desc">
-                    @if(app()->getLocale() == 'jp' && $campus->getTranslation('description', 'jp', false))
-                        {{ $campus->getTranslation('description', 'jp') }}
-                    @else
-                        {{ $campus->getTranslation('description', 'id') ?: 'Belum ada deskripsi.' }}
-                    @endif
+                <p class="kampus-desc" style="flex-grow: 1; margin-bottom: 24px;">
+                    {{ $campus->getShortDescription(app()->getLocale()) }}
                 </p>
+                
+                <div style="margin-top: auto; width: 100%; display: flex; justify-content: center; z-index: 15; position: relative;">
+                    <a href="{{ route('partner.show', $campus) }}" class="btn btn-outline" style="border-radius: 99px; padding: 8px 24px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(15, 76, 129, 0.2); color: var(--blue); font-weight: 600; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--blue)'; this.style.background='rgba(15, 76, 129, 0.05)'" onmouseout="this.style.borderColor='rgba(15, 76, 129, 0.2)'; this.style.background='transparent'">
+                        {{ (app()->getLocale() === 'jp' || app()->getLocale() === 'ja') ? '詳細を見る' : 'Lihat Selengkapnya' }}
+                        <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+                    </a>
+                </div>
               </div>
             </div>
           </div>

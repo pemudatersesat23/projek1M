@@ -1,7 +1,7 @@
 
 @if($keunggulans->count() > 0)
 <!-- ═══ KEUNGGULAN KIZUKU ═══ -->
-<section id="keunggulan" class="section-pad" style="background: white; position: relative; overflow: hidden;">
+<section id="keunggulan" class="section-pad" style="background: linear-gradient(180deg, #ffffff 0%, rgba(225, 6, 0, 0.10) 15%, rgba(225, 6, 0, 0.15) 50%, rgba(225, 6, 0, 0.10) 85%, #ffffff 100%), radial-gradient(ellipse at 15% 50%, rgba(225, 6, 0, 0.12) 0%, transparent 55%), radial-gradient(ellipse at 85% 50%, rgba(255, 80, 60, 0.08) 0%, transparent 55%); position: relative; overflow: hidden;">
     <!-- Decorative element -->
     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.4; pointer-events: none; background-image: radial-gradient(#0067a3 0.5px, transparent 0.5px); background-size: 24px 24px; z-index: 1;"></div>
     

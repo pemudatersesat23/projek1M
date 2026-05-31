@@ -1,6 +1,14 @@
 /* ═══════════════ KONTAK ═══════════════ */
 #kontak {
-    background: #fff;
+    background:
+        linear-gradient(180deg,
+            #ffffff 0%,
+            rgba(225, 6, 0, 0.10) 15%,
+            rgba(225, 6, 0, 0.15) 50%,
+            rgba(225, 6, 0, 0.10) 85%,
+            #ffffff 100%),
+        radial-gradient(ellipse at 85% 50%, rgba(225, 6, 0, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 50%, rgba(255, 80, 60, 0.08) 0%, transparent 55%);
 }
 
 .kontak-grid {

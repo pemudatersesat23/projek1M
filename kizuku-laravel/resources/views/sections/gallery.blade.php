@@ -1,5 +1,5 @@
 <!-- ═══ GALLERY ═══ -->
-<section id="galeri" class="section-pad" style="background: #f8fafc;">
+<section id="galeri" class="section-pad" style="background: linear-gradient(180deg, #ffffff 0%, rgba(15, 76, 129, 0.12) 15%, rgba(15, 76, 129, 0.18) 50%, rgba(15, 76, 129, 0.12) 85%, #ffffff 100%), radial-gradient(ellipse at 15% 50%, rgba(15, 76, 129, 0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 50%, rgba(31, 162, 201, 0.1) 0%, transparent 55%); position: relative; overflow: hidden;">
   <div class="container">
     <div class="sec-head reveal" style="text-align:center;max-width:600px;margin:0 auto 50px;">
       <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ app()->getLocale() == 'id' ? 'Galeri Kegiatan' : (app()->getLocale() == 'jp' ? '活動ギャラリー' : 'Activity Gallery') }}</div>

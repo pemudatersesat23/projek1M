@@ -9,6 +9,7 @@ use App\Models\Batch;
 use Illuminate\Http\Request;
 
 use App\Models\ApplicantDocument;
+use App\Models\PartnerCampus;
 use Illuminate\Support\Facades\Storage;
 use App\Services\DynamicFormService;
 
@@ -128,6 +129,12 @@ class HomeController extends Controller
         // Get recent news for sidebar/footer of detail page
         $recentNews = Berita::published()->where('id', '!=', $berita->id)->latest()->take(5)->get();
         return view('berita-detail', compact('berita', 'recentNews'));
+    }
+
+    public function showPartner(PartnerCampus $partnerCampus)
+    {
+        $recentCampuses = PartnerCampus::where('id', '!=', $partnerCampus->id)->latest()->take(5)->get();
+        return view('partner-detail', compact('partnerCampus', 'recentCampuses'));
     }
 
     public function showAlur()
