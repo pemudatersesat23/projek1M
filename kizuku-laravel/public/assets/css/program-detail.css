@@ -579,3 +579,44 @@
 }
 
 .contents { display: contents; }
+
+/* ── Dynamic Form: Section Header ── */
+.df-section-header {
+  margin: 24px 0 8px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(0,103,163,0.06) 0%, rgba(0,103,163,0.02) 100%);
+  border-left: 4px solid #0067a3;
+  border-radius: 0 12px 12px 0;
+}
+
+.df-section-header:first-child {
+  margin-top: 0;
+}
+
+.df-section-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0,103,163,0.1);
+  color: #0067a3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.df-section-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0067a3;
+  letter-spacing: -0.3px;
+}
+
+.df-section-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 6px;
+  padding-left: 44px;
+  line-height: 1.5;
+}
+

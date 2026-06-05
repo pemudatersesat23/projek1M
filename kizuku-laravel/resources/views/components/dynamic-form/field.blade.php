@@ -28,7 +28,7 @@
   $oldFile      = old('dynamic_files.' . $fieldKey);
 @endphp
 
-<div class="form-group-custom {{ in_array($type, ['textarea']) ? 'form-full' : 'form-half' }} dynamic-field-wrapper">
+<div class="form-group-custom {{ $type === 'section' ? 'form-full' : (in_array($type, ['textarea', 'checkbox']) ? 'form-full' : 'form-half') }} dynamic-field-wrapper">
 
   {{-- Label (Hidden for section) --}}
   @if($type !== 'section')
@@ -178,17 +178,19 @@
     @php
       $settings = is_array($field->settings) ? $field->settings : (json_decode($field->settings, true) ?: []);
       $icon = $settings['section_icon'] ?? 'info';
-      $color = $settings['section_color'] ?? '#673ab7';
+      $rawColor = $settings['section_color'] ?? '';
+      // Paksa semua warna section ke biru primary website — abaikan warna ungu dari builder
+      $color = '#0067a3';
     @endphp
-    <div class="form-full py-6 mt-4 border-t border-slate-100 first:border-t-0 first:mt-0">
-      <div class="flex items-center gap-3 mb-2">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm" style="background-color: {{ $color }}20; color: {{ $color }};">
-          @include('components.form-section-icon', ['icon' => $icon, 'color' => $color, 'size' => '24px'])
+    <div class="form-full df-section-header">
+      <div class="flex items-center gap-3">
+        <div class="df-section-icon-box">
+          @include('components.form-section-icon', ['icon' => $icon, 'color' => $color, 'size' => '22px'])
         </div>
-        <h3 class="text-xl font-bold" style="color: {{ $color }};">{{ $label }}</h3>
+        <h3 class="df-section-title">{{ $label }}</h3>
       </div>
       @if($description)
-        <p class="text-sm text-slate-500 mt-1 pl-[52px] whitespace-pre-line leading-relaxed">{{ $description }}</p>
+        <p class="df-section-desc">{{ $description }}</p>
       @endif
     </div>
   @endif
