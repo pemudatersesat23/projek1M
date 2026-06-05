@@ -47,17 +47,7 @@
     </ul>
 
     <div class="nav-cta">
-      <div class="lang-switcher-wrapper">
-        <a href="{{ route('lang.switch', 'jp') }}" class="lang-toggle-link {{ (app()->getLocale() == 'jp' || app()->getLocale() == 'ja') ? 'active' : '' }}" style="display:flex; align-items:center; gap:4px;">
-          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
-          JP
-        </a>
-        <span class="text-slate-300">|</span>
-        <a href="{{ route('lang.switch', 'id') }}" class="lang-toggle-link {{ app()->getLocale() == 'id' ? 'active' : '' }}" style="display:flex; align-items:center; gap:4px;">
-          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><rect fill="#ED2939" width="3" height="1"/></svg>
-          ID
-        </a>
-      </div>
+
 
       @guest
         <a class="btn btn-outline" href="{{ url('/') }}#kontak">{{ __('messages.nav.konsultasi') }}</a>

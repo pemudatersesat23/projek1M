@@ -17,10 +17,6 @@
             <input type="text" name="title_id" required class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" placeholder="Contoh: Form Pendaftaran Beasiswa 2026">
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Judul Formulir (JP)</label>
-            <input type="text" name="title_jp" class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" placeholder="Contoh: 2026年奨学金申込書">
-        </div>
 
         <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Program <span class="text-red-500">*</span></label>

@@ -252,6 +252,58 @@
         color: white;
         transform: scale(1.1);
     }
+
+    /* Premium Flag Switcher Styles */
+    .lang-switcher-buttons {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(241, 245, 249, 0.9);
+        padding: 4px 8px;
+        border-radius: 99px;
+        border: 1px solid rgba(0,0,0,0.08);
+        margin-right: 15px;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .lang-btn {
+        background: none;
+        border: none;
+        padding: 4px 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 99px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0.45;
+        scale: 0.95;
+        text-decoration: none;
+    }
+    .lang-btn svg {
+        border-radius: 2px;
+        border: 1px solid rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        display: block;
+    }
+    .lang-btn:hover {
+        opacity: 0.85;
+        scale: 1.05;
+    }
+    .lang-btn.active {
+        opacity: 1;
+        scale: 1.1;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+    .lang-btn.active svg {
+        border-color: rgba(0,0,0,0.15);
+    }
+    .lang-divider {
+        width: 1px;
+        height: 14px;
+        background: rgba(0,0,0,0.1);
+    }
   </style>
   @stack('styles')
 </head>
@@ -286,16 +338,15 @@
     </ul>
 
     <div class="nav-cta">
-      <div class="lang-switcher-wrapper">
-        <a href="{{ route('lang.switch', 'jp') }}" class="lang-toggle-link {{ (app()->getLocale() == 'jp' || app()->getLocale() == 'ja') ? 'active' : '' }}" style="display:flex; align-items:center; gap:4px;">
-          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
-          JP
-        </a>
-        <span class="text-slate-300">|</span>
-        <a href="{{ route('lang.switch', 'id') }}" class="lang-toggle-link {{ app()->getLocale() == 'id' ? 'active' : '' }}" style="display:flex; align-items:center; gap:4px;">
-          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><rect fill="#ED2939" width="3" height="1"/></svg>
-          ID
-        </a>
+      <!-- Language Switcher desktop -->
+      <div class="lang-switcher-buttons">
+          <a href="{{ route('lang.switch', 'id') }}" class="lang-btn lang-btn-id {{ app()->getLocale() === 'id' ? 'active' : '' }}" title="Bahasa Indonesia">
+              <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#ED2939" width="3" height="1"/><rect fill="#fff" y="1" width="3" height="1"/></svg>
+          </a>
+          <span class="lang-divider"></span>
+          <a href="{{ route('lang.switch', 'jp') }}" class="lang-btn lang-btn-jp {{ (app()->getLocale() === 'jp' || app()->getLocale() === 'ja') ? 'active' : '' }}" title="日本語">
+              <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
+          </a>
       </div>
 
       @guest
@@ -346,17 +397,21 @@
       </div>
     @endauth
 
-    <div class="mob-cta">
-      <div class="lang-switcher-wrapper flex justify-center gap-4 mb-4">
-        <a href="{{ route('lang.switch', 'jp') }}" class="text-sm font-bold flex items-center gap-2 {{ app()->getLocale() == 'jp' ? 'text-primary' : 'text-slate-400' }}">
-          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
-          JAPANESE
-        </a>
-        <a href="{{ route('lang.switch', 'id') }}" class="text-sm font-bold flex items-center gap-2 {{ app()->getLocale() == 'id' ? 'text-primary' : 'text-slate-400' }}">
-          <svg width="18" height="12" viewBox="0 0 3 2" style="border:1px solid rgba(0,0,0,0.1); border-radius:2px;"><rect fill="#fff" width="3" height="2"/><rect fill="#ED2939" width="3" height="1"/></svg>
-          INDONESIA
-        </a>
+    <!-- Language Switcher mobile -->
+    <div style="padding: 10px 20px;">
+      <div class="lang-switcher-buttons" style="display: inline-flex;">
+          <a href="{{ route('lang.switch', 'id') }}" class="lang-btn lang-btn-id {{ app()->getLocale() === 'id' ? 'active' : '' }}" title="Bahasa Indonesia">
+              <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#ED2939" width="3" height="1"/><rect fill="#fff" y="1" width="3" height="1"/></svg>
+          </a>
+          <span class="lang-divider"></span>
+          <a href="{{ route('lang.switch', 'jp') }}" class="lang-btn lang-btn-jp {{ (app()->getLocale() === 'jp' || app()->getLocale() === 'ja') ? 'active' : '' }}" title="日本語">
+              <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
+          </a>
       </div>
+    </div>
+
+    <div class="mob-cta">
+
       @guest
         <a class="btn btn-outline" href="{{ url('/') }}#kontak">{{ __('messages.nav.konsultasi') }}</a>
         <a class="btn btn-primary" href="{{ url('/') }}#kontak">{{ __('messages.nav.home') === 'Beranda' ? 'Daftar Sekarang' : '今すぐ登録' }}</a>

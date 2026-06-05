@@ -286,22 +286,9 @@
                     Advanced Settings (JP & Success Msg)
                 </button>
                 <div id="meta-advanced" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Title (JP)</label>
-                            <input type="text" id="form-title-jp" value="{{ $formTitleJp }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Desc (JP)</label>
-                            <input type="text" id="form-desc-jp" value="{{ $formDescriptionJp }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
-                        </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Success Msg (ID)</label>
                             <input type="text" id="form-success-id" value="{{ $formSuccessId }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Success Msg (JP)</label>
-                            <input type="text" id="form-success-jp" value="{{ $formSuccessJp }}" class="w-full text-sm border-slate-200 rounded-md focus:ring-purple-200 focus:border-purple-600" onchange="saveMetadata()">
                         </div>
                     </div>
                 </div>
@@ -355,10 +342,6 @@
                     </button>
                     <div class="adv-meta-container hidden space-y-3 bg-slate-50 p-3 rounded border border-slate-100">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div class="space-y-1">
-                                <label class="text-[9px] font-bold text-slate-400 uppercase">Label (JP)</label>
-                                <input type="text" class="field-label-jp w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
-                            </div>
                             <div class="space-y-1">
                                 <label class="text-[9px] font-bold text-slate-400 uppercase">Placeholder (ID)</label>
                                 <input type="text" class="field-placeholder-id w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
@@ -545,7 +528,6 @@
         card.querySelector('.field-label-text').textContent = field.label?.id || '(No Question)';
         card.querySelector('.field-type-badge').textContent = field.type;
         card.querySelector('.field-label-id').value = field.label?.id || '';
-        card.querySelector('.field-label-jp').value = field.label?.jp || '';
         card.querySelector('.field-name-input').value = field.field_name || '';
         card.querySelector('.field-type-select').value = field.type || 'text';
         card.querySelector('.field-role-select').value = field.field_role || 'none';
@@ -748,7 +730,6 @@
                     <input type="text" class="opt-label-id flex-1 text-sm google-input" placeholder="Option Label (ID)" value="${opt.label?.id || ''}">
                     <input type="text" class="opt-value w-24 text-[10px] font-mono text-slate-400 bg-slate-50 border-none rounded px-2" placeholder="val" value="${opt.value || ''}">
                 </div>
-                <input type="text" class="opt-label-jp w-full text-[10px] text-slate-400 google-input" placeholder="Option Label (JP - Optional)" value="${opt.label?.jp || ''}">
             </div>
             <button type="button" class="delete-option-btn p-1 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 mt-1"><span class="material-symbols-outlined text-[18px]">close</span></button>
         `;
@@ -765,7 +746,6 @@
         const payload = {
             program_id: {{ $form->program_id }}, schema_id: {{ $form->schema_id ?? 'null' }},
             label_id: card.querySelector('.field-label-id').value || 'Untitled',
-            label_jp: card.querySelector('.field-label-jp').value,
             placeholder_id: card.querySelector('.field-placeholder-id').value,
             description_id: card.querySelector('.field-description-id').value,
             field_name: card.querySelector('.field-name-input').value,
@@ -776,7 +756,7 @@
         if (['radio', 'checkbox', 'select'].includes(type)) {
             const opts = [];
             card.querySelectorAll('.option-row').forEach(row => {
-                opts.push({ value: row.querySelector('.opt-value').value, label: { id: row.querySelector('.opt-label-id').value, jp: row.querySelector('.opt-label-jp').value } });
+                opts.push({ value: row.querySelector('.opt-value').value, label: { id: row.querySelector('.opt-label-id').value } });
             });
             payload.options = JSON.stringify(opts);
         }
@@ -932,9 +912,9 @@
     function saveMetadata() {
         const payload = {
             program_id: {{ $form->program_id }}, schema_id: {{ $form->schema_id ?? 'null' }},
-            title_id: document.getElementById('form-title-id').value, title_jp: document.getElementById('form-title-jp').value,
-            description_id: document.getElementById('form-desc-id').value, description_jp: document.getElementById('form-desc-jp').value,
-            success_message_id: document.getElementById('form-success-id').value, success_message_jp: document.getElementById('form-success-jp').value,
+            title_id: document.getElementById('form-title-id').value,
+            description_id: document.getElementById('form-desc-id').value,
+            success_message_id: document.getElementById('form-success-id').value,
         };
         fetch(`/dashboard-admin/forms/${formId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) }).then(() => showToast('Form metadata saved'));
     }
