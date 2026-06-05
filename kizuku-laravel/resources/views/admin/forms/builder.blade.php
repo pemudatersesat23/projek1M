@@ -293,7 +293,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <!-- Question Cards Container -->
         <div id="fields-container" class="space-y-4">

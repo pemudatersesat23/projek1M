@@ -10,7 +10,7 @@
             <div class="sec-tag" style="background: rgba(0, 103, 163, 0.08); color: var(--primary); border-color: rgba(0, 103, 163, 0.1);">
                 {{ app()->getLocale() == 'jp' ? '✦ なぜ私たちを選ぶのか' : '✦ KENAPA MEMILIH KAMI?' }}
             </div>
-            <h2 class="sec-h2" style="background: linear-gradient(90deg, #0f1c23, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h2 class="sec-h2" style="background: linear-gradient(90deg, #0f1c23, var(--primary, #0067a3)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                 {{ app()->getLocale() == 'jp' ? 'キズク インターナショナル アカデミーの強み' : 'Keunggulan Kizuku International Academy' }}
             </h2>
             <p class="sec-p" style="margin:0 auto; color: #64748b;">

@@ -15,6 +15,9 @@
   --grad-red: linear-gradient(135deg, #FF4B2B, var(--red));
   --grad-blue: linear-gradient(135deg, #1FA2C9, var(--blue));
   --grad-mix: linear-gradient(135deg, var(--red), var(--blue), var(--cyan));
+  
+  /* Brand Primary Color */
+  --primary: #0067a3;
 }
 
 @keyframes float {
