@@ -72,10 +72,7 @@
           <span class="material-symbols-outlined text-[22px]">newspaper</span>
           <span class="font-medium text-sm">Berita</span>
         </a>
-        <a href="{{ route('admin.payment.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.payment.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
-          <span class="material-symbols-outlined text-[22px]">payments</span>
-          <span class="font-medium text-sm">Payment</span>
-        </a>
+
         <a href="{{ route('admin.export') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.export') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">download</span>
           <span class="font-medium text-sm">Export</span>

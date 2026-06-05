@@ -468,6 +468,10 @@
                             <option value="applicant_email">Email</option>
                             <option value="applicant_phone">WhatsApp</option>
                             <option value="applicant_birth_date">Birth Date</option>
+                            <option value="applicant_gender">Gender</option>
+                            <option value="applicant_pob">Place of Birth</option>
+                            <option value="applicant_address">Address</option>
+                            <option value="applicant_education">Education</option>
                         </select>
                     </div>
                 </div>

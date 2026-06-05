@@ -16,6 +16,40 @@
         <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
           <span class="material-symbols-outlined text-primary">person</span> Informasi Personal
         </h4>
+        @php
+            $findAnswer = function($keywords) use ($applicant) {
+                foreach ($applicant->dynamicAnswers as $ans) {
+                    $snapLabel = $ans->field_label_snapshot;
+                    $labelStr = strtolower(is_array($snapLabel) ? ($snapLabel['id'] ?? '') : (string) $snapLabel);
+                    foreach ((array)$keywords as $kw) {
+                        if (str_contains($labelStr, $kw)) {
+                            // Resolve label
+                            $val = $ans->value;
+                            $optionsSnap = $ans->field_options_snapshot ?? $ans->formField?->options;
+                            if (is_string($optionsSnap)) {
+                                $optionsSnap = json_decode($optionsSnap, true);
+                            }
+                            if (is_array($optionsSnap)) {
+                                foreach ($optionsSnap as $opt) {
+                                    if (isset($opt['value']) && $opt['value'] == $val) {
+                                        return $opt['label']['id'] ?? $val;
+                                    }
+                                }
+                            }
+                            return is_array($val) ? implode(', ', $val) : $val;
+                        }
+                    }
+                }
+                return null;
+            };
+
+            $jk = $applicant->jenis_kelamin ?? $findAnswer(['kelamin', 'gender']);
+            $tempatLahir = $applicant->tempat_lahir ?? $findAnswer(['tempat', 'pob']);
+            $pendidikan = $applicant->pendidikan ?? $findAnswer(['pendidikan', 'education', 'terakhir']);
+            $alamat = $applicant->alamat ?? $findAnswer(['alamat', 'domisili', 'address']);
+            $pengalamanKerja = $applicant->pengalaman_kerja ?: ($applicant->pengalaman ?: $findAnswer(['pengalaman', 'experience', 'kerja', 'riwayat']));
+            $motivasi = $applicant->motivasi ?: $findAnswer(['motivasi', 'alasan', 'tujuan', 'motivation']);
+        @endphp
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Nama Lengkap</p>
@@ -23,19 +57,19 @@
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Jenis Kelamin</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->jenis_kelamin ? ($applicant->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan') : '-' }}</p>
+            <p class="text-slate-800 font-bold">{{ $jk ? ($jk === 'L' ? 'Laki-laki' : ($jk === 'P' ? 'Perempuan' : ucfirst($jk))) : '-' }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tempat, Tgl Lahir</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->tempat_lahir ?: '-' }}, {{ $applicant->tanggal_lahir?->format('d/m/Y') ?? '-' }}</p>
+            <p class="text-slate-800 font-bold">{{ $tempatLahir ?: '-' }}, {{ $applicant->tanggal_lahir?->format('d/m/Y') ?? '-' }}</p>
           </div>
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pendidikan Terakhir</p>
-            <p class="text-slate-800 font-bold">{{ $applicant->pendidikan }}</p>
+            <p class="text-slate-800 font-bold">{{ $pendidikan ?: '-' }}</p>
           </div>
           <div class="md:col-span-2">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Alamat Lengkap</p>
-            <p class="text-slate-800 font-medium leading-relaxed">{{ $applicant->alamat }}</p>
+            <p class="text-slate-800 font-medium leading-relaxed">{{ $alamat ?: '-' }}</p>
           </div>
         </div>
       </div>
@@ -68,11 +102,11 @@
           </div>
           <div class="p-4 bg-slate-50 rounded-xl">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Pengalaman Kerja</p>
-            <p class="text-slate-700 text-sm whitespace-pre-line">{{ $applicant->pengalaman_kerja ?: ($applicant->pengalaman ?: 'Tidak ada pengalaman kerja dicantumkan.') }}</p>
+            <p class="text-slate-700 text-sm whitespace-pre-line">{{ $pengalamanKerja ?: 'Tidak ada pengalaman kerja dicantumkan.' }}</p>
           </div>
           <div class="p-4 bg-slate-50 rounded-xl">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Motivasi</p>
-            <p class="text-slate-700 text-sm whitespace-pre-line">{{ $applicant->motivasi ?: 'Tidak ada motivasi dicantumkan.' }}</p>
+            <p class="text-slate-700 text-sm whitespace-pre-line">{{ $motivasi ?: 'Tidak ada motivasi dicantumkan.' }}</p>
           </div>
         </div>
       </div>
@@ -145,46 +179,6 @@
       </div>
       @endif
 
-      {{-- Dokumen --}}
-      <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">folder_open</span> Dokumen Unggahan
-        </h4>
-        @if($applicant->document)
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @php
-              $docs = [
-                'ktp' => ['label' => 'KTP', 'path' => $applicant->document->ktp],
-                'kk' => ['label' => 'KK', 'path' => $applicant->document->kk],
-                'foto' => ['label' => 'Pas Foto', 'path' => $applicant->document->foto],
-                'ijazah' => ['label' => 'Ijazah', 'path' => $applicant->document->ijazah],
-                'sertifikat' => ['label' => 'Sertifikat', 'path' => $applicant->document->sertifikat],
-                'cv' => ['label' => 'CV', 'path' => $applicant->document->cv],
-                'transkrip' => ['label' => 'Transkrip Nilai', 'path' => $applicant->document->transkrip],
-                'bukti_sosmed' => ['label' => 'Bukti Sosmed', 'path' => $applicant->document->bukti_sosmed],
-              ];
-            @endphp
-            @foreach($docs as $field => $doc)
-              @if($doc['path'])
-                <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                  <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-slate-400">description</span>
-                    <span class="text-sm font-bold text-slate-700">{{ $doc['label'] }}</span>
-                  </div>
-                  <a href="{{ route('admin.applicants.documents.download', [$applicant, $applicant->document, $field]) }}" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
-                    Unduh <span class="material-symbols-outlined text-xs">download</span>
-                  </a>
-                </div>
-              @endif
-            @endforeach
-          </div>
-        @else
-          <div class="py-12 text-center">
-            <span class="material-symbols-outlined text-4xl text-slate-200">cloud_off</span>
-            <p class="text-slate-400 text-sm mt-2">Pendaftar ini belum mengunggah dokumen.</p>
-          </div>
-        @endif
-      </div>
 
       {{-- Dynamic Answers (Form Builder) --}}
       <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
@@ -200,7 +194,30 @@
                 $displayLabel = is_array($snapLabel)
                   ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Field'))
                   : (string) $snapLabel;
-                $val = $answer->value;
+                
+                $rawVal = $answer->value;
+                $optionsSnap = $answer->field_options_snapshot ?? $answer->formField?->options;
+                if (is_string($optionsSnap)) {
+                    $optionsSnap = json_decode($optionsSnap, true);
+                }
+                
+                // Helper untuk mapping value ke label
+                $mapValueToLabel = function($v) use ($optionsSnap) {
+                    if (is_array($optionsSnap)) {
+                        foreach ($optionsSnap as $opt) {
+                            if (isset($opt['value']) && $opt['value'] == $v) {
+                                return $opt['label']['id'] ?? ($opt['label']['jp'] ?? $v);
+                            }
+                        }
+                    }
+                    return $v;
+                };
+
+                if (is_array($rawVal)) {
+                    $val = array_map($mapValueToLabel, $rawVal);
+                } else {
+                    $val = $mapValueToLabel($rawVal);
+                }
               @endphp
               <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $displayLabel }}</p>

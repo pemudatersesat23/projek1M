@@ -155,8 +155,6 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     )->name('applicants.documents.download');
 
 
-    // Payment Settings
-    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
 
     // Export
     Route::get('/export', [ExportController::class, 'index'])->name('export');
