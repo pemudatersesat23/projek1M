@@ -227,4 +227,16 @@ class FormController extends Controller
 
         return response()->json(['message' => 'Form berhasil diarsipkan.', 'status' => 'archived']);
     }
+
+    public function destroy(Form $form)
+    {
+        $formTitle = $form->getTranslation('title', 'id', false) ?: 'Untitled';
+
+        // Hapus semua fields terkait lalu hapus form
+        $form->fields()->delete();
+        $form->delete();
+
+        return redirect()->route('admin.forms.index')
+            ->with('success', "Form \"{$formTitle}\" berhasil dihapus.");
+    }
 }

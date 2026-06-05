@@ -116,6 +116,7 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::post('forms/{form}/publish', [\App\Http\Controllers\Admin\FormController::class, 'publish'])->name('forms.publish');
     Route::post('forms/{form}/draft', [\App\Http\Controllers\Admin\FormController::class, 'draft'])->name('forms.draft');
     Route::post('forms/{form}/archive', [\App\Http\Controllers\Admin\FormController::class, 'archive'])->name('forms.archive');
+    Route::delete('forms/{form}', [\App\Http\Controllers\Admin\FormController::class, 'destroy'])->name('forms.destroy');
 
     Route::post('forms/{form}/fields', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'store'])->name('forms.fields.store');
     Route::patch('forms/{form}/fields/{field}', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'update'])->name('forms.fields.update');

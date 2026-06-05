@@ -3,6 +3,27 @@
 @section('admin-title', 'Form Builder Baru')
 
 @section('admin-content')
+
+{{-- Flash Messages --}}
+@if(session('success'))
+<div id="flash-success" class="mb-4 flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium shadow-sm">
+    <span class="material-symbols-outlined text-emerald-500 text-[20px]">check_circle</span>
+    {{ session('success') }}
+    <button onclick="document.getElementById('flash-success').remove()" class="ml-auto text-emerald-400 hover:text-emerald-600">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+    </button>
+</div>
+@endif
+@if(session('error'))
+<div id="flash-error" class="mb-4 flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-sm font-medium shadow-sm">
+    <span class="material-symbols-outlined text-red-500 text-[20px]">error</span>
+    {{ session('error') }}
+    <button onclick="document.getElementById('flash-error').remove()" class="ml-auto text-red-400 hover:text-red-600">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+    </button>
+</div>
+@endif
+
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -62,6 +83,7 @@
                 @forelse($forms as $form)
                 @php
                     $formTitle = $form->getTranslation('title', 'id', false) ?: 'Untitled';
+                    $isPublished = $form->status === 'published';
                 @endphp
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="py-3 px-4">
@@ -115,6 +137,15 @@
                             <a href="{{ route('admin.forms.responses.index', $form->id) }}" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Responses">
                                 <span class="material-symbols-outlined text-[20px]">inbox</span>
                             </a>
+                            {{-- Tombol Hapus --}}
+                            <button
+                                type="button"
+                                onclick="confirmDelete({{ $form->id }}, '{{ addslashes($formTitle) }}', {{ $isPublished ? 'true' : 'false' }})"
+                                class="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                title="Hapus Form"
+                            >
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -137,4 +168,110 @@
     </div>
     @endif
 </div>
+
+{{-- Hidden DELETE form --}}
+<form id="delete-form" method="POST" action="" class="hidden">
+    @csrf
+    @method('DELETE')
+</form>
+
+{{-- Modal Konfirmasi Hapus --}}
+<div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    {{-- Backdrop --}}
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="cancelDelete()"></div>
+
+    {{-- Modal Card --}}
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-fadeIn">
+        {{-- Ikon peringatan --}}
+        <div class="flex items-center justify-center w-14 h-14 bg-red-100 rounded-full mx-auto mb-4">
+            <span class="material-symbols-outlined text-red-500 text-[32px]">delete_forever</span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-800 text-center mb-1">Hapus Form?</h3>
+        <p class="text-sm text-slate-500 text-center mb-1">Anda akan menghapus form:</p>
+        <p id="modal-form-title" class="text-sm font-semibold text-slate-800 text-center mb-4 px-4 py-2 bg-slate-50 rounded-lg border border-slate-200"></p>
+        <p id="modal-warning-normal" class="text-xs text-red-600 text-center mb-6 bg-red-50 border border-red-200 rounded-lg px-3 py-2 hidden">
+            ⚠️ Tindakan ini akan menghapus form beserta semua pertanyaannya secara permanen dan <strong>tidak dapat dibatalkan</strong>.
+        </p>
+        <p id="modal-warning-published" class="text-xs text-red-700 text-center mb-6 bg-red-50 border border-red-300 rounded-lg px-3 py-2 hidden">
+            🚨 Form ini sedang <strong>Published</strong>. Menghapusnya akan menghentikan penerimaan pendaftaran dan menghapus semua pertanyaan secara <strong>permanen</strong>.
+        </p>
+
+        <div class="flex gap-3">
+            <button
+                type="button"
+                onclick="cancelDelete()"
+                class="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors text-sm"
+            >
+                Batal
+            </button>
+            <button
+                type="button"
+                onclick="executeDelete()"
+                class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+            >
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.18s ease-out forwards; }
+</style>
+
+<script>
+    let deleteTargetId = null;
+
+    function confirmDelete(formId, formTitle, isPublished) {
+        deleteTargetId = formId;
+        document.getElementById('modal-form-title').textContent = formTitle;
+
+        // Tampilkan peringatan sesuai status
+        const warnNormal    = document.getElementById('modal-warning-normal');
+        const warnPublished = document.getElementById('modal-warning-published');
+        if (isPublished) {
+            warnNormal.classList.add('hidden');
+            warnPublished.classList.remove('hidden');
+        } else {
+            warnPublished.classList.add('hidden');
+            warnNormal.classList.remove('hidden');
+        }
+
+        document.getElementById('delete-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cancelDelete() {
+        deleteTargetId = null;
+        document.getElementById('delete-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function executeDelete() {
+        if (!deleteTargetId) return;
+        const form = document.getElementById('delete-form');
+        form.action = `/dashboard-admin/forms/${deleteTargetId}`;
+        form.submit();
+    }
+
+    // Tutup modal dengan ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') cancelDelete();
+    });
+
+    // Auto-dismiss flash messages setelah 5 detik
+    setTimeout(() => {
+        ['flash-success', 'flash-error'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
+    }, 5000);
+</script>
+
 @endsection
