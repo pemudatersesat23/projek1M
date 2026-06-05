@@ -46,11 +46,11 @@
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 48px;">
             @foreach($tgFields as $index => $field)
               <div class="tg-field-card" style="display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9; background: white; transition: all 0.3s; cursor: default;">
-                <div class="tg-field-icon" style="width: 48px; height: 48px; border-radius: 12px; background: #f8fafc; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s;">
-                  <span class="material-symbols-outlined">{{ $field['icon'] }}</span>
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--primary, #1e40af), #3b82f6); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(59,130,246,0.25);">
+                  <span style="font-size: 16px; font-weight: 900; color: white; line-height: 1;">{{ $loop->iteration }}</span>
                 </div>
                 <div>
-                  <span style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 2px;">Bidang {{ $loop->iteration }}</span>
+                  <span style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">Bidang {{ $loop->iteration }}</span>
                   <span style="display: block; font-size: 14px; font-weight: 800; color: #0f1c23;">{{ $field['display'] }}</span>
                 </div>
               </div>
