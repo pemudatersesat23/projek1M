@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Program;
+use App\Models\ProgramSection;
 use App\Http\Requests\Admin\ProgramRequest;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,10 +28,12 @@ class ProgramController extends Controller
     public function store(ProgramRequest $request)
     {
         $validated = $request->validated();
+        $sections = $validated['sections'] ?? [];
         
         $data = $this->prepareProgramData($validated, $request);
 
-        Program::create($data);
+        $program = Program::create($data);
+        $this->syncSections($program, $sections);
 
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil ditambahkan.');
     }
@@ -42,16 +45,20 @@ class ProgramController extends Controller
 
     public function edit(Program $program)
     {
+        $program->load('sections');
+
         return view('admin.programs.edit', compact('program'));
     }
 
     public function update(ProgramRequest $request, Program $program)
     {
         $validated = $request->validated();
+        $sections = $validated['sections'] ?? [];
         
         $data = $this->prepareProgramData($validated, $request, $program);
 
         $program->update($data);
+        $this->syncSections($program, $sections);
 
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil diperbarui.');
     }
@@ -87,7 +94,54 @@ class ProgramController extends Controller
         
         // Clean up uploaded files array keys
         unset($validated['thumbnail']);
+        unset($validated['sections']);
         
         return $validated;
+    }
+
+    private function syncSections(Program $program, array $sections): void
+    {
+        $program->sections()->delete();
+
+        foreach ($sections as $index => $section) {
+            $type = $section['type'] ?? 'text';
+
+            if (!array_key_exists($type, ProgramSection::TYPES)) {
+                continue;
+            }
+
+            $items = $this->cleanSectionItems($section['items'] ?? []);
+            $title = trim((string) ($section['title'] ?? ''));
+            $description = trim((string) ($section['description'] ?? ''));
+
+            if ($title === '' && $description === '' && empty($items)) {
+                continue;
+            }
+
+            $program->sections()->create([
+                'type' => $type,
+                'title' => $title === '' ? [] : ['id' => $title],
+                'description' => $description === '' ? [] : ['id' => $description],
+                'items' => ['id' => $items],
+                'settings' => [],
+                'sort_order' => (int) ($section['sort_order'] ?? $index),
+                'is_active' => filter_var($section['is_active'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            ]);
+        }
+    }
+
+    private function cleanSectionItems(array $items): array
+    {
+        return collect($items)
+            ->map(function ($item) {
+                return [
+                    'title' => trim((string) ($item['title'] ?? '')),
+                    'description' => trim((string) ($item['description'] ?? '')),
+                    'icon' => trim((string) ($item['icon'] ?? '')),
+                ];
+            })
+            ->filter(fn ($item) => $item['title'] !== '' || $item['description'] !== '')
+            ->values()
+            ->all();
     }
 }

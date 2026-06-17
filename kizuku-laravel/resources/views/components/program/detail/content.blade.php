@@ -4,6 +4,9 @@
 --}}
 @php
   $tgFields = config('programs.tg_fields');
+  $dynamicSections = $program->relationLoaded('activeSections')
+    ? $program->activeSections
+    : $program->activeSections()->get();
 @endphp
 
 <main class="pd-content-section">
@@ -13,6 +16,11 @@
       {{-- ── Kiri: Konten Detail ── --}}
       <div class="pd-left-content">
 
+        @if($dynamicSections->isNotEmpty())
+          @foreach($dynamicSections as $section)
+            @include('components.program.detail.section', ['section' => $section])
+          @endforeach
+        @else
         {{-- Focus & Target --}}
         <div class="focus-grid reveal">
           <div class="focus-box">
@@ -97,6 +105,7 @@
               </div>
             @endforeach
           </div>
+        @endif
         @endif
 
         {{-- Batch History --}}

@@ -74,6 +74,19 @@ class Program extends Model
         return $this->hasMany(ProgramSchema::class)->where('status', 'aktif')->orderBy('sort_order');
     }
 
+    public function sections()
+    {
+        return $this->hasMany(ProgramSection::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function activeSections()
+    {
+        return $this->hasMany(ProgramSection::class)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id');
+    }
+
     public function applicants()
     {
         return $this->hasMany(Applicant::class);

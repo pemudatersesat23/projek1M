@@ -125,6 +125,83 @@
 }
 
 /* ── Focus Grid ── */
+.pd-dynamic-section {
+  margin-bottom: 80px;
+}
+.pd-section-desc {
+  color: #64748b;
+  margin: -20px 0 24px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.pd-rich-text {
+  color: #334155;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.8;
+  padding: 28px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 24px;
+  margin-bottom: 48px;
+}
+.pd-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+.pd-content-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  background: white;
+  transition: all 0.3s;
+}
+.pd-number-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary, #1e40af), #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+}
+.pd-number-badge span {
+  font-size: 16px;
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+}
+.pd-card-eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #94a3b8;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.pd-card-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f1c23;
+}
+.pd-card-desc,
+.pd-timeline-desc {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.55;
+  margin-top: 6px;
+}
 .focus-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -619,4 +696,3 @@
   padding-left: 44px;
   line-height: 1.5;
 }
-

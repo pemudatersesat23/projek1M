@@ -118,6 +118,8 @@ class ProgramAndBatchSeeder extends Seeder
                 $data
             );
 
+            $this->syncDefaultSections($program, $data);
+
             // Clear existing batches to avoid duplicates if re-seeding
             $program->batches()->delete();
 
@@ -162,5 +164,83 @@ class ProgramAndBatchSeeder extends Seeder
                 'tanggal_selesai' => now()->addMonths(10),
             ]);
         }
+    }
+
+    private function syncDefaultSections(Program $program, array $data): void
+    {
+        $program->sections()->delete();
+        $order = 0;
+
+        $infoItems = array_values(array_filter([
+            $this->sectionItem('Target Peserta', $data['target_peserta'] ?? '', 'groups'),
+            $this->sectionItem('Materi Utama', $data['materi'] ?? '', 'menu_book'),
+            $this->sectionItem('Fokus Pelatihan', $program->getTranslation('focus', 'id', false) ?: '', 'track_changes'),
+            $this->sectionItem('Output Program', $program->getTranslation('output', 'id', false) ?: '', 'verified'),
+        ], fn ($item) => $item['description'] !== ''));
+
+        if (!empty($infoItems)) {
+            $this->createSection($program, 'info_grid', 'Informasi Program', '', $infoItems, $order++);
+        }
+
+        if ($program->slug === 'tokutei-ginou-tg') {
+            $tgItems = collect(config('programs.tg_fields', []))
+                ->map(fn ($field) => $this->sectionItem($field['display'] ?? '', '', $field['icon'] ?? 'work'))
+                ->values()
+                ->all();
+
+            $this->createSection(
+                $program,
+                'cards',
+                config('programs.tg_fields_by_slug.tokutei-ginou-tg.section_title', '10 Bidang Pekerjaan Tokutei Ginou'),
+                config('programs.tg_fields_by_slug.tokutei-ginou-tg.section_desc', ''),
+                $tgItems,
+                $order++
+            );
+        }
+
+        $benefits = $this->linesFromText($data['benefit'] ?? '');
+        if (!empty($benefits)) {
+            $this->createSection($program, 'checklist', 'Benefit Program', '', array_map(fn ($line) => $this->sectionItem($line), $benefits), $order++);
+        }
+
+        $steps = $this->linesFromText($data['alur_seleksi'] ?? '');
+        if (!empty($steps)) {
+            $this->createSection($program, 'timeline', 'Alur Seleksi', '', array_map(fn ($line) => $this->sectionItem($line), $steps), $order++);
+        }
+
+        if (!empty($data['faq'])) {
+            $faqItems = collect($data['faq'])
+                ->map(fn ($item) => $this->sectionItem($item['q'] ?? '', $item['a'] ?? '', 'help'))
+                ->values()
+                ->all();
+            $this->createSection($program, 'faq', 'FAQ', '', $faqItems, $order++);
+        }
+    }
+
+    private function createSection(Program $program, string $type, string $title, string $description, array $items, int $order): void
+    {
+        $program->sections()->create([
+            'type' => $type,
+            'title' => ['id' => $title],
+            'description' => $description === '' ? [] : ['id' => $description],
+            'items' => ['id' => $items],
+            'settings' => [],
+            'sort_order' => $order,
+            'is_active' => true,
+        ]);
+    }
+
+    private function sectionItem(string $title, string $description = '', string $icon = ''): array
+    {
+        return compact('title', 'description', 'icon');
+    }
+
+    private function linesFromText(string $text): array
+    {
+        return collect(preg_split('/\r\n|\r|\n/', $text) ?: [])
+            ->map(fn ($line) => trim(ltrim($line, "-• \t")))
+            ->filter()
+            ->values()
+            ->all();
     }
 }

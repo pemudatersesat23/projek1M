@@ -77,7 +77,7 @@ class HomeController extends Controller
         $program = Program::where('slug', $slug)
             ->with(['batches' => function($q) {
                 $q->orderBy('created_at', 'desc');
-            }, 'activeBatches', 'activeSchemas'])
+            }, 'activeBatches', 'activeSchemas', 'activeSections'])
             ->firstOrFail();
 
         $activeBatch  = $program->currentOpenBatch();

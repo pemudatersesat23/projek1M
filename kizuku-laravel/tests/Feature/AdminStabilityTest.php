@@ -208,6 +208,66 @@ class AdminStabilityTest extends TestCase
         $this->assertSame('Form Pendaftaran Engineering Jepang - Reguler', $form->getTranslation('title', 'id'));
     }
 
+    public function test_admin_can_create_program_with_dynamic_content_sections(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->actingAs($admin)->post(route('admin.programs.store'), [
+            'nama_program' => 'Program Universal Test',
+            'slug' => 'program-universal-test',
+            'deskripsi' => 'Deskripsi program universal.',
+            'durasi' => '3 Bulan',
+            'biaya' => 'Rp 1.000.000',
+            'status' => 'aktif',
+            'sort_order' => 1,
+            'sections' => [
+                [
+                    'type' => 'cards',
+                    'title' => 'Bidang Kerja Fleksibel',
+                    'description' => 'Konten ini berasal dari database.',
+                    'sort_order' => 0,
+                    'is_active' => 1,
+                    'items' => [
+                        ['title' => 'Perhotelan Premium', 'description' => 'Front office dan hospitality.', 'icon' => 'hotel'],
+                        ['title' => 'Manufaktur Modern', 'description' => 'Produksi dan quality control.', 'icon' => 'factory'],
+                    ],
+                ],
+                [
+                    'type' => 'checklist',
+                    'title' => 'Keunggulan Program',
+                    'description' => '',
+                    'sort_order' => 1,
+                    'is_active' => 1,
+                    'items' => [
+                        ['title' => 'Bisa diatur dari dashboard', 'description' => '', 'icon' => 'check'],
+                    ],
+                ],
+            ],
+        ]);
+
+        $program = Program::where('slug', 'program-universal-test')->firstOrFail();
+        $response->assertRedirect(route('admin.programs.index'));
+
+        $this->assertCount(2, $program->sections);
+        $this->assertSame('Bidang Kerja Fleksibel', $program->sections()->first()->getTranslation('title', 'id'));
+
+        Batch::create([
+            'program_id' => $program->id,
+            'nama_batch' => ['id' => 'Batch Universal'],
+            'status' => 'dibuka',
+            'tanggal_buka' => now()->subDay(),
+            'tanggal_tutup' => now()->addDay(),
+            'cta_type' => 'whatsapp',
+        ]);
+
+        $this->get(route('programs.show', $program->slug))
+            ->assertOk()
+            ->assertSee('Bidang Kerja Fleksibel')
+            ->assertSee('Konten ini berasal dari database.')
+            ->assertSee('Perhotelan Premium')
+            ->assertSee('Bisa diatur dari dashboard');
+    }
+
     public function test_response_detail_rejects_applicant_from_different_form_or_without_form(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);

@@ -4,6 +4,8 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use App\Models\ProgramSection;
 
 class ProgramRequest extends FormRequest
 {
@@ -66,6 +68,16 @@ class ProgramRequest extends FormRequest
             'is_featured' => 'boolean',
             'sort_order' => 'nullable|integer',
             'has_schema' => 'boolean',
+            'sections' => 'nullable|array',
+            'sections.*.type' => ['nullable', Rule::in(array_keys(ProgramSection::TYPES))],
+            'sections.*.title' => 'nullable|string|max:255',
+            'sections.*.description' => 'nullable|string',
+            'sections.*.sort_order' => 'nullable|integer',
+            'sections.*.is_active' => 'nullable|boolean',
+            'sections.*.items' => 'nullable|array',
+            'sections.*.items.*.title' => 'nullable|string|max:255',
+            'sections.*.items.*.description' => 'nullable|string',
+            'sections.*.items.*.icon' => 'nullable|string|max:80',
         ];
     }
 }

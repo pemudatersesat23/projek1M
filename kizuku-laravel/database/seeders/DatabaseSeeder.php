@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
 
         // ═══ DATA PROGRAM & BATCH ═══
         $this->call(ProgramAndBatchSeeder::class);
+        $this->call(KizukuProgramsFromDocumentSeeder::class);
+        $this->call(KizukuProgramFormsFromDocumentSeeder::class);
 
         // ═══ DATA BERITA ═══
         $beritas = [
