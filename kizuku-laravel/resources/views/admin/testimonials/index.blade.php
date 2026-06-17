@@ -56,7 +56,7 @@
                   <a href="{{ route('admin.testimonials.edit', $testi) }}" class="p-2 text-slate-400 hover:text-primary transition-colors">
                     <span class="material-symbols-outlined text-lg">edit</span>
                   </a>
-                  <form action="{{ route('admin.testimonials.destroy', $testi) }}" method="POST" onsubmit="return confirm('Hapus testimoni ini?')">
+                  <form action="{{ route('admin.testimonials.destroy', $testi) }}" method="POST" data-confirm="Hapus testimoni ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
                     @csrf @method('DELETE')
                     <button class="p-2 text-slate-400 hover:text-accent-red transition-colors">
                       <span class="material-symbols-outlined text-lg">delete</span>

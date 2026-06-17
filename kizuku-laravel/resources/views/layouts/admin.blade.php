@@ -173,25 +173,12 @@
 
       {{-- Page Content --}}
       <div class="p-4 lg:p-8">
-        {{-- Flash Messages --}}
-        @if(session('success'))
-          <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3">
-            <span class="material-symbols-outlined text-emerald-600">check_circle</span>
-            <span class="text-sm font-medium text-emerald-700">{{ session('success') }}</span>
-          </div>
-        @endif
-
-        @if(session('error'))
-          <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3">
-            <span class="material-symbols-outlined text-red-600">error</span>
-            <span class="text-sm font-medium text-red-700">{{ session('error') }}</span>
-          </div>
-        @endif
-
         @yield('admin-content')
       </div>
     </main>
   </div>
+
+  @include('components.app-alerts')
 
   <script>
     function toggleSidebar() {

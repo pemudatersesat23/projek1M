@@ -874,7 +874,13 @@
     }
 
     async function deleteField(id, card) {
-        if (!confirm('Delete this question?')) return;
+        const confirmed = await window.KizukuAlert.confirm({
+            type: 'warning',
+            title: 'Hapus Pertanyaan',
+            message: 'Delete this question?',
+            confirmText: 'Ya, hapus',
+        });
+        if (!confirmed) return;
         try {
             const res = await fetch(`/dashboard-admin/forms/${formId}/fields/${id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken } });
             if (res.ok) {
@@ -900,7 +906,7 @@
         try {
             const res = await fetch(`/dashboard-admin/forms/${formId}/publish`, { method: 'POST', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken } });
             const data = await res.json();
-            if (res.ok) { showToast('Form published!'); setTimeout(() => location.reload(), 1000); } else alert(data.message || 'Validation failed.');
+            if (res.ok) { showToast('Form published!'); setTimeout(() => location.reload(), 1000); } else window.KizukuAlert.alert(data.message || 'Validation failed.', { type: 'error', title: 'Publish Gagal' });
         } catch(e) { console.error(e); }
     }
 
@@ -918,14 +924,11 @@
         fetch(`/dashboard-admin/forms/${formId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) }).then(() => showToast('Form metadata saved'));
     }
 
-    function showToast(msg) {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = 'bg-slate-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-xl mb-3 translate-y-10 opacity-0 transition-all duration-300 flex items-center gap-2';
-        toast.innerHTML = `<span class="material-symbols-outlined text-[18px] text-emerald-400">check_circle</span> ${msg}`;
-        container.appendChild(toast);
-        requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
-        setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
+    function showToast(msg, type = 'success') {
+        window.KizukuAlert.notify({
+            type: type === 'error' ? 'error' : 'success',
+            message: msg,
+        });
     }
 
     renderAll();

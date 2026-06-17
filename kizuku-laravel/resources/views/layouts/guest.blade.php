@@ -463,5 +463,6 @@
         </div>
     </div>
 
+    @include('components.app-alerts')
 </body>
 </html>

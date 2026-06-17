@@ -9,13 +9,6 @@
     </a>
   </div>
 
-  @if(session('success'))
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-3">
-      <span class="material-symbols-outlined">check_circle</span>
-      <p class="font-bold text-sm">{{ session('success') }}</p>
-    </div>
-  @endif
-
   <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
@@ -58,7 +51,7 @@
                   <a href="{{ route('admin.faqs.edit', $faq) }}" class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
                     <span class="material-symbols-outlined text-[20px]">edit</span>
                   </a>
-                  <form action="{{ route('admin.faqs.destroy', $faq) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus FAQ ini?');">
+                  <form action="{{ route('admin.faqs.destroy', $faq) }}" method="POST" class="inline-block" data-confirm="Yakin ingin menghapus FAQ ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
                     @csrf @method('DELETE')
                     <button type="submit" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Hapus">
                       <span class="material-symbols-outlined text-[20px]">delete</span>

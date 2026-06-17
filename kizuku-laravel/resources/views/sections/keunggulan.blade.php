@@ -34,13 +34,13 @@
     <style>
         .keunggulan-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
         }
 
         .keunggulan-card {
             background: #fff;
-            padding: 40px 30px;
+            padding: 36px 22px;
             border-radius: 24px;
             border: 1px solid #f1f5f9;
             box-shadow: 0 10px 30px rgba(0,0,0,0.02);
@@ -96,8 +96,18 @@
         }
 
         @media (max-width: 640px) {
+            .keunggulan-grid {
+                grid-template-columns: 1fr;
+            }
+
             .keunggulan-card {
                 padding: 30px 20px;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1023px) {
+            .keunggulan-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
     </style>

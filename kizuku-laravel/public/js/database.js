@@ -107,16 +107,35 @@ function resetForm() {
     document.getElementById('add-pendidikan').value = 'SMA/SMK';
 }
 
-function hapusSiswa(id) {
-    if (!confirm('Yakin ingin menghapus data siswa ini?')) return;
+async function hapusSiswa(id) {
+    const confirmed = await window.KizukuAlert.confirm({
+        type: 'warning',
+        title: 'Hapus Data Siswa',
+        message: 'Yakin ingin menghapus data siswa ini?',
+        confirmText: 'Ya, hapus',
+    });
+    if (!confirmed) return;
     siswas = siswas.filter(s => s.id !== id); saveDB(); filterSiswa(); updateStats();
 }
 
-function editStatus(id) {
+async function editStatus(id) {
     const s = siswas.find(s => s.id === id); if (!s) return;
     const opts = ['Aktif', 'Proses', 'Berangkat', 'Lulus'];
-    const newStat = prompt(`Ubah status "${s.nama}":\n(${opts.join(' / ')})`, s.status);
-    if (newStat && opts.includes(newStat)) { s.status = newStat; saveDB(); filterSiswa(); updateStats(); }
+    const newStat = await window.KizukuAlert.select({
+        type: 'info',
+        title: 'Ubah Status Siswa',
+        message: `Pilih status baru untuk "${s.nama}".`,
+        choices: opts,
+        value: s.status,
+        confirmText: 'Simpan',
+    });
+    if (newStat && opts.includes(newStat)) {
+        s.status = newStat;
+        saveDB();
+        filterSiswa();
+        updateStats();
+        window.KizukuAlert.success('Status siswa berhasil diperbarui.');
+    }
 }
 
 function exportCSV() {

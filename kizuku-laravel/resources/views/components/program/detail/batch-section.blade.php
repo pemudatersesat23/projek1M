@@ -300,7 +300,10 @@
         const hasSchema = {{ $program->hasActiveSchemas() ? 'true' : 'false' }};
         if (hasSchema && !selectedSchemaId) {
           e.preventDefault();
-          alert('Silakan pilih skema pendaftaran terlebih dahulu.');
+          window.KizukuAlert.alert('Silakan pilih skema pendaftaran terlebih dahulu.', {
+            type: 'warning',
+            title: 'Pilih Skema',
+          });
           document.querySelector('.schema-selector-card')?.scrollIntoView({ behavior: 'smooth' });
           return;
         }

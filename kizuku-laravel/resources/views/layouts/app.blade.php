@@ -507,6 +507,8 @@
     </div>
   </div>
 
+  @include('components.app-alerts')
+
   <script src="{{ asset('js/navbar.js') }}"></script>
   <script src="{{ asset('js/lang-toggle.js') }}"></script>
   <script>
@@ -629,7 +631,10 @@
         const question = document.getElementById('wa_question').value;
 
         if (!name || !program || !question) {
-            alert('Mohon isi semua data agar admin dapat membantu Anda lebih baik.');
+            window.KizukuAlert.alert('Mohon isi semua data agar admin dapat membantu Anda lebih baik.', {
+              type: 'warning',
+              title: 'Data Belum Lengkap',
+            });
             return;
         }
 

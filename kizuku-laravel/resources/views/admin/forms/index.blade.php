@@ -4,26 +4,6 @@
 
 @section('admin-content')
 
-{{-- Flash Messages --}}
-@if(session('success'))
-<div id="flash-success" class="mb-4 flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium shadow-sm">
-    <span class="material-symbols-outlined text-emerald-500 text-[20px]">check_circle</span>
-    {{ session('success') }}
-    <button onclick="document.getElementById('flash-success').remove()" class="ml-auto text-emerald-400 hover:text-emerald-600">
-        <span class="material-symbols-outlined text-[18px]">close</span>
-    </button>
-</div>
-@endif
-@if(session('error'))
-<div id="flash-error" class="mb-4 flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-sm font-medium shadow-sm">
-    <span class="material-symbols-outlined text-red-500 text-[20px]">error</span>
-    {{ session('error') }}
-    <button onclick="document.getElementById('flash-error').remove()" class="ml-auto text-red-400 hover:text-red-600">
-        <span class="material-symbols-outlined text-[18px]">close</span>
-    </button>
-</div>
-@endif
-
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>

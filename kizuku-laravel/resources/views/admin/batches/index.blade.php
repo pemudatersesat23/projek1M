@@ -54,7 +54,7 @@
                 <a href="{{ route('admin.batches.edit', $batch) }}" class="p-2 text-slate-400 hover:text-primary transition-colors hover:bg-primary/5 rounded-lg" title="Edit">
                   <span class="material-symbols-outlined">edit</span>
                 </a>
-                <form action="{{ route('admin.batches.destroy', $batch) }}" method="POST" onsubmit="return confirm('Hapus batch ini?')">
+                <form action="{{ route('admin.batches.destroy', $batch) }}" method="POST" data-confirm="Hapus batch ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
                   @csrf @method('DELETE')
                   <button type="submit" class="p-2 text-slate-400 hover:text-accent-red transition-colors hover:bg-red-50 rounded-lg" title="Hapus">
                     <span class="material-symbols-outlined">delete</span>

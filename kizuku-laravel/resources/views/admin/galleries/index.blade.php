@@ -13,13 +13,6 @@
     </a>
   </div>
 
-  @if(session('success'))
-    <div class="mb-6 p-4 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center gap-3">
-      <span class="material-symbols-outlined text-emerald-500">check_circle</span>
-      <span class="text-sm font-medium text-emerald-700">{{ session('success') }}</span>
-    </div>
-  @endif
-
   {{-- Gallery List --}}
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     @forelse($galleries as $g)
@@ -30,7 +23,7 @@
           <a href="{{ route('admin.galleries.edit', $g) }}" class="w-10 h-10 bg-white text-slate-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
             <span class="material-symbols-outlined text-lg">edit</span>
           </a>
-          <form method="POST" action="{{ route('admin.galleries.destroy', $g) }}" onsubmit="return confirm('Hapus foto ini?')">
+          <form method="POST" action="{{ route('admin.galleries.destroy', $g) }}" data-confirm="Hapus foto ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
             @csrf @method('DELETE')
             <button type="submit" class="w-10 h-10 bg-white text-accent-red rounded-full flex items-center justify-center hover:bg-accent-red hover:text-white transition-colors">
               <span class="material-symbols-outlined text-lg">delete</span>

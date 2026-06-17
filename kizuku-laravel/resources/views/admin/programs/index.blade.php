@@ -63,7 +63,7 @@
                 <a href="{{ route('admin.programs.edit', $program) }}" class="p-2 text-slate-400 hover:text-primary transition-colors hover:bg-primary/5 rounded-lg" title="Edit">
                   <span class="material-symbols-outlined">edit</span>
                 </a>
-                <form action="{{ route('admin.programs.destroy', $program) }}" method="POST" onsubmit="return confirm('Hapus program ini secara logikal (Soft Delete)?')">
+                <form action="{{ route('admin.programs.destroy', $program) }}" method="POST" data-confirm="Hapus program ini secara logikal (Soft Delete)?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
                   @csrf @method('DELETE')
                   <button type="submit" class="p-2 text-slate-400 hover:text-accent-red transition-colors hover:bg-red-50 rounded-lg" title="Hapus">
                     <span class="material-symbols-outlined">delete</span>

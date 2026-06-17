@@ -39,12 +39,6 @@
         </p>
       </div>
 
-      @if(session('success'))
-        <div style="padding:24px; border-radius:32px; background:#ecfdf5; color:#059669; font-weight:800; font-size:15px; margin-bottom:40px; border:1px solid #dcfce7; text-align:center;">
-          ✅ {{ session('success') }}
-        </div>
-      @endif
-
       <form action="{{ route('pendaftaran.store') }}" method="POST"
             enctype="multipart/form-data"
             class="form-grid">

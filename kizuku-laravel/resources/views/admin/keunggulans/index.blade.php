@@ -62,7 +62,7 @@
                                 <a href="{{ route('admin.keunggulans.edit', $item) }}" class="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Edit">
                                     <span class="material-symbols-outlined text-xl">edit</span>
                                 </a>
-                                <form action="{{ route('admin.keunggulans.destroy', $item) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus keunggulan ini?')">
+                                <form action="{{ route('admin.keunggulans.destroy', $item) }}" method="POST" class="inline-block" data-confirm="Yakin ingin menghapus keunggulan ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">

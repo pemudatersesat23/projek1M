@@ -195,6 +195,8 @@
     <a class="btn btn-primary admin-fab" href="{{ route('admin.dashboard') }}">⚙️ Admin Panel</a>
   @endauth
 
+  @include('components.app-alerts')
+
   <script src="{{ asset('js/navbar.js') }}"></script>
   @stack('scripts')
 

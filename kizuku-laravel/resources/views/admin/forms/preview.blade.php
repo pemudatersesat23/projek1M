@@ -179,7 +179,7 @@
         </div>
 
         <!-- Field Cards -->
-        <form onsubmit="event.preventDefault(); alert('Ini adalah mode pratinjau. Form tidak dapat dikirim.');">
+        <form onsubmit="event.preventDefault(); window.KizukuAlert.alert('Ini adalah mode pratinjau. Form tidak dapat dikirim.', { type: 'info', title: 'Mode Pratinjau' });">
             @forelse($form->fields()->ordered()->get() as $field)
                 @if($field->status === 'aktif')
                     @php

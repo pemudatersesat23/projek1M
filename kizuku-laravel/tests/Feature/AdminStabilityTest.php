@@ -28,7 +28,7 @@ class AdminStabilityTest extends TestCase
             ->assertSee('Export Data Pendaftar');
     }
 
-    public function test_export_download_returns_applicant_csv(): void
+    public function test_export_download_returns_applicant_excel(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
         [$program, $batch] = $this->createProgramAndBatch();
@@ -50,9 +50,110 @@ class AdminStabilityTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.export.download'));
 
         $response->assertOk()
-            ->assertHeader('content-type', 'text/csv; charset=UTF-8');
+            ->assertHeader('content-type', 'application/vnd.ms-excel; charset=UTF-8');
 
-        $this->assertStringContainsString('Budi Export', $response->streamedContent());
+        $this->assertStringContainsString('.xls', $response->headers->get('content-disposition'));
+        $content = $response->streamedContent();
+        $this->assertStringContainsString('<table', $content);
+        $this->assertStringContainsString('Budi Export', $content);
+    }
+
+    public function test_export_status_filter_affects_preview_and_excel_download(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [$program, $batch] = $this->createProgramAndBatch();
+
+        Applicant::create([
+            'program_id' => $program->id,
+            'batch_id' => $batch->id,
+            'nama' => 'Budi Baru',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Makassar',
+            'tanggal_lahir' => '2000-01-01',
+            'alamat' => 'Jl. Test',
+            'phone' => '08123456789',
+            'email' => 'budi.baru@example.com',
+            'pendidikan' => 'SMA',
+            'status_seleksi' => 'baru',
+        ]);
+
+        Applicant::create([
+            'program_id' => $program->id,
+            'batch_id' => $batch->id,
+            'nama' => 'Sari Lolos',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Makassar',
+            'tanggal_lahir' => '2000-01-01',
+            'alamat' => 'Jl. Test',
+            'phone' => '08123456780',
+            'email' => 'sari.lolos@example.com',
+            'pendidikan' => 'SMA',
+            'status_seleksi' => 'lolos',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.export', ['status' => 'lolos']))
+            ->assertOk()
+            ->assertSee('Sari Lolos')
+            ->assertDontSee('Budi Baru');
+
+        $content = $this->actingAs($admin)
+            ->get(route('admin.export.download', ['status' => 'lolos']))
+            ->assertOk()
+            ->streamedContent();
+
+        $this->assertStringContainsString('Sari Lolos', $content);
+        $this->assertStringNotContainsString('Budi Baru', $content);
+    }
+
+    public function test_export_program_and_batch_filters_affect_preview_and_excel_download(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [$programA, $batchA] = $this->createProgramAndBatch('program-export-a');
+        [$programB, $batchB] = $this->createProgramAndBatch('program-export-b');
+
+        Applicant::create([
+            'program_id' => $programA->id,
+            'batch_id' => $batchA->id,
+            'nama' => 'Applicant Program A',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Makassar',
+            'tanggal_lahir' => '2000-01-01',
+            'alamat' => 'Jl. Test',
+            'phone' => '08123456789',
+            'email' => 'program.a@example.com',
+            'pendidikan' => 'SMA',
+            'status_seleksi' => 'baru',
+        ]);
+
+        Applicant::create([
+            'program_id' => $programB->id,
+            'batch_id' => $batchB->id,
+            'nama' => 'Applicant Program B',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Makassar',
+            'tanggal_lahir' => '2000-01-01',
+            'alamat' => 'Jl. Test',
+            'phone' => '08123456780',
+            'email' => 'program.b@example.com',
+            'pendidikan' => 'SMA',
+            'status_seleksi' => 'review',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.export', ['program_id' => $programB->id]))
+            ->assertOk()
+            ->assertSee('Applicant Program B')
+            ->assertDontSee('Applicant Program A')
+            ->assertDontSee('Filter Program ID');
+
+        $content = $this->actingAs($admin)
+            ->get(route('admin.export.download', ['batch_id' => $batchA->id]))
+            ->assertOk()
+            ->streamedContent();
+
+        $this->assertStringContainsString('Applicant Program A', $content);
+        $this->assertStringNotContainsString('Applicant Program B', $content);
     }
 
     public function test_admin_can_open_builder_and_empty_responses_page(): void

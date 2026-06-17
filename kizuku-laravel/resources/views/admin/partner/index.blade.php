@@ -13,13 +13,6 @@
     </a>
   </div>
 
-  @if(session('success'))
-    <div class="mb-6 p-4 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center gap-3">
-      <span class="material-symbols-outlined text-emerald-600">check_circle</span>
-      <span class="text-sm font-medium text-emerald-700">{{ session('success') }}</span>
-    </div>
-  @endif
-
   {{-- List Kampus --}}
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @forelse($campuses as $campus)
@@ -35,7 +28,7 @@
             <a href="{{ route('admin.partner-campus.edit', $campus) }}" class="px-3 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">edit</span> Edit
             </a>
-            <form method="POST" action="{{ route('admin.partner-campus.destroy', $campus) }}" class="inline" onsubmit="return confirm('Hapus kampus ini?')">
+            <form method="POST" action="{{ route('admin.partner-campus.destroy', $campus) }}" class="inline" data-confirm="Hapus kampus ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
               @csrf @method('DELETE')
               <button type="submit" class="px-3 py-1.5 border border-red-200 text-accent-red rounded-lg text-xs font-medium hover:bg-red-50 transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-sm">delete</span> Hapus

@@ -62,7 +62,13 @@ function tambahBerita() {
     setTimeout(() => msg.style.display = 'none', 3000);
 }
 
-function hapusBerita(id) {
-    if (!confirm('Hapus berita ini?')) return;
+async function hapusBerita(id) {
+    const confirmed = await window.KizukuAlert.confirm({
+        type: 'warning',
+        title: 'Hapus Berita',
+        message: 'Hapus berita ini?',
+        confirmText: 'Ya, hapus',
+    });
+    if (!confirmed) return;
     newsData = newsData.filter(n => n.id !== id); saveNews(); renderNewsAdmin();
 }

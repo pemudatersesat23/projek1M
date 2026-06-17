@@ -100,7 +100,7 @@
                 <a href="{{ route('admin.applicants.show', $a) }}" class="p-2 text-slate-400 hover:text-primary transition-colors hover:bg-primary/5 rounded-lg" title="Detail">
                   <span class="material-symbols-outlined">visibility</span>
                 </a>
-                <form action="{{ route('admin.applicants.destroy', $a) }}" method="POST" onsubmit="return confirm('Hapus data pendaftar ini?')">
+                <form action="{{ route('admin.applicants.destroy', $a) }}" method="POST" data-confirm="Hapus data pendaftar ini?" data-confirm-type="warning" data-confirm-text="Ya, hapus">
                   @csrf @method('DELETE')
                   <button type="submit" class="p-2 text-slate-400 hover:text-accent-red transition-colors hover:bg-red-50 rounded-lg" title="Hapus">
                     <span class="material-symbols-outlined">delete</span>
