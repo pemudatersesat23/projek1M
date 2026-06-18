@@ -268,7 +268,7 @@ class KizukuProgramFormsFromDocumentSeeder extends Seeder
         return [
             $this->section('data_pribadi', 'Data Pribadi', 'user'),
             $this->text('nama_lengkap', 'Nama Lengkap Sesuai KTP / Paspor', true, null, 'applicant_name'),
-            $this->choice('jenis_kelamin', 'Jenis Kelamin', ['Laki-laki', 'Perempuan'], 'radio', $allRequired, 'applicant_gender'),
+            $this->choice('jenis_kelamin', 'Jenis Kelamin', ['L' => 'Laki-laki', 'P' => 'Perempuan'], 'radio', $allRequired, 'applicant_gender'),
             $this->text('tempat_lahir', 'Tempat Lahir', $allRequired, null, 'applicant_pob'),
             $this->field('tanggal_lahir', 'Tanggal Lahir', 'date', $allRequired, 'applicant_birth_date'),
             $this->textarea('alamat_domisili', 'Alamat Domisili', $allRequired, null, 'applicant_address'),
@@ -407,12 +407,18 @@ class KizukuProgramFormsFromDocumentSeeder extends Seeder
 
     private function options(array $labels): array
     {
-        return array_map(function (string $label) {
-            return [
-                'value' => str($label)->lower()->ascii()->replaceMatches('/[^a-z0-9]+/', '_')->trim('_')->toString(),
+        $options = [];
+
+        foreach ($labels as $value => $label) {
+            $options[] = [
+                'value' => is_string($value)
+                    ? $value
+                    : str($label)->lower()->ascii()->replaceMatches('/[^a-z0-9]+/', '_')->trim('_')->toString(),
                 'label' => $this->translated($label),
             ];
-        }, $labels);
+        }
+
+        return $options;
     }
 
     private function translated(string $value): array

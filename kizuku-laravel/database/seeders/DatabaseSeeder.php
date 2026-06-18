@@ -35,7 +35,9 @@ class DatabaseSeeder extends Seeder
         // ═══ DATA PROGRAM & BATCH ═══
         $this->call(ProgramAndBatchSeeder::class);
         $this->call(KizukuProgramsFromDocumentSeeder::class);
+        $this->call(OpenJune2026BatchesSeeder::class);
         $this->call(KizukuProgramFormsFromDocumentSeeder::class);
+        $this->call(KizukuTestApplicantsSeeder::class);
 
         // ═══ DATA BERITA ═══
         $beritas = [
