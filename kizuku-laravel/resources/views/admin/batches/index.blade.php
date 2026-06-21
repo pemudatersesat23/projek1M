@@ -13,6 +13,43 @@
     </a>
   </div>
 
+  <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
+    <form action="{{ route('admin.batches.index') }}" method="GET" class="flex flex-wrap gap-4 items-end">
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Filter Program</label>
+        <select name="program_id" class="w-full rounded-lg border-slate-300 text-sm focus:border-primary focus:ring-primary">
+          <option value="">Semua Program</option>
+          @foreach($programs as $program)
+            <option value="{{ $program->id }}" {{ request('program_id') == $program->id ? 'selected' : '' }}>
+              {{ $program->nama_program }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Filter Status</label>
+        <select name="status" class="w-full rounded-lg border-slate-300 text-sm focus:border-primary focus:ring-primary">
+          <option value="">Semua Status</option>
+          <option value="dibuka" {{ request('status') === 'dibuka' ? 'selected' : '' }}>Dibuka</option>
+          <option value="akan_dibuka" {{ request('status') === 'akan_dibuka' ? 'selected' : '' }}>Akan Dibuka</option>
+          <option value="ditutup" {{ request('status') === 'ditutup' ? 'selected' : '' }}>Ditutup</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button type="submit" class="px-5 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+          Terapkan Filter
+        </button>
+        @if(request()->hasAny(['program_id', 'status']))
+          <a href="{{ route('admin.batches.index') }}" class="px-4 py-2.5 text-slate-500 hover:bg-slate-100 font-medium rounded-lg transition-colors">
+            Reset
+          </a>
+        @endif
+      </div>
+    </form>
+  </div>
+
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-left">

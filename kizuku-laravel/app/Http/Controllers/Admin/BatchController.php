@@ -9,10 +9,22 @@ use App\Http\Requests\Admin\BatchRequest;
 
 class BatchController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $batches = Batch::with('program')->latest()->paginate(10);
-        return view('admin.batches.index', compact('batches'));
+        $query = Batch::with('program');
+
+        if ($request->filled('program_id')) {
+            $query->where('program_id', $request->program_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $batches = $query->latest()->paginate(10);
+        $programs = Program::active()->get();
+
+        return view('admin.batches.index', compact('batches', 'programs'));
     }
 
     public function create()
