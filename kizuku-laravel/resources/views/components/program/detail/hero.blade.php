@@ -13,6 +13,16 @@
     $hsColor = '#64748b';
     $hsText  = __('messages.program.status_labels.tutup');
   }
+
+  // Parse YouTube URL to embed format
+  $embedUrl = $program->video_url;
+  if ($embedUrl) {
+      if (preg_match('/[\\?\\&]v=([^\\?\\&]+)/', $embedUrl, $matches)) {
+          $embedUrl = 'https://www.youtube.com/embed/' . $matches[1];
+      } elseif (preg_match('/youtu\.be\/([^\\?\\&]+)/', $embedUrl, $matches)) {
+          $embedUrl = 'https://www.youtube.com/embed/' . $matches[1];
+      }
+  }
 @endphp
 
 <header class="program-detail-hero">
@@ -46,9 +56,9 @@
         <div style="position: relative;">
           <div style="position: absolute; top: -20px; left: -20px; right: 20px; bottom: 20px; background: var(--detail-primary); opacity: 0.1; border-radius: 40px; transform: rotate(-2deg); z-index: -1;"></div>
 
-          @if($program->video_url)
+          @if($embedUrl)
             <div class="video-container" style="border-radius:32px; overflow:hidden; box-shadow:0 30px 60px rgba(0,0,0,0.12); border: 8px solid white;">
-              <iframe width="100%" height="315" src="{{ $program->video_url }}"
+              <iframe width="100%" height="315" src="{{ $embedUrl }}"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>

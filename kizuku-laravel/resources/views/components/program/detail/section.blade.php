@@ -37,7 +37,6 @@
             <span>{{ $loop->iteration }}</span>
           </div>
           <div>
-            <span class="pd-card-eyebrow">Item {{ $loop->iteration }}</span>
             <span class="pd-card-title">{{ $item['title'] ?? '' }}</span>
             @if(!empty($item['description']))
               <span class="pd-card-desc">{{ $item['description'] }}</span>
