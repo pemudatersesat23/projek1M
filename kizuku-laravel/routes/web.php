@@ -130,6 +130,16 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class)->except(['show']);
     Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['show']);
     Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class)->except(['show']);
+
+    // Alur Pendaftaran
+    Route::post('alur-pendaftaran/reorder', [\App\Http\Controllers\Admin\AlurPendaftaranController::class, 'reorder'])->name('alur.reorder');
+    Route::resource('alur-pendaftaran', \App\Http\Controllers\Admin\AlurPendaftaranController::class)->names([
+        'index' => 'alur.index',
+        'store' => 'alur.store',
+        'update' => 'alur.update',
+        'destroy' => 'alur.destroy',
+    ])->except(['show']);
+
     Route::resource('keunggulans', \App\Http\Controllers\Admin\KeunggulanController::class)->except(['show']);
 
     // CRUD Applicants

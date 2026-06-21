@@ -155,28 +155,56 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: 20px;
   border-radius: 16px;
   border: 1px solid #f1f5f9;
   background: white;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
+}
+.pd-content-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--detail-primary);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.pd-content-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 103, 163, 0.08);
+  border-color: rgba(0, 103, 163, 0.15);
+}
+.pd-content-card:hover::before {
+  opacity: 1;
 }
 .pd-number-badge {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary, #1e40af), #3b82f6);
+  background: rgba(0, 103, 163, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+  box-shadow: inset 0 0 0 1px rgba(0, 103, 163, 0.1);
+  transition: all 0.3s;
 }
 .pd-number-badge span {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
-  color: white;
+  color: var(--detail-primary);
   line-height: 1;
+}
+.pd-content-card:hover .pd-number-badge {
+  background: var(--detail-primary);
+  box-shadow: 0 8px 20px rgba(0, 103, 163, 0.25);
+  transform: scale(1.05);
+}
+.pd-content-card:hover .pd-number-badge span {
+  color: white;
 }
 .pd-card-eyebrow {
   display: block;

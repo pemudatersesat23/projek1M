@@ -139,7 +139,8 @@ class HomeController extends Controller
 
     public function showAlur()
     {
-        return view('alur-pendaftaran');
+        $steps = \App\Models\AlurPendaftaran::where('is_active', true)->orderBy('order')->get();
+        return view('alur-pendaftaran', compact('steps'));
     }
 
     public function showAllPrograms()

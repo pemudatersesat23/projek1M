@@ -40,6 +40,54 @@ class SettingSeeder extends Seeder
                 'value' => '5',
                 'type' => 'number',
             ],
+            [
+                'key' => 'instagram_link',
+                'label' => 'Link Instagram',
+                'value' => 'https://instagram.com/kizuku_academy',
+                'type' => 'text',
+            ],
+            [
+                'key' => 'tiktok_link',
+                'label' => 'Link TikTok',
+                'value' => 'https://tiktok.com/@kizuku_academy',
+                'type' => 'text',
+            ],
+            [
+                'key' => 'youtube_link',
+                'label' => 'Link YouTube',
+                'value' => 'https://youtube.com/@kizuku_academy',
+                'type' => 'text',
+            ],
+            [
+                'key' => 'alur_tag',
+                'label' => 'Tagline Alur Pendaftaran',
+                'value' => '✦ PROSES SELEKSI',
+                'type' => 'text',
+            ],
+            [
+                'key' => 'alur_title',
+                'label' => 'Judul Alur Pendaftaran',
+                'value' => 'Alur Pendaftaran & <br><span class="text-primary">Keberangkatan</span>',
+                'type' => 'textarea',
+            ],
+            [
+                'key' => 'alur_subtitle',
+                'label' => 'Subjudul Alur Pendaftaran',
+                'value' => 'Pahami setiap langkah perjalanannmu menuju karier sukses di Jepang bersama LPK Kizuku.',
+                'type' => 'textarea',
+            ],
+            [
+                'key' => 'alur_cta_title',
+                'label' => 'Judul CTA Alur Pendaftaran',
+                'value' => 'Mulai Langkah Pertama Anda Hari Ini',
+                'type' => 'text',
+            ],
+            [
+                'key' => 'alur_cta_btn',
+                'label' => 'Teks Tombol CTA Alur Pendaftaran',
+                'value' => 'Pilih Program & Daftar',
+                'type' => 'text',
+            ],
         ];
 
         foreach ($settings as $setting) {

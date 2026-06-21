@@ -431,10 +431,10 @@
           </div>
           <p class="ft-desc">{{ __('messages.nav.home') === 'Beranda' ? 'Lembaga pelatihan kerja terpercaya yang mempersiapkan generasi Indonesia untuk bersaing dan berkarier di Jepang.' : 'インドネシアの次世代が日本で競争し、キャリアを築くための信頼できる職業訓練機関です。' }}</p>
           <div class="ft-socials">
-            <a class="ft-soc" href="#" aria-label="Instagram">📸</a>
-            <a class="ft-soc" href="#" aria-label="TikTok">🎵</a>
-            <a class="ft-soc" href="#" aria-label="YouTube">▶️</a>
-            <a class="ft-soc" href="https://wa.me/{{ $appSettings['whatsapp_number'] }}" aria-label="WhatsApp">💬</a>
+            <a class="ft-soc" href="{{ $appSettings['instagram_link'] ?? '#' }}" target="_blank" aria-label="Instagram">📸</a>
+            <a class="ft-soc" href="{{ $appSettings['tiktok_link'] ?? '#' }}" target="_blank" aria-label="TikTok">🎵</a>
+            <a class="ft-soc" href="{{ $appSettings['youtube_link'] ?? '#' }}" target="_blank" aria-label="YouTube">▶️</a>
+            <a class="ft-soc" href="https://wa.me/{{ $appSettings['whatsapp_number'] }}" target="_blank" aria-label="WhatsApp">💬</a>
           </div>
         </div>
         <div class="ft-col">

@@ -108,40 +108,7 @@
         </div>
       </div>
 
-      {{-- Detail Konten --}}
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">description</span> Detail Konten
-        </h4>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Target Peserta</label>
-            <textarea name="target_peserta" rows="2" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('target_peserta', $program->target_peserta ?? '') }}</textarea>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Fokus Pelatihan</label>
-              <textarea name="focus" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Bahasa Jepang, Skill Kerja...">{{ old('focus', $program->focus ?? '') }}</textarea>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Output Program</label>
-              <textarea name="output" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Contoh: Siap kerja ke Jepang...">{{ old('output', $program->output ?? '') }}</textarea>
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Benefit Program</label>
-            <textarea name="benefit" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Gunakan tanda hubung (-) untuk list...">{{ old('benefit', $program->benefit ?? '') }}</textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Alur Seleksi</label>
-            <textarea name="alur_seleksi" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20">{{ old('alur_seleksi', $program->alur_seleksi ?? '') }}</textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Materi Utama</label>
-            <textarea name="materi" rows="3" class="w-full rounded-lg border-slate-200 focus:border-primary focus:ring-primary/20" placeholder="Materi yang akan dipelajari...">{{ old('materi', $program->materi ?? '') }}</textarea>
-          </div>
-        </div>
-      </div>
+
 
       {{-- Konten Halaman Dinamis --}}
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">

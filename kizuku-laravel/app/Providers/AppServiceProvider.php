@@ -29,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
             'admin_email'     => 'info@kizuku-academy.com',
             'office_address'  => 'Jl. Bontotangnga, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
             'office_hours'    => 'Senin - Sabtu, 08.00 - 17.00 WIB',
+            'instagram_link'  => 'https://instagram.com/kizuku_academy',
+            'tiktok_link'     => 'https://tiktok.com/@kizuku_academy',
+            'youtube_link'    => 'https://youtube.com/@kizuku_academy',
         ];
 
         View::share('appSettings', Schema::hasTable('settings') ? [
@@ -36,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
             'admin_email'     => Setting::get('admin_email', $defaultSettings['admin_email']),
             'office_address'  => Setting::get('office_address', $defaultSettings['office_address']),
             'office_hours'    => Setting::get('office_hours', $defaultSettings['office_hours']),
+            'instagram_link'  => Setting::get('instagram_link', $defaultSettings['instagram_link']),
+            'tiktok_link'     => Setting::get('tiktok_link', $defaultSettings['tiktok_link']),
+            'youtube_link'    => Setting::get('youtube_link', $defaultSettings['youtube_link']),
         ] : $defaultSettings);
 
         // View Composer: inject $keunggulans ke section keunggulan

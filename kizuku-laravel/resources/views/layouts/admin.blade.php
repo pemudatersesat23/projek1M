@@ -111,6 +111,10 @@
           <span class="material-symbols-outlined text-[22px]">assignment</span>
           <span class="font-medium text-sm">Data Program</span>
         </a>
+        <a href="{{ route('admin.alur.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.alur.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
+          <span class="material-symbols-outlined text-[22px]">alt_route</span>
+          <span class="font-medium text-sm">Alur Pendaftaran</span>
+        </a>
         <a href="{{ route('admin.batches.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group {{ request()->routeIs('admin.batches.*') ? 'sidebar-item-active' : 'text-slate-600 hover:bg-slate-50' }}">
           <span class="material-symbols-outlined text-[22px]">layers</span>
           <span class="font-medium text-sm">Batch Pendaftaran</span>

@@ -183,9 +183,9 @@
 <header class="alur-hero">
     <div class="container">
         <div class="reveal">
-            <div class="alur-tag">{{ __('messages.alur.tag') }}</div>
-            <h1 class="alur-h1">{!! __('messages.alur.title') !!}</h1>
-            <p class="alur-p">{{ __('messages.alur.subtitle') }}</p>
+            <div class="alur-tag">{{ \App\Models\Setting::get('alur_tag', '✦ PROSES SELEKSI') }}</div>
+            <h1 class="alur-h1">{!! \App\Models\Setting::get('alur_title', 'Alur Pendaftaran & <br><span class="text-primary">Keberangkatan</span>') !!}</h1>
+            <p class="alur-p">{{ \App\Models\Setting::get('alur_subtitle', 'Pahami setiap langkah perjalanannmu menuju karier sukses di Jepang bersama LPK Kizuku.') }}</p>
         </div>
     </div>
 </header>
@@ -193,26 +193,25 @@
 <section class="process-section">
     <div class="container">
         <div class="timeline">
-            @for ($i = 1; $i <= 5; $i++)
-                @php $step = "step{$i}"; @endphp
+            @foreach ($steps as $index => $step)
                 <div class="timeline-item reveal">
                     <div class="timeline-dot">
-                        <span class="material-symbols-outlined">{{ __('messages.alur.' . $step . '.icon') }}</span>
+                        <span class="material-symbols-outlined">{{ $step->icon }}</span>
                     </div>
                     <div class="timeline-content">
-                        <span class="timeline-step">Step 0{{ $i }}</span>
-                        <h3 class="timeline-title">{{ __('messages.alur.' . $step . '.title') }}</h3>
-                        <p class="timeline-desc">{{ __('messages.alur.' . $step . '.desc') }}</p>
+                        <span class="timeline-step">Step {{ sprintf('%02d', $index + 1) }}</span>
+                        <h3 class="timeline-title">{{ $step->getTranslation('title', app()->getLocale(), false) ?: $step->getTranslation('title', 'id') }}</h3>
+                        <p class="timeline-desc">{{ $step->getTranslation('description', app()->getLocale(), false) ?: $step->getTranslation('description', 'id') }}</p>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </div>
 
         <div class="cta-section reveal">
-            <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 16px;">{{ __('messages.alur.cta_title') }}</h2>
+            <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 16px;">{{ \App\Models\Setting::get('alur_cta_title', 'Mulai Langkah Pertama Anda Hari Ini') }}</h2>
             <p style="opacity: 0.8; margin-bottom: 40px; font-size: 18px;">{{ __('messages.home.program_p') }}</p>
             <a href="{{ route('programs.index') }}" class="btn btn-primary" style="padding: 18px 40px; font-size: 16px; font-weight: 900;">
-                {{ __('messages.alur.cta_btn') }}
+                {{ \App\Models\Setting::get('alur_cta_btn', 'Pilih Program & Daftar') }}
             </a>
         </div>
     </div>
