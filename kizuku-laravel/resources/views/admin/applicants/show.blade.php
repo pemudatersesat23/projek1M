@@ -180,97 +180,217 @@
       @endif
 
 
-      {{-- Dynamic Answers (Form Builder) --}}
-      <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">dynamic_form</span>
-          Jawaban Formulir Dinamis
-        </h4>
-        @if($applicant->dynamicAnswers->isNotEmpty())
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($applicant->dynamicAnswers as $answer)
-              @php
-                $snapLabel = $answer->field_label_snapshot;
-                $displayLabel = is_array($snapLabel)
-                  ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Field'))
-                  : (string) $snapLabel;
-                
-                $rawVal = $answer->value;
-                $optionsSnap = $answer->field_options_snapshot ?? $answer->formField?->options;
-                if (is_string($optionsSnap)) {
-                    $optionsSnap = json_decode($optionsSnap, true);
-                }
-                
-                // Helper untuk mapping value ke label
-                $mapValueToLabel = function($v) use ($optionsSnap) {
-                    if (is_array($optionsSnap)) {
-                        foreach ($optionsSnap as $opt) {
-                            if (isset($opt['value']) && $opt['value'] == $v) {
-                                return $opt['label']['id'] ?? ($opt['label']['jp'] ?? $v);
-                            }
-                        }
-                    }
-                    return $v;
-                };
-
-                if (is_array($rawVal)) {
-                    $val = array_map($mapValueToLabel, $rawVal);
+      {{-- Data Formulir Dinamis Terstruktur --}}
+      @if($applicant->form && $applicant->form->fields->isNotEmpty())
+        @php
+            // Ambil semua field form, siapkan dictionary jawaban dan file
+            $answersDict = $applicant->dynamicAnswers->keyBy('form_field_id');
+            $filesDict = $applicant->dynamicFiles->keyBy('form_field_id');
+            
+            // Group fields by section sesuai urutan form
+            $sections = [];
+            $currentSection = null;
+            
+            foreach($applicant->form->fields as $field) {
+                if ($field->type === 'section') {
+                    $currentSection = $field;
+                    $sections[$field->id] = ['section' => $field, 'items' => []];
                 } else {
-                    $val = $mapValueToLabel($rawVal);
+                    $sectionId = $currentSection ? $currentSection->id : 'default';
+                    if (!isset($sections[$sectionId])) {
+                        $sections[$sectionId] = ['section' => null, 'items' => []];
+                    }
+                    $ans = $answersDict->get($field->id);
+                    $file = $filesDict->get($field->id);
+                    if ($ans || $file) {
+                        $sections[$sectionId]['items'][] = [
+                            'field' => $field,
+                            'answer' => $ans,
+                            'file' => $file,
+                        ];
+                    }
                 }
-              @endphp
-              <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $displayLabel }}</p>
-                <p class="text-slate-800 font-bold">
-                  @if(is_array($val))
-                    {{ implode(', ', $val) }}
+            }
+        @endphp
+        
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+          <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">dynamic_form</span>
+            Data Formulir Pendaftar
+          </h4>
+          
+          <div class="space-y-8">
+            @forelse($sections as $sectionData)
+              @if(count($sectionData['items']) > 0)
+                <div class="border border-slate-100 rounded-xl overflow-hidden">
+                  @if($sectionData['section'])
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-100">
+                      <h5 class="font-bold text-slate-700">{{ $sectionData['section']->label }}</h5>
+                      @if($sectionData['section']->description)
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">{{ $sectionData['section']->description }}</p>
+                      @endif
+                    </div>
                   @else
-                    {{ $val ?: '—' }}
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-100">
+                      <h5 class="font-bold text-slate-700">Informasi Umum</h5>
+                    </div>
                   @endif
-                </p>
+                  
+                  <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($sectionData['items'] as $item)
+                      @if($item['file'])
+                        {{-- RENDER FILE --}}
+                        @php
+                          $snapLabel = $item['file']->field_label_snapshot;
+                          $fileLabel = is_array($snapLabel) ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? $item['field']->label)) : (string) $snapLabel;
+                        @endphp
+                        <div class="col-span-full lg:col-span-1">
+                          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{{ $fileLabel }}</p>
+                          <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 hover:border-primary/30 transition-colors">
+                            <div class="flex items-start gap-3 overflow-hidden">
+                              <span class="material-symbols-outlined text-slate-400 mt-0.5">description</span>
+                              <div class="truncate">
+                                <p class="text-sm font-bold text-slate-700 truncate" title="{{ $item['file']->original_name }}">{{ $item['file']->original_name }}</p>
+                                <p class="text-xs text-slate-400">{{ $item['file']->readableSize() }}</p>
+                              </div>
+                            </div>
+                            <a href="{{ route('admin.applicants.dynamic-files.download', [$applicant, $item['file']]) }}" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline whitespace-nowrap ml-2">
+                              <span class="material-symbols-outlined text-sm">download</span> Unduh
+                            </a>
+                          </div>
+                        </div>
+                      @elseif($item['answer'])
+                        {{-- RENDER TEXT ANSWER --}}
+                        @php
+                          $snapLabel = $item['answer']->field_label_snapshot;
+                          $displayLabel = is_array($snapLabel) ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? $item['field']->label)) : (string) $snapLabel;
+                          
+                          $rawVal = $item['answer']->value;
+                          $optionsSnap = $item['answer']->field_options_snapshot ?? $item['field']->options;
+                          if (is_string($optionsSnap)) {
+                              $optionsSnap = json_decode($optionsSnap, true);
+                          }
+                          
+                          $mapValueToLabel = function($v) use ($optionsSnap) {
+                              if (is_array($optionsSnap)) {
+                                  foreach ($optionsSnap as $opt) {
+                                      if (isset($opt['value']) && $opt['value'] == $v) {
+                                          return $opt['label']['id'] ?? ($opt['label']['jp'] ?? $v);
+                                      }
+                                  }
+                              }
+                              return $v;
+                          };
+
+                          if (is_array($rawVal)) {
+                              $val = array_map($mapValueToLabel, $rawVal);
+                          } else {
+                              $val = $mapValueToLabel($rawVal);
+                          }
+                          
+                          $isLongText = in_array($item['field']->type, ['textarea', 'address']);
+                        @endphp
+                        <div class="{{ $isLongText ? 'col-span-full' : '' }}">
+                          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $displayLabel }}</p>
+                          <p class="text-slate-800 {{ $isLongText ? 'font-medium leading-relaxed whitespace-pre-line text-sm' : 'font-bold' }}">
+                            @if(is_array($val))
+                              {{ implode(', ', $val) }}
+                            @else
+                              {{ $val ?: '—' }}
+                            @endif
+                          </p>
+                        </div>
+                      @endif
+                    @endforeach
+                  </div>
+                </div>
+              @endif
+            @empty
+              <div class="py-8 text-center border border-slate-100 rounded-xl">
+                <span class="material-symbols-outlined text-3xl text-slate-200">inbox</span>
+                <p class="text-slate-400 text-sm mt-2">Tidak ada data formulir yang diisi.</p>
+              </div>
+            @endforelse
+          </div>
+        </div>
+      @else
+        {{-- FALLBACK TO FLAT LAYOUT IF FORM ASSOCIATION IS MISSING --}}
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+          <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">dynamic_form</span>
+            Jawaban Formulir Dinamis
+          </h4>
+          @if($applicant->dynamicAnswers->isNotEmpty())
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              @foreach($applicant->dynamicAnswers as $answer)
+                @php
+                  $snapLabel = $answer->field_label_snapshot;
+                  $displayLabel = is_array($snapLabel) ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Field')) : (string) $snapLabel;
+                  
+                  $rawVal = $answer->value;
+                  $optionsSnap = $answer->field_options_snapshot ?? $answer->formField?->options;
+                  if (is_string($optionsSnap)) {
+                      $optionsSnap = json_decode($optionsSnap, true);
+                  }
+                  
+                  $mapValueToLabel = function($v) use ($optionsSnap) {
+                      if (is_array($optionsSnap)) {
+                          foreach ($optionsSnap as $opt) {
+                              if (isset($opt['value']) && $opt['value'] == $v) {
+                                  return $opt['label']['id'] ?? ($opt['label']['jp'] ?? $v);
+                              }
+                          }
+                      }
+                      return $v;
+                  };
+
+                  $val = is_array($rawVal) ? array_map($mapValueToLabel, $rawVal) : $mapValueToLabel($rawVal);
+                @endphp
+                <div>
+                  <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ $displayLabel }}</p>
+                  <p class="text-slate-800 font-bold">
+                    {{ is_array($val) ? implode(', ', $val) : ($val ?: '—') }}
+                  </p>
+                </div>
+              @endforeach
+            </div>
+          @else
+            <div class="py-8 text-center">
+              <span class="material-symbols-outlined text-3xl text-slate-200">inbox</span>
+              <p class="text-slate-400 text-sm mt-2">Tidak ada jawaban formulir dinamis.</p>
+            </div>
+          @endif
+        </div>
+
+        @if($applicant->dynamicFiles->isNotEmpty())
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm mt-8">
+          <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">upload_file</span>
+            Dokumen Dinamis
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach($applicant->dynamicFiles as $dynFile)
+              @php
+                $snapLabel = $dynFile->field_label_snapshot;
+                $fileLabel = is_array($snapLabel) ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Dokumen')) : (string) $snapLabel;
+              @endphp
+              <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-slate-400 mt-0.5">description</span>
+                  <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ $fileLabel }}</p>
+                    <p class="text-sm font-bold text-slate-700 mt-0.5">{{ $dynFile->original_name }}</p>
+                    <p class="text-xs text-slate-400">{{ $dynFile->readableSize() }}</p>
+                  </div>
+                </div>
+                <a href="{{ route('admin.applicants.dynamic-files.download', [$applicant, $dynFile]) }}" class="flex items-center gap-1 text-xs font-bold text-primary hover:underline whitespace-nowrap">
+                  <span class="material-symbols-outlined text-sm">download</span> Unduh
+                </a>
               </div>
             @endforeach
           </div>
-        @else
-          <div class="py-8 text-center">
-            <span class="material-symbols-outlined text-3xl text-slate-200">inbox</span>
-            <p class="text-slate-400 text-sm mt-2">Tidak ada jawaban formulir dinamis.</p>
-          </div>
-        @endif
-      </div>
-
-      {{-- Dynamic Files (Form Builder) --}}
-      @if($applicant->dynamicFiles->isNotEmpty())
-      <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-        <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">upload_file</span>
-          Dokumen Dinamis
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          @foreach($applicant->dynamicFiles as $dynFile)
-            @php
-              $snapLabel = $dynFile->field_label_snapshot;
-              $fileLabel = is_array($snapLabel)
-                ? ($snapLabel['id'] ?? ($snapLabel[array_key_first($snapLabel)] ?? 'Dokumen'))
-                : (string) $snapLabel;
-            @endphp
-            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-              <div class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-slate-400 mt-0.5">description</span>
-                <div>
-                  <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ $fileLabel }}</p>
-                  <p class="text-sm font-bold text-slate-700 mt-0.5">{{ $dynFile->original_name }}</p>
-                  <p class="text-xs text-slate-400">{{ $dynFile->readableSize() }}</p>
-                </div>
-              </div>
-              <a href="{{ route('admin.applicants.dynamic-files.download', [$applicant, $dynFile]) }}"
-                 class="flex items-center gap-1 text-xs font-bold text-primary hover:underline whitespace-nowrap">
-                <span class="material-symbols-outlined text-sm">download</span> Unduh
-              </a>
-            </div>
-          @endforeach
         </div>
-      </div>
+        @endif
       @endif
 
     </div>

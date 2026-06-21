@@ -36,6 +36,14 @@
             <p class="text-xs text-slate-500 mt-1">Pilih jika form ini hanya berlaku untuk skema spesifik.</p>
         </div>
 
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Batch / Gelombang (Opsional)</label>
+            <select name="batch_id" id="batch_id" class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary">
+                <option value="">Berlaku untuk semua batch di program ini</option>
+            </select>
+            <p class="text-xs text-slate-500 mt-1">Pilih jika form ini khusus dibuat hanya untuk Batch tertentu.</p>
+        </div>
+
         <div class="pt-4 flex justify-end gap-3">
             <a href="{{ route('admin.forms.index') }}" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 font-medium text-sm transition-colors">Batal</a>
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 font-medium text-sm transition-colors">Buat & Lanjut ke Builder</button>
@@ -50,13 +58,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     const programSelect = document.getElementById('program_id');
     const schemaSelect = document.getElementById('schema_id');
+    const batchSelect = document.getElementById('batch_id');
 
     programSelect.addEventListener('change', function() {
         const programId = this.value;
         schemaSelect.innerHTML = '<option value="">Berlaku untuk semua skema / Program Umum</option>';
+        batchSelect.innerHTML = '<option value="">Berlaku untuk semua batch di program ini</option>';
         
         if (programId) {
-            fetch(`/dashboard-admin/form-fields-schemas?program_id=${programId}`)
+            // Fetch schemas
+            fetch(`/dashboard-admin/form-dependencies/schemas?program_id=${programId}`)
                 .then(res => res.json())
                 .then(data => {
                     data.forEach(schema => {
@@ -67,6 +78,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 })
                 .catch(err => console.error('Error fetching schemas:', err));
+                
+            // Fetch batches
+            fetch(`/dashboard-admin/form-dependencies/batches?program_id=${programId}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(batch => {
+                        const option = document.createElement('option');
+                        option.value = batch.id;
+                        option.textContent = batch.nama_batch;
+                        batchSelect.appendChild(option);
+                    });
+                })
+                .catch(err => console.error('Error fetching batches:', err));
         }
     });
 });

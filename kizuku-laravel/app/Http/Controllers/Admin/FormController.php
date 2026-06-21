@@ -76,6 +76,11 @@ class FormController extends Controller
 
         return view('admin.forms.builder', compact('form'));
     }
+    public function edit(Form $form)
+    {
+        $programs = Program::active()->get();
+        return view('admin.forms.edit', compact('form', 'programs'));
+    }
 
     public function update(FormRequest $request, Form $form)
     {
@@ -99,7 +104,37 @@ class FormController extends Controller
             ],
         ]);
 
-        return response()->json(['message' => 'Metadata form berhasil disimpan']);
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['message' => 'Metadata form berhasil disimpan']);
+        }
+
+        return redirect()->route('admin.forms.index')->with('success', 'Pengaturan formulir berhasil diubah.');
+    }
+
+    public function duplicate(Form $form)
+    {
+        // 1. Replicate Form
+        $newForm = $form->replicate();
+        
+        // Add [COPY] to title
+        $newTitle = $newForm->getTranslations('title');
+        if (isset($newTitle['id'])) {
+            $newTitle['id'] = '[COPY] ' . $newTitle['id'];
+        }
+        $newForm->title = $newTitle;
+        
+        $newForm->status = 'draft';
+        $newForm->accepts_responses = false;
+        $newForm->save();
+
+        // 2. Replicate FormFields
+        foreach ($form->fields as $field) {
+            $newField = $field->replicate();
+            $newField->form_id = $newForm->id;
+            $newField->save();
+        }
+
+        return redirect()->route('admin.forms.index')->with('success', 'Formulir berhasil diduplikasi. Silakan edit pengaturannya jika diperlukan.');
     }
 
     public function preview(Form $form)
@@ -238,5 +273,26 @@ class FormController extends Controller
 
         return redirect()->route('admin.forms.index')
             ->with('success', "Form \"{$formTitle}\" berhasil dihapus.");
+    }
+    public function getSchemas(Request $request)
+    {
+        $schemas = ProgramSchema::where('program_id', $request->program_id)->get()->map(function ($schema) {
+            return [
+                'id' => $schema->id,
+                'nama_skema' => $schema->getTranslation('nama_skema', 'id', false) ?: $schema->nama_skema
+            ];
+        });
+        return response()->json($schemas);
+    }
+
+    public function getBatches(Request $request)
+    {
+        $batches = Batch::where('program_id', $request->program_id)->get()->map(function ($batch) {
+            return [
+                'id' => $batch->id,
+                'nama_batch' => $batch->getTranslation('nama_batch', 'id', false) ?: $batch->nama_batch
+            ];
+        });
+        return response()->json($batches);
     }
 }

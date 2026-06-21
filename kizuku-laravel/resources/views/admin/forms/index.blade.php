@@ -117,6 +117,17 @@
                             <a href="{{ route('admin.forms.responses.index', $form->id) }}" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Responses">
                                 <span class="material-symbols-outlined text-[20px]">inbox</span>
                             </a>
+                            <a href="{{ route('admin.forms.edit', $form->id) }}" class="p-1.5 text-blue-500 hover:bg-blue-50 rounded transition-colors" title="Edit Pengaturan Form">
+                                <span class="material-symbols-outlined text-[20px]">settings</span>
+                            </a>
+                            <button
+                                type="button"
+                                onclick="confirmDuplicate({{ $form->id }}, '{{ addslashes($formTitle) }}')"
+                                class="p-1.5 text-indigo-500 hover:bg-indigo-50 rounded transition-colors"
+                                title="Duplikat Form"
+                            >
+                                <span class="material-symbols-outlined text-[20px]">content_copy</span>
+                            </button>
                             {{-- Tombol Hapus --}}
                             <button
                                 type="button"
@@ -153,6 +164,11 @@
 <form id="delete-form" method="POST" action="" class="hidden">
     @csrf
     @method('DELETE')
+</form>
+
+{{-- Hidden DUPLICATE form --}}
+<form id="duplicate-form" method="POST" action="" class="hidden">
+    @csrf
 </form>
 
 {{-- Modal Konfirmasi Hapus --}}
@@ -192,6 +208,42 @@
             >
                 <span class="material-symbols-outlined text-[18px]">delete</span>
                 Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Konfirmasi Duplikat --}}
+<div id="duplicate-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    {{-- Backdrop --}}
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="cancelDuplicate()"></div>
+
+    {{-- Modal Card --}}
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-fadeIn">
+        {{-- Ikon --}}
+        <div class="flex items-center justify-center w-14 h-14 bg-indigo-100 rounded-full mx-auto mb-4">
+            <span class="material-symbols-outlined text-indigo-500 text-[32px]">content_copy</span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-800 text-center mb-1">Duplikat Form?</h3>
+        <p class="text-sm text-slate-500 text-center mb-1">Anda akan menyalin seluruh field pertanyaan pada form ini:</p>
+        <p id="modal-duplicate-form-title" class="text-sm font-semibold text-slate-800 text-center mb-6 px-4 py-2 bg-slate-50 rounded-lg border border-slate-200"></p>
+
+        <div class="flex gap-3">
+            <button
+                type="button"
+                onclick="cancelDuplicate()"
+                class="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors text-sm"
+            >
+                Batal
+            </button>
+            <button
+                type="button"
+                onclick="executeDuplicate()"
+                class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+            >
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                Ya, Duplikat
             </button>
         </div>
     </div>
@@ -237,6 +289,28 @@
         if (!deleteTargetId) return;
         const form = document.getElementById('delete-form');
         form.action = `/dashboard-admin/forms/${deleteTargetId}`;
+        form.submit();
+    }
+
+    let duplicateTargetId = null;
+
+    function confirmDuplicate(formId, formTitle) {
+        duplicateTargetId = formId;
+        document.getElementById('modal-duplicate-form-title').textContent = formTitle;
+        document.getElementById('duplicate-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cancelDuplicate() {
+        duplicateTargetId = null;
+        document.getElementById('duplicate-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function executeDuplicate() {
+        if (!duplicateTargetId) return;
+        const form = document.getElementById('duplicate-form');
+        form.action = `/dashboard-admin/forms/${duplicateTargetId}/duplicate`;
         form.submit();
     }
 

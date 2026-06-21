@@ -102,13 +102,18 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
     Route::get('forms', [\App\Http\Controllers\Admin\FormController::class, 'index'])->name('forms.index');
     Route::get('forms/create', [\App\Http\Controllers\Admin\FormController::class, 'create'])->name('forms.create');
     Route::post('forms', [\App\Http\Controllers\Admin\FormController::class, 'store'])->name('forms.store');
+    Route::get('forms/{form}/edit', [\App\Http\Controllers\Admin\FormController::class, 'edit'])->name('forms.edit');
     Route::get('forms/{form}/builder', [\App\Http\Controllers\Admin\FormController::class, 'builder'])->name('forms.builder');
     Route::patch('forms/{form}', [\App\Http\Controllers\Admin\FormController::class, 'update'])->name('forms.update');
+    Route::post('forms/{form}/duplicate', [\App\Http\Controllers\Admin\FormController::class, 'duplicate'])->name('forms.duplicate');
     Route::get('forms/{form}/preview', [\App\Http\Controllers\Admin\FormController::class, 'preview'])->name('forms.preview');
     Route::post('forms/{form}/publish', [\App\Http\Controllers\Admin\FormController::class, 'publish'])->name('forms.publish');
     Route::post('forms/{form}/draft', [\App\Http\Controllers\Admin\FormController::class, 'draft'])->name('forms.draft');
     Route::post('forms/{form}/archive', [\App\Http\Controllers\Admin\FormController::class, 'archive'])->name('forms.archive');
     Route::delete('forms/{form}', [\App\Http\Controllers\Admin\FormController::class, 'destroy'])->name('forms.destroy');
+
+    Route::get('form-dependencies/schemas', [\App\Http\Controllers\Admin\FormController::class, 'getSchemas'])->name('forms.schemas');
+    Route::get('form-dependencies/batches', [\App\Http\Controllers\Admin\FormController::class, 'getBatches'])->name('forms.batches');
 
     Route::post('forms/{form}/fields', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'store'])->name('forms.fields.store');
     Route::patch('forms/{form}/fields/{field}', [\App\Http\Controllers\Admin\FormBuilderFieldController::class, 'update'])->name('forms.fields.update');
