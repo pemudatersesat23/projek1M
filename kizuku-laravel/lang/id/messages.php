@@ -58,10 +58,12 @@ return [
         'faq' => 'FAQ (Sering Ditanyakan)',
         'batch_history' => 'Riwayat Gelombang',
         'status_labels' => [
-            'dibuka' => 'Dibuka',
+            'dibuka'      => 'Dibuka',
+            'diperpanjang'=> 'Diperpanjang',
             'akan_dibuka' => 'Akan Datang',
-            'selesai' => 'Selesai',
-            'tutup' => 'Ditutup',
+            'selesai'     => 'Selesai',
+            'ditutup'     => 'Ditutup',  // nilai aktual di database
+            'tutup'       => 'Ditutup',  // alias (digunakan di hero.blade.php)
         ],
         'enroll_open' => 'PENDAFTARAN DIBUKA',
         'enroll_soon' => 'AKAN DATANG',

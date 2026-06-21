@@ -175,22 +175,12 @@
 
   {{-- ── SECTION ── --}}
   @elseif($type === 'section')
-    @php
-      $settings = is_array($field->settings) ? $field->settings : (json_decode($field->settings, true) ?: []);
-      $icon = $settings['section_icon'] ?? 'info';
-      $rawColor = $settings['section_color'] ?? '';
-      // Paksa semua warna section ke biru primary website — abaikan warna ungu dari builder
-      $color = '#0067a3';
-    @endphp
     <div class="form-full df-section-header">
       <div class="flex items-center gap-3">
-        <div class="df-section-icon-box">
-          @include('components.form-section-icon', ['icon' => $icon, 'color' => $color, 'size' => '22px'])
-        </div>
-        <h3 class="df-section-title">{{ $label }}</h3>
+        <h3 class="df-section-title font-bold text-xl text-slate-800">{{ $label }}</h3>
       </div>
       @if($description)
-        <p class="df-section-desc">{{ $description }}</p>
+        <p class="df-section-desc text-sm text-slate-500 mt-1">{{ $description }}</p>
       @endif
     </div>
   @endif

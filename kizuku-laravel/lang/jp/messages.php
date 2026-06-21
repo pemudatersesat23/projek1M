@@ -58,10 +58,12 @@ return [
         'faq' => 'よくある質問',
         'batch_history' => 'バッチ履歴',
         'status_labels' => [
-            'dibuka' => '募集中',
-            'akan_dibuka' => 'まもなく',
-            'selesai' => '終了',
-            'tutup' => '締切',
+            'dibuka'       => '募集中',
+            'diperpanjang' => '延長中',
+            'akan_dibuka'  => 'まもなく',
+            'selesai'      => '終了',
+            'ditutup'      => '締切',   // 値がデータベースに存在する
+            'tutup'        => '締切',   // エイリアス
         ],
         'enroll_open' => '登録受付中',
         'enroll_soon' => '近日公開',

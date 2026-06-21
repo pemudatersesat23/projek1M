@@ -263,19 +263,12 @@
       </div>`;
     }
 
-    if (f.type === 'section') {
-      const settings = f.settings || {};
-      const icon = settings.section_icon || 'info';
-      const color = settings.section_color || '#673ab7';
-      const desc = f.description ? `<p class="text-sm text-slate-500 mt-1 pl-[52px] whitespace-pre-line leading-relaxed">${escHtml(f.description)}</p>` : '';
+      const desc = f.description ? `<p class="text-sm text-slate-500 mt-1 pl-[5px] whitespace-pre-line leading-relaxed">${escHtml(f.description)}</p>` : '';
       
       return `
         <div class="form-full py-6 mt-4 border-t border-slate-100 first:border-t-0 first:mt-0">
           <div class="flex items-center gap-3 mb-2">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm" style="background-color: ${color}20; color: ${color};">
-              <span class="material-symbols-outlined" style="font-size: 24px; color: ${color}; vertical-align: middle;">${icon}</span>
-            </div>
-            <h3 class="text-xl font-bold" style="color: ${color};">${escHtml(f.label)}</h3>
+            <h3 class="text-xl font-bold text-slate-800">${escHtml(f.label)}</h3>
           </div>
           ${desc}
         </div>

@@ -413,22 +413,6 @@
                     </div>
                 </div>
             </div>
-            <div class="section-config-container mt-8 hidden bg-slate-50 p-4 rounded-lg border border-slate-100">
-                <div class="grid grid-cols-1 gap-6">
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Section Icon</p>
-                        <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 section-icon-selector">
-                            <!-- Icons injected by JS -->
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Section Accent Color</p>
-                        <div class="flex flex-wrap gap-2 section-color-selector">
-                            <!-- Colors injected by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="error-area mt-4 hidden p-3 bg-red-50 border border-red-100 rounded text-red-600 text-xs font-medium space-y-1"></div>
 
@@ -538,9 +522,7 @@
         card.querySelector('.field-label-id').addEventListener('input', (e) => {
             const inactiveLabel = card.querySelector('.field-label-text');
             if (field.type === 'section') {
-                const iconName = card.dataset.sectionIcon || field.settings?.section_icon || 'info';
-                const color = card.dataset.sectionColor || field.settings?.section_color || '#673ab7';
-                inactiveLabel.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${color}">${iconName}</span> ${e.target.value || 'Untitled Section'}`;
+                inactiveLabel.innerHTML = `<span class="font-bold text-lg text-slate-800">${e.target.value || 'Untitled Section'}</span>`;
             } else {
                 inactiveLabel.textContent = e.target.value || '(No Question)';
             }
@@ -582,9 +564,7 @@
             card.querySelectorAll('.file-ext-checkboxes input').forEach(cb => cb.checked = exts.includes(cb.value));
             card.querySelector('.file-max-size').value = field.max_file_size || 2048;
         }
-        if (field.type === 'section') {
-            renderSectionSelectors(card, field.settings || {});
-        }
+
 
         container.appendChild(card);
     }
@@ -627,16 +607,13 @@
         
         // Hide metadata for section
         const settingsBar = card.querySelector('.field-settings-bar');
-        const sectionDiv = card.querySelector('.section-config-container');
         
         if (type === 'section') {
             settingsBar.classList.add('hidden');
-            sectionDiv.classList.remove('hidden');
             card.classList.add('section-card', 'border-l-8');
-            if (!card.style.borderLeftColor) card.style.borderLeftColor = '#673ab7';
+            if (!card.style.borderLeftColor) card.style.borderLeftColor = '#64748b'; // default slate color
         } else {
             settingsBar.classList.remove('hidden');
-            sectionDiv.classList.add('hidden');
             card.classList.remove('section-card', 'border-l-8');
             card.style.borderLeftColor = '';
         }
@@ -648,9 +625,8 @@
         
         if (field.type === 'section') {
             card.classList.add('section-card', 'border-l-8');
-            card.style.borderLeftColor = field.settings?.section_color || '#673ab7';
-            const iconName = field.settings?.section_icon || 'info';
-            labelText.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${field.settings?.section_color || '#673ab7'}">${iconName}</span> ${field.label?.id || 'Untitled Section'}`;
+            card.style.borderLeftColor = '#64748b'; // slate color
+            labelText.innerHTML = `<span class="font-bold text-lg text-slate-800">${field.label?.id || 'Untitled Section'}</span>`;
         } else {
             card.classList.remove('section-card', 'border-l-8');
             card.style.borderLeftColor = '';
@@ -660,55 +636,6 @@
         typeBadge.textContent = field.type;
     }
 
-    function renderSectionSelectors(card, settings) {
-        const iconContainer = card.querySelector('.section-icon-selector');
-        const colorContainer = card.querySelector('.section-color-selector');
-        const currentIcon = settings.section_icon || 'info';
-        const currentColor = settings.section_color || '#673ab7';
-
-        iconContainer.innerHTML = '';
-        iconList.forEach(icon => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `p-2 rounded hover:bg-slate-200 transition-colors ${icon === currentIcon ? 'bg-purple-100 text-purple-600 ring-1 ring-purple-600' : 'text-slate-400'}`;
-            btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">${icon}</span>`;
-            btn.onclick = () => {
-                iconContainer.querySelectorAll('button').forEach(b => b.className = 'p-2 rounded hover:bg-slate-200 transition-colors text-slate-400');
-                btn.className = 'p-2 rounded bg-purple-100 text-purple-600 ring-1 ring-purple-600 transition-colors';
-                card.dataset.sectionIcon = icon;
-                
-                // Real-time inactive view update
-                const labelText = card.querySelector('.field-label-text');
-                const color = card.dataset.sectionColor || '#673ab7';
-                const labelValue = card.querySelector('.field-label-id').value || 'Untitled Section';
-                labelText.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${color}">${icon}</span> ${labelValue}`;
-            };
-            iconContainer.appendChild(btn);
-        });
-        card.dataset.sectionIcon = currentIcon;
-
-        colorContainer.innerHTML = '';
-        colorList.forEach(color => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `w-6 h-6 rounded-full border-2 transition-all ${color === currentColor ? 'border-slate-800 scale-110' : 'border-transparent hover:scale-105'}`;
-            btn.style.backgroundColor = color;
-            btn.onclick = () => {
-                colorContainer.querySelectorAll('button').forEach(b => b.className = 'w-6 h-6 rounded-full border-2 border-transparent hover:scale-105 transition-all');
-                btn.className = 'w-6 h-6 rounded-full border-2 border-slate-800 scale-110 transition-all';
-                card.dataset.sectionColor = color;
-                card.style.borderLeftColor = color;
-
-                // Real-time inactive view update
-                const labelText = card.querySelector('.field-label-text');
-                const iconName = card.dataset.sectionIcon || 'info';
-                const labelValue = card.querySelector('.field-label-id').value || 'Untitled Section';
-                labelText.innerHTML = `<span class="material-symbols-outlined align-middle mr-1" style="color: ${color}">${iconName}</span> ${labelValue}`;
-            };
-            colorContainer.appendChild(btn);
-        });
-        card.dataset.sectionColor = currentColor;
-    }
 
     function renderOptions(card, options) {
         const list = card.querySelector('.options-list');
@@ -768,10 +695,7 @@
         }
 
         if (type === 'section') {
-            payload.settings = {
-                section_icon: card.dataset.sectionIcon || 'info',
-                section_color: card.dataset.sectionColor || '#673ab7'
-            };
+            payload.settings = null;
             payload.field_role = 'none';
             payload.is_required = 0;
         }
@@ -804,10 +728,7 @@
             type: 'section',
             is_required: 0,
             status: 'aktif',
-            settings: {
-                section_icon: 'info',
-                section_color: '#673ab7'
-            }
+            settings: null
         };
 
         try {
