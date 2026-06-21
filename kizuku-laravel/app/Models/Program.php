@@ -47,7 +47,18 @@ class Program extends Model
 
     protected $casts = [
         'is_featured' => 'boolean',
-        'has_schema'  => 'boolean'
+        'has_schema'  => 'boolean',
+        'nama_program' => 'array',
+        'deskripsi' => 'array',
+        'focus' => 'array',
+        'output' => 'array',
+        'target_peserta' => 'array',
+        'benefit' => 'array',
+        'alur_seleksi' => 'array',
+        'materi' => 'array',
+        'durasi' => 'array',
+        'biaya' => 'array',
+        'faq' => 'array',
     ];
 
     // Relations

@@ -34,7 +34,6 @@ class KizukuProgramsFromDocumentSeeder extends Seeder
                 'benefit',
                 'alur_seleksi',
                 'biaya',
-                'faq',
             ] as $field) {
                 $program->setTranslation($field, 'id', $data[$field]);
             }

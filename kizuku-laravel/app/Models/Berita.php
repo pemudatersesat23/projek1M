@@ -16,6 +16,12 @@ class Berita extends Model
 
     public $translatable = ['judul', 'isi'];
 
+    protected $casts = [
+        'judul' => 'array',
+        'isi' => 'array',
+    ];
+
+
     public function scopePublished($query)
     {
         return $query->where('status_publish', 'published');

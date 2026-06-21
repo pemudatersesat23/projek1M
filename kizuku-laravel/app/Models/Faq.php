@@ -29,5 +29,8 @@ class Faq extends Model
         'question' => 'array',
         'answer' => 'array',
         'is_active' => 'boolean',
+        'kategori' => 'array',
+        'question' => 'array',
+        'answer' => 'array',
     ];
 }

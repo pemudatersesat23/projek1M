@@ -26,6 +26,8 @@ class Keunggulan extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'title' => 'array',
-        'description' => 'array'
+        'description' => 'array',
+        'title' => 'array',
+        'description' => 'array',
     ];
 }

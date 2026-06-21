@@ -34,6 +34,9 @@ class Form extends Model
         'is_active' => 'boolean',
         'accepts_responses' => 'boolean',
         'published_at' => 'datetime',
+        'title' => 'array',
+        'description' => 'array',
+        'success_message' => 'array',
     ];
 
     // ── Relations ─────────────────────────────────────────────────────────────

@@ -32,6 +32,9 @@ class ProgramSchema extends Model
 
     protected $casts = [
         'harga' => 'decimal:2',
+        'nama_skema' => 'array',
+        'deskripsi' => 'array',
+        'persyaratan' => 'array',
     ];
 
     // Relations

@@ -14,6 +14,12 @@ class PartnerCampus extends Model
     
     public $translatable = ['name', 'description'];
 
+    protected $casts = [
+        'name' => 'array',
+        'description' => 'array',
+    ];
+
+
     /**
      * Get the first two sentences of the description.
      */

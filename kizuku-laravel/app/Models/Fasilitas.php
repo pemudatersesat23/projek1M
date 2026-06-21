@@ -14,7 +14,10 @@ class Fasilitas extends Model
 
     public $translatable = ['nama'];
 
-    protected $table = 'fasilitas';
+    protected $casts = [
+        'nama' => 'array',
+        'urutan' => 'integer',
+    ];
 
-    protected $casts = ['urutan' => 'integer'];
+    protected $table = 'fasilitas';
 }

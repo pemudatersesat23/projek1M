@@ -20,4 +20,11 @@ class Testimonial extends Model
     ];
 
     public $translatable = ['name', 'role', 'content'];
+
+    protected $casts = [
+        'name' => 'array',
+        'role' => 'array',
+        'content' => 'array',
+    ];
+
 }

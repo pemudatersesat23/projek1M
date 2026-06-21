@@ -43,6 +43,9 @@ class FormField extends Model
         'is_required' => 'boolean',
         'is_locked' => 'boolean',
         'settings' => 'array',
+        'label' => 'array',
+        'placeholder' => 'array',
+        'description' => 'array',
     ];
 
     // Relations

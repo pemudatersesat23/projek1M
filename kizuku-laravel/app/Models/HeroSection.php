@@ -24,4 +24,13 @@ class HeroSection extends Model
     ];
 
     public $translatable = ['title', 'subtitle', 'btn_primary_text', 'btn_secondary_text', 'badge_text'];
+
+    protected $casts = [
+        'title' => 'array',
+        'subtitle' => 'array',
+        'btn_primary_text' => 'array',
+        'btn_secondary_text' => 'array',
+        'badge_text' => 'array',
+    ];
+
 }

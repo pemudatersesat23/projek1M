@@ -36,6 +36,7 @@ class Batch extends Model
         'tanggal_mulai' => 'date',
         'tanggal_selesai' => 'date',
         'tanggal_estimasi_selesai' => 'date',
+        'nama_batch' => 'array',
     ];
 
     // Relations

@@ -27,5 +27,7 @@ class AlurPendaftaran extends Model
         'title' => 'array',
         'description' => 'array',
         'is_active' => 'boolean',
+        'title' => 'array',
+        'description' => 'array',
     ];
 }
