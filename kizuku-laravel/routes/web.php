@@ -23,21 +23,13 @@ Route::get('/berita/{berita}', [HomeController::class, 'showBerita'])->name('ber
 Route::get('/partnership/{partnerCampus}', [HomeController::class, 'showPartner'])->name('partner.show');
 
 // ═══ STANDALONE PROGRAM PAGES (Alias Routes) ═══
-Route::get('/tokutei-ginou', function() {
-    return app(HomeController::class)->showProgram('tokutei-ginou-tg');
-})->name('pages.tokutei');
-
-Route::get('/engineer-jepang', function() {
-    return app(HomeController::class)->showProgram('engineer-jepang-gijinkoku');
-})->name('pages.engineer');
-
-Route::get('/ex-internship', function() {
-    return app(HomeController::class)->showProgram('engineer-jepang-ex-internship');
-})->name('pages.magang');
-
-Route::get('/kursus-bahasa-jepang', function() {
-    return app(HomeController::class)->showProgram('kursus-bahasa-jepang');
-})->name('pages.kursus');
+// Mapping slug → URL alias dikelola di config/program_aliases.php
+// Jika slug program di database berubah, cukup update file config tersebut.
+foreach (config('program_aliases', []) as $alias) {
+    Route::get($alias['url'], function () use ($alias) {
+        return app(HomeController::class)->showProgram($alias['slug']);
+    })->name($alias['name']);
+}
 
 Route::get('/program', [HomeController::class, 'showAllPrograms'])->name('programs.index');
 

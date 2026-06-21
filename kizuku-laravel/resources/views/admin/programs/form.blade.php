@@ -241,37 +241,7 @@
         </div>
       </div>
 
-      {{-- FAQ Section --}}
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <div class="flex items-center justify-between mb-6">
-          <h4 class="font-bold text-slate-800 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">quiz</span> FAQ (Pertanyaan Umum)
-          </h4>
-          <button type="button" onclick="addFaq()" class="text-sm text-primary font-bold flex items-center gap-1 hover:underline">
-            <span class="material-symbols-outlined text-sm">add_circle</span> Tambah FAQ
-          </button>
-        </div>
-        <div id="faq-container" class="space-y-4">
-          @php 
-            $faqData = old('faq', $program->faq ?? []);
-            if (is_string($faqData)) {
-                $faqData = json_decode($faqData, true);
-            }
-            $faqs = is_array($faqData) ? $faqData : [];
-          @endphp
-          @foreach($faqs as $index => $item)
-          <div class="faq-item p-4 bg-slate-50 rounded-lg border border-slate-100 relative group">
-            <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-              <span class="material-symbols-outlined text-xs">close</span>
-            </button>
-            <div class="space-y-3">
-              <input type="text" name="faq[{{$index}}][q]" value="{{ $item['q'] ?? '' }}" class="w-full text-sm font-bold bg-transparent border-0 border-b border-slate-200 focus:ring-0 px-0" placeholder="Pertanyaan">
-              <textarea name="faq[{{$index}}][a]" rows="2" class="w-full text-sm bg-transparent border-0 focus:ring-0 px-0" placeholder="Jawaban">{{ $item['a'] ?? '' }}</textarea>
-            </div>
-          </div>
-          @endforeach
-        </div>
-      </div>
+      {{-- Catatan: FAQ per-program sekarang dikelola via Konten Halaman Dinamis (Section type FAQ) di atas. --}}
     </div>
 
     <div class="space-y-6">
@@ -313,20 +283,9 @@
     </div>
   </form>
 
-  <template id="faq-template">
-    <div class="faq-item p-4 bg-slate-50 rounded-lg border border-slate-100 relative group">
-      <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-        <span class="material-symbols-outlined text-xs">close</span>
-      </button>
-      <div class="space-y-3">
-        <input type="text" name="faq[INDEX][q]" class="w-full text-sm font-bold bg-transparent border-0 border-b border-slate-200 focus:ring-0 px-0" placeholder="Pertanyaan">
-        <textarea name="faq[INDEX][a]" rows="2" class="w-full text-sm bg-transparent border-0 focus:ring-0 px-0" placeholder="Jawaban"></textarea>
-      </div>
-    </div>
-  </template>
+
 
   <script>
-    let faqCount = {{ count($faqs) }};
     let programSectionCount = {{ count($sectionsData) }};
     const sectionTypes = @json($sectionTypes);
 
@@ -416,12 +375,7 @@
       `);
     }
 
-    function addFaq() {
-      const container = document.getElementById('faq-container');
-      const template = document.getElementById('faq-template').innerHTML;
-      const html = template.replace(/INDEX/g, faqCount++);
-      container.insertAdjacentHTML('beforeend', html);
-    }
+
     
     document.querySelectorAll('textarea').forEach(el => {
       el.addEventListener('input', function() {

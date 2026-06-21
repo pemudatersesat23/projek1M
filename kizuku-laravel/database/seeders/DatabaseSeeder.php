@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Siswa;
 use App\Models\Berita;
 use App\Models\User;
+use App\Models\Program;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,6 +13,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Nonaktifkan AutoTranslate selama seeding massal
+        // untuk menghindari ratusan Google Translate API call yang memperlambat proses.
+        // Seeder sudah menyediakan terjemahan 'id' dan 'jp' secara manual.
+        Program::disableAutoTranslate();
+        Berita::disableAutoTranslate();
+
         // ═══ ADMIN USER ═══
         User::updateOrCreate(
             ['email' => 'admin@kizuku.co.id'],

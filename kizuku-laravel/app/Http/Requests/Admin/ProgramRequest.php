@@ -59,7 +59,6 @@ class ProgramRequest extends FormRequest
             'benefit' => 'nullable|string',
             'alur_seleksi' => 'nullable|string',
             'biaya' => 'nullable|string',
-            'faq' => 'nullable|array',
             'materi' => 'nullable|string',
             'brosur' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',

@@ -91,21 +91,6 @@
           @endforeach
         </div>
 
-        {{-- FAQ --}}
-        @if($program->faq)
-          <h3 class="pd-section-h3">{{ __('messages.program.faq') }}</h3>
-          <div class="reveal">
-            @php
-              $faqs = $program->getTranslation('faq', app()->getLocale()) ?: $program->faq;
-            @endphp
-            @foreach($faqs as $faq)
-              <div class="pd-faq-item">
-                <h5 class="pd-faq-q">{{ $faq['q'] ?? '' }}</h5>
-                <p class="pd-faq-a">{{ $faq['a'] ?? '' }}</p>
-              </div>
-            @endforeach
-          </div>
-        @endif
         @endif
 
         {{-- Batch History --}}

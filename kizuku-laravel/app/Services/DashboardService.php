@@ -78,7 +78,8 @@ class DashboardService
 
     /**
      * Get monthly application summary for the last 6 months.
-     * Fixed N+1 issue by using a single GROUP BY subquery aggregate.
+     * Menggunakan SQL GROUP BY untuk efisiensi — hanya mengambil data agregat dari DB,
+     * bukan load semua baris lalu di-group di PHP.
      *
      * @return array
      */
@@ -87,29 +88,28 @@ class DashboardService
         $laporanBulanan = [];
         $sixMonthsAgo = Carbon::now()->subMonths(5)->startOfMonth();
 
-        $monthlyStats = Applicant::select(['created_at', 'status_seleksi'])
+        // Single query dengan SQL GROUP BY — jauh lebih efisien dari load-all-in-PHP
+        $monthlyStats = Applicant::selectRaw('
+                YEAR(created_at)  AS tahun,
+                MONTH(created_at) AS bulan_num,
+                COUNT(*)          AS total,
+                SUM(CASE WHEN status_seleksi = "lolos" THEN 1 ELSE 0 END) AS lolos
+            ')
             ->where('created_at', '>=', $sixMonthsAgo)
+            ->groupByRaw('YEAR(created_at), MONTH(created_at)')
             ->get()
-            ->groupBy(function ($applicant) {
-                return $applicant->created_at->format('Y-m');
-            })
-            ->map(function ($items) {
-                return [
-                    'total' => $items->count(),
-                    'lolos' => $items->where('status_seleksi', 'lolos')->count(),
-                ];
-            });
+            ->keyBy(fn ($r) => $r->tahun . '-' . str_pad($r->bulan_num, 2, '0', STR_PAD_LEFT));
 
         for ($i = 0; $i < 6; $i++) {
             $date = Carbon::now()->subMonths($i);
-            $key = $date->format('Y-m');
-            
+            $key  = $date->format('Y-m');
+
             if ($monthlyStats->has($key)) {
                 $stat = $monthlyStats->get($key);
                 $laporanBulanan[] = [
                     'bulan' => $date->translatedFormat('F Y'),
-                    'total' => (int) $stat['total'],
-                    'lolos' => (int) $stat['lolos'],
+                    'total' => (int) $stat->total,
+                    'lolos' => (int) $stat->lolos,
                 ];
             }
         }

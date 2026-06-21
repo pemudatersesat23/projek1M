@@ -101,7 +101,10 @@ class ProgramController extends Controller
 
     private function syncSections(Program $program, array $sections): void
     {
-        $program->sections()->delete();
+        // Gunakan forceDelete() bukan delete() karena sections adalah konten yang
+        // sepenuhnya dikelola via syncSections — tidak perlu soft-delete audit trail.
+        // Dengan soft delete, setiap edit program mengakumulasi baris "ghost" di DB.
+        $program->sections()->withTrashed()->forceDelete();
 
         foreach ($sections as $index => $section) {
             $type = $section['type'] ?? 'text';
@@ -119,13 +122,13 @@ class ProgramController extends Controller
             }
 
             $program->sections()->create([
-                'type' => $type,
-                'title' => $title === '' ? [] : ['id' => $title],
+                'type'        => $type,
+                'title'       => $title === '' ? [] : ['id' => $title],
                 'description' => $description === '' ? [] : ['id' => $description],
-                'items' => ['id' => $items],
-                'settings' => [],
-                'sort_order' => (int) ($section['sort_order'] ?? $index),
-                'is_active' => filter_var($section['is_active'] ?? false, FILTER_VALIDATE_BOOLEAN),
+                'items'       => ['id' => $items],
+                'settings'    => [],
+                'sort_order'  => (int) ($section['sort_order'] ?? $index),
+                'is_active'   => filter_var($section['is_active'] ?? false, FILTER_VALIDATE_BOOLEAN),
             ]);
         }
     }

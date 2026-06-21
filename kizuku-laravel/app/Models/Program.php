@@ -22,7 +22,6 @@ class Program extends Model
         'benefit',
         'alur_seleksi',
         'biaya',
-        'faq',
         'materi',
         'brosur',
         'thumbnail_path',
@@ -44,13 +43,11 @@ class Program extends Model
         'materi',
         'durasi',
         'biaya',
-        'faq'
     ];
 
     protected $casts = [
-        'faq' => 'array',
         'is_featured' => 'boolean',
-        'has_schema' => 'boolean'
+        'has_schema'  => 'boolean'
     ];
 
     // Relations

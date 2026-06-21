@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Keunggulan;
+use App\Models\Program;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -25,18 +26,19 @@ class AppServiceProvider extends ServiceProvider
     {
         $defaultSettings = [
             'whatsapp_number' => '6281217549529',
-            'admin_email' => 'info@kizuku-academy.com',
-            'office_address' => 'Jl. Bontotangnga, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
-            'office_hours' => 'Senin - Sabtu, 08.00 - 17.00 WIB',
+            'admin_email'     => 'info@kizuku-academy.com',
+            'office_address'  => 'Jl. Bontotangnga, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
+            'office_hours'    => 'Senin - Sabtu, 08.00 - 17.00 WIB',
         ];
 
         View::share('appSettings', Schema::hasTable('settings') ? [
             'whatsapp_number' => Setting::get('whatsapp_number', $defaultSettings['whatsapp_number']),
-            'admin_email' => Setting::get('admin_email', $defaultSettings['admin_email']),
-            'office_address' => Setting::get('office_address', $defaultSettings['office_address']),
-            'office_hours' => Setting::get('office_hours', $defaultSettings['office_hours']),
+            'admin_email'     => Setting::get('admin_email', $defaultSettings['admin_email']),
+            'office_address'  => Setting::get('office_address', $defaultSettings['office_address']),
+            'office_hours'    => Setting::get('office_hours', $defaultSettings['office_hours']),
         ] : $defaultSettings);
 
+        // View Composer: inject $keunggulans ke section keunggulan
         View::composer('sections.keunggulan', function ($view) {
             if (!isset($view->getData()['keunggulans'])) {
                 $view->with('keunggulans', Schema::hasTable('keunggulans')
@@ -44,5 +46,16 @@ class AppServiceProvider extends ServiceProvider
                     : collect());
             }
         });
+
+        // View Composer: inject $publicPrograms ke layout utama
+        // Digunakan oleh WA Modal agar daftar program tidak hardcoded.
+        View::composer('layouts.app', function ($view) {
+            if (!isset($view->getData()['publicPrograms'])) {
+                $view->with('publicPrograms', Schema::hasTable('programs')
+                    ? Program::active()->ordered()->get(['id', 'nama_program', 'slug'])
+                    : collect());
+            }
+        });
     }
 }
+

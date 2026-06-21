@@ -488,10 +488,11 @@
                 <label class="wa-form-label">Program yang diminati</label>
                 <select id="wa_program" class="wa-select">
                     <option value="">-- Pilih Program --</option>
-                    <option value="Tokutei Ginou (TG)">Tokutei Ginou (TG)</option>
-                    <option value="Engineering">Engineering</option>
-                    <option value="Kelas Bahasa Jepang">Kelas Bahasa Jepang</option>
-                    <option value="Magang / Returnee">Magang / Returnee</option>
+                    @foreach($publicPrograms as $prog)
+                        <option value="{{ $prog->getTranslation('nama_program', app()->getLocale()) ?: $prog->getTranslation('nama_program', 'id') }}">
+                            {{ $prog->getTranslation('nama_program', app()->getLocale()) ?: $prog->getTranslation('nama_program', 'id') }}
+                        </option>
+                    @endforeach
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
@@ -513,93 +514,104 @@
   <script src="{{ asset('js/lang-toggle.js') }}"></script>
   <script>
     // Initialize Swiper Sliders
+    // Setiap inisialisasi dilindungi null check agar tidak error di halaman yang tidak memiliki element slider.
     document.addEventListener('DOMContentLoaded', function() {
-      const testimonialSwiper = new Swiper('.testimonialSwiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }
-      });
 
-      const gallerySwiper = new Swiper('.gallerySwiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-          delay: 3000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-          640: { slidesPerView: 2 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4 },
-        }
-      });
+      if (document.querySelector('.testimonialSwiper')) {
+        new Swiper('.testimonialSwiper', {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          loop: true,
+          autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+          },
+          pagination: {
+            el: '.testimonialSwiper .swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.testimonialSwiper .swiper-button-next',
+            prevEl: '.testimonialSwiper .swiper-button-prev',
+          },
+          breakpoints: {
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }
+        });
+      }
 
-      const heroSwiper = new Swiper('.heroSwiper', {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        loop: true,
-        effect: 'fade',
-        fadeEffect: {
-          crossFade: true
-        },
-        autoplay: {
-          delay: 7000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.heroSwiper .swiper-pagination',
-          clickable: true,
-        },
-      });
+      if (document.querySelector('.gallerySwiper')) {
+        new Swiper('.gallerySwiper', {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          loop: true,
+          autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+          },
+          pagination: {
+            el: '.gallerySwiper .swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.gallerySwiper .swiper-button-next',
+            prevEl: '.gallerySwiper .swiper-button-prev',
+          },
+          breakpoints: {
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
+          }
+        });
+      }
 
-      const kampusPartnerSwiper = new Swiper('.kampusPartnerSwiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-          delay: 4000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }
-      });
+      if (document.querySelector('.heroSwiper')) {
+        new Swiper('.heroSwiper', {
+          slidesPerView: 1,
+          spaceBetween: 0,
+          loop: true,
+          effect: 'fade',
+          fadeEffect: {
+            crossFade: true
+          },
+          autoplay: {
+            delay: 7000,
+            disableOnInteraction: false,
+          },
+          pagination: {
+            el: '.heroSwiper .swiper-pagination',
+            clickable: true,
+          },
+        });
+      }
+
+      if (document.querySelector('.kampusPartnerSwiper')) {
+        new Swiper('.kampusPartnerSwiper', {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          loop: true,
+          autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+          },
+          pagination: {
+            el: '.kampusPartnerSwiper .swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.kampusPartnerSwiper .swiper-button-next',
+            prevEl: '.kampusPartnerSwiper .swiper-button-prev',
+          },
+          breakpoints: {
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }
+        });
+      }
+
     });
 
     const waModal = document.getElementById('waModal');
