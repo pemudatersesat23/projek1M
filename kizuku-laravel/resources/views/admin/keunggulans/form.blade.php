@@ -40,16 +40,39 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{-- Icon --}}
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Ikon (Material Symbol)</label>
-                    <div class="relative">
-                        <input type="text" name="icon" value="{{ old('icon', $keunggulan->icon ?? 'verified_user') }}" required
-                            placeholder="Contoh: group, school, flight_takeoff"
-                            class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                            {{ old('icon', $keunggulan->icon ?? 'verified_user') }}
-                        </span>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Ikon (Material Symbol) <span class="text-red-500">*</span></label>
+                    <div class="relative mb-2">
+                        <select id="iconSelect" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none cursor-pointer" onchange="handleIconChange(this.value)">
+                            <option value="verified_user">Verified / Aman</option>
+                            <option value="school">Sekolah / Pendidikan</option>
+                            <option value="flight_takeoff">Keberangkatan / Pesawat</option>
+                            <option value="group">Grup / Komunitas</option>
+                            <option value="assignment">Tugas / Ujian</option>
+                            <option value="language">Bahasa / Global</option>
+                            <option value="business_center">Kerja / Profesional</option>
+                            <option value="star">Bintang / Unggulan</option>
+                            <option value="emoji_events">Penghargaan / Prestasi</option>
+                            <option value="apartment">Gedung / Perusahaan</option>
+                            <option value="translate">Terjemahan / Bahasa</option>
+                            <option value="work">Pekerjaan</option>
+                            <option value="military_tech">Medali / Pencapaian</option>
+                            <option value="account_balance">Institusi Resmi</option>
+                            <option value="support_agent">Dukungan / Layanan</option>
+                            <option value="custom">-- Ketik Nama Ikon Lainnya --</option>
+                        </select>
+                        <span translate="no" id="iconSelectPreview" class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none w-6 h-6 overflow-hidden flex items-center justify-center">verified_user</span>
+                        <span translate="no" class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">expand_more</span>
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-2 italic">Cari nama ikon di <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" class="text-primary hover:underline">Google Fonts Icons</a></p>
+
+                    <div id="customIconWrapper" class="relative hidden mt-2">
+                        <input type="text" name="icon" id="iconInput" value="{{ old('icon', $keunggulan->icon ?? 'verified_user') }}" required
+                            oninput="handleIconInput(this)"
+                            placeholder="Ketik nama ikon (cth: verified_user)..."
+                            class="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                        <span translate="no" id="iconCustomPreview" class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none w-6 h-6 overflow-hidden flex items-center justify-center">{{ old('icon', $keunggulan->icon ?? 'verified_user') }}</span>
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 mt-2 italic">Untuk menambah ikon lain, pilih "Ketik Nama Ikon Lainnya" lalu cari di <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" class="text-primary hover:underline">Google Fonts</a> dan ketik namanya dengan format huruf kecil dan garis bawah (contoh: <code>favorite</code>).</p>
                     @error('icon') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
@@ -80,4 +103,56 @@
         </div>
     </form>
 </div>
+@endsection
+
+@section('admin-scripts')
+<script>
+    function handleIconChange(value) {
+        const customWrapper = document.getElementById('customIconWrapper');
+        const iconInput = document.getElementById('iconInput');
+        const preview = document.getElementById('iconSelectPreview');
+
+        if (value === 'custom') {
+            customWrapper.classList.remove('hidden');
+            iconInput.focus();
+            if (iconInput.value === 'verified_user' || iconInput.value === 'custom') {
+                iconInput.value = '';
+            }
+            preview.innerText = iconInput.value || 'extension';
+            document.getElementById('iconCustomPreview').innerText = iconInput.value || 'extension';
+        } else {
+            customWrapper.classList.add('hidden');
+            iconInput.value = value;
+            preview.innerText = value;
+        }
+    }
+
+    function handleIconInput(input) {
+        // Sanitize input: lowercase, replace spaces/dashes with underscore, remove non-alphanumeric
+        let val = input.value.toLowerCase().replace(/[\s-]/g, '_').replace(/[^a-z0-9_]/g, '');
+        input.value = val;
+        
+        let previewVal = val || 'extension';
+        document.getElementById('iconCustomPreview').innerText = previewVal;
+        document.getElementById('iconSelectPreview').innerText = previewVal;
+    }
+
+    // Initialize state on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('iconSelect');
+        const input = document.getElementById('iconInput');
+        const currentValue = input.value;
+        const options = Array.from(select.options).map(opt => opt.value);
+        
+        if (options.includes(currentValue) && currentValue !== 'custom') {
+            select.value = currentValue;
+            document.getElementById('iconSelectPreview').innerText = currentValue;
+        } else if (currentValue) {
+            select.value = 'custom';
+            document.getElementById('customIconWrapper').classList.remove('hidden');
+            document.getElementById('iconSelectPreview').innerText = currentValue;
+            document.getElementById('iconCustomPreview').innerText = currentValue;
+        }
+    });
+</script>
 @endsection

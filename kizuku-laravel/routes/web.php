@@ -133,12 +133,10 @@ Route::middleware(['auth', 'admin'])->prefix('dashboard-admin')->name('admin.')-
 
     // Alur Pendaftaran
     Route::post('alur-pendaftaran/reorder', [\App\Http\Controllers\Admin\AlurPendaftaranController::class, 'reorder'])->name('alur.reorder');
-    Route::resource('alur-pendaftaran', \App\Http\Controllers\Admin\AlurPendaftaranController::class)->names([
-        'index' => 'alur.index',
-        'store' => 'alur.store',
-        'update' => 'alur.update',
-        'destroy' => 'alur.destroy',
-    ])->except(['show']);
+    Route::resource('alur-pendaftaran', \App\Http\Controllers\Admin\AlurPendaftaranController::class)
+        ->names('alur')
+        ->parameters(['alur-pendaftaran' => 'alur'])
+        ->except(['show']);
 
     Route::resource('keunggulans', \App\Http\Controllers\Admin\KeunggulanController::class)->except(['show']);
 

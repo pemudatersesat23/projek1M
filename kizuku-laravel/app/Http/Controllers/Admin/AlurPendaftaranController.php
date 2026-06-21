@@ -14,14 +14,17 @@ class AlurPendaftaranController extends Controller
         return view('admin.alur.index', compact('alurs'));
     }
 
+    public function create()
+    {
+        return view('admin.alur.form');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'icon' => 'required|string|max:50',
             'title_id' => 'required|string|max:255',
-            'title_jp' => 'nullable|string|max:255',
             'description_id' => 'required|string',
-            'description_jp' => 'nullable|string',
         ]);
 
         $maxOrder = AlurPendaftaran::max('order') ?? 0;
@@ -30,11 +33,9 @@ class AlurPendaftaranController extends Controller
             'icon' => $request->icon,
             'title' => [
                 'id' => $request->title_id,
-                'jp' => $request->title_jp,
             ],
             'description' => [
                 'id' => $request->description_id,
-                'jp' => $request->description_jp,
             ],
             'order' => $maxOrder + 1,
             'is_active' => $request->has('is_active'),
@@ -43,25 +44,26 @@ class AlurPendaftaranController extends Controller
         return redirect()->route('admin.alur.index')->with('success', 'Langkah baru berhasil ditambahkan.');
     }
 
+    public function edit(AlurPendaftaran $alur)
+    {
+        return view('admin.alur.form', compact('alur'));
+    }
+
     public function update(Request $request, AlurPendaftaran $alur)
     {
         $request->validate([
             'icon' => 'required|string|max:50',
             'title_id' => 'required|string|max:255',
-            'title_jp' => 'nullable|string|max:255',
             'description_id' => 'required|string',
-            'description_jp' => 'nullable|string',
         ]);
 
         $alur->update([
             'icon' => $request->icon,
             'title' => [
                 'id' => $request->title_id,
-                'jp' => $request->title_jp,
             ],
             'description' => [
                 'id' => $request->description_id,
-                'jp' => $request->description_jp,
             ],
             'is_active' => $request->has('is_active'),
         ]);
