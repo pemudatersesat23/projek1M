@@ -167,6 +167,7 @@
         top: 0; left: 0; right: 0; bottom: 0;
         background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-46-45c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm54 24c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM58 69c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM4 60c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm59 32c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm29-20c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm-62-39c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm34 37c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm-3-47c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
         opacity: 0.5;
+        pointer-events: none;
     }
 
     @media (max-width: 768px) {
@@ -208,11 +209,13 @@
         </div>
 
         <div class="cta-section reveal">
-            <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 16px;">{{ \App\Models\Setting::get('alur_cta_title', 'Mulai Langkah Pertama Anda Hari Ini') }}</h2>
-            <p style="opacity: 0.8; margin-bottom: 40px; font-size: 18px;">{{ __('messages.home.program_p') }}</p>
-            <a href="{{ route('programs.index') }}" class="btn btn-primary" style="padding: 18px 40px; font-size: 16px; font-weight: 900;">
-                {{ \App\Models\Setting::get('alur_cta_btn', 'Pilih Program & Daftar') }}
-            </a>
+            <div style="position: relative; z-index: 2;">
+                <h2 style="font-size: 36px; font-weight: 900; margin-bottom: 16px;">{{ \App\Models\Setting::get('alur_cta_title', 'Mulai Langkah Pertama Anda Hari Ini') }}</h2>
+                <p style="opacity: 0.8; margin-bottom: 40px; font-size: 18px;">{{ __('messages.home.program_p') }}</p>
+                <a href="{{ route('programs.index') }}" class="btn btn-primary" style="padding: 18px 40px; font-size: 16px; font-weight: 900;">
+                    {{ \App\Models\Setting::get('alur_cta_btn', 'Pilih Program & Daftar') }}
+                </a>
+            </div>
         </div>
     </div>
 </section>

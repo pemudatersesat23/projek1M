@@ -26,6 +26,22 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <style>
+    /* Hide Google Translate top bar & tooltips */
+    .skiptranslate, iframe.goog-te-banner-frame, .goog-te-banner-frame, .goog-te-balloon-frame {
+        display: none !important;
+    }
+    body {
+        top: 0px !important;
+    }
+    .goog-tooltip, .goog-tooltip:hover {
+        display: none !important;
+    }
+    .goog-text-highlight {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
     .lang-switcher-wrapper {
         display: flex;
         align-items: center;
@@ -340,11 +356,11 @@
     <div class="nav-cta">
       <!-- Language Switcher desktop -->
       <div class="lang-switcher-buttons">
-          <a href="{{ route('lang.switch', 'id') }}" class="lang-btn lang-btn-id {{ app()->getLocale() === 'id' ? 'active' : '' }}" title="Bahasa Indonesia">
+          <a href="javascript:changeLanguage('id')" class="lang-btn lang-btn-id" title="Bahasa Indonesia">
               <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#ED2939" width="3" height="1"/><rect fill="#fff" y="1" width="3" height="1"/></svg>
           </a>
           <span class="lang-divider"></span>
-          <a href="{{ route('lang.switch', 'jp') }}" class="lang-btn lang-btn-jp {{ (app()->getLocale() === 'jp' || app()->getLocale() === 'ja') ? 'active' : '' }}" title="日本語">
+          <a href="javascript:changeLanguage('ja')" class="lang-btn lang-btn-jp" title="日本語">
               <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
           </a>
       </div>
@@ -400,11 +416,11 @@
     <!-- Language Switcher mobile -->
     <div style="padding: 10px 20px;">
       <div class="lang-switcher-buttons" style="display: inline-flex;">
-          <a href="{{ route('lang.switch', 'id') }}" class="lang-btn lang-btn-id {{ app()->getLocale() === 'id' ? 'active' : '' }}" title="Bahasa Indonesia">
+          <a href="javascript:changeLanguage('id')" class="lang-btn lang-btn-id" title="Bahasa Indonesia">
               <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#ED2939" width="3" height="1"/><rect fill="#fff" y="1" width="3" height="1"/></svg>
           </a>
           <span class="lang-divider"></span>
-          <a href="{{ route('lang.switch', 'jp') }}" class="lang-btn lang-btn-jp {{ (app()->getLocale() === 'jp' || app()->getLocale() === 'ja') ? 'active' : '' }}" title="日本語">
+          <a href="javascript:changeLanguage('ja')" class="lang-btn lang-btn-jp" title="日本語">
               <svg width="20" height="14" viewBox="0 0 3 2"><rect fill="#fff" width="3" height="2"/><circle fill="#bc002d" cx="1.5" cy="1" r="0.6"/></svg>
           </a>
       </div>
@@ -661,6 +677,66 @@
     // Close on backdrop click
     waModal.addEventListener('click', function(e) {
         if (e.target === waModal) closeWaModal();
+    });
+  </script>
+  
+  <!-- Google Translate Element (Hidden) -->
+  <div id="google_translate_element" style="display:none;"></div>
+  
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'id',
+        includedLanguages: 'id,ja',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <script type="text/javascript">
+    function getCookie(name) {
+      var value = "; " + document.cookie;
+      var parts = value.split("; " + name + "=");
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
+
+    function changeLanguage(langCode) {
+      var domain = window.location.hostname;
+      document.cookie = "googtrans=/id/" + langCode + "; path=/";
+      document.cookie = "googtrans=/id/" + langCode + "; path=/; domain=" + domain;
+      document.cookie = "googtrans=/id/" + langCode + "; path=/; domain=." + domain;
+      
+      var select = document.querySelector('select.goog-te-combo');
+      if (select) {
+        select.value = langCode;
+        select.dispatchEvent(new Event('change'));
+      }
+      location.reload();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Prevent Google Translate from translating material icons, swiper buttons, and lang buttons
+      document.querySelectorAll('.material-symbols-outlined, .swiper-button-next, .swiper-button-prev, [class*="swiper-button"], .lang-btn, .lang-switcher-buttons').forEach(function(el) {
+        el.classList.add('notranslate');
+        el.setAttribute('translate', 'no');
+      });
+
+      var googtrans = getCookie('googtrans');
+      var isJp = (googtrans === '/id/ja');
+
+      var btnIds = document.querySelectorAll('.lang-btn-id');
+      var btnJps = document.querySelectorAll('.lang-btn-jp');
+
+      if (isJp) {
+        btnIds.forEach(function(el) { el.classList.remove('active'); });
+        btnJps.forEach(function(el) { el.classList.add('active'); });
+      } else {
+        btnIds.forEach(function(el) { el.classList.add('active'); });
+        btnJps.forEach(function(el) { el.classList.remove('active'); });
+      }
     });
   </script>
   @stack('scripts')

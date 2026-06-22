@@ -110,11 +110,7 @@
               <p class="testi-text">"{{ $testi->getTranslation('content', app()->getLocale()) }}"</p>
               <div class="testi-person">
                 <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),#ff5e58)">
-                  @if($testi->avatar_path)
-                    <img src="{{ asset('storage/' . $testi->avatar_path) }}" class="w-full h-full object-cover rounded-full">
-                  @else
-                    {{ substr($testi->name, 0, 1) }}
-                  @endif
+                  {{ substr($testi->name, 0, 1) }}
                 </div>
                 <div>
                   <div class="testi-name">{{ $testi->name }}</div>

@@ -6,10 +6,10 @@
 --}}
 <section id="program" class="section-pad">
   <div class="container" style="position: relative; z-index: 2;">
-    <div class="sec-head reveal">
+    <div class="sec-head reveal" style="text-align:center;margin-bottom:50px;">
       <div class="sec-tag" style="background: rgba(225, 6, 0, 0.08); color: var(--red); border-color: rgba(225, 6, 0, 0.1);">{{ __('messages.home.program_tag') }}</div>
       <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.program_h2') !!}</h2>
-      <p class="sec-p">{{ __('messages.home.program_p') }}</p>
+      <p class="sec-p" style="margin:0 auto;">{{ __('messages.home.program_p') }}</p>
     </div>
 
     <!-- Slider Wrapper -->
@@ -61,14 +61,19 @@
               @endforeach
             </ul>
 
-            <div class="prog-footer">
-              <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}">
+            <div class="prog-footer" style="display: flex; flex-direction: column; gap: 8px; width: 100%; align-items: stretch;">
+              <a class="btn btn-{{ $cardClasses[$index % 4] }}" href="{{ route('programs.show', $p->slug) }}" style="text-align: center; justify-content: center;">
                 {{ __('messages.program.batch.details') }}
               </a>
+              @if($p->brosur)
+                <a class="btn btn-outline" href="{{ asset('storage/' . $p->brosur) }}" target="_blank" style="text-align: center; justify-content: center; display: inline-flex; align-items: center; gap: 6px;">
+                  <span class="material-symbols-outlined notranslate" translate="no" style="font-size: 16px;">download</span> Brosur Program
+                </a>
+              @endif
               @if($p->isRegistrationOpen())
-                <span class="prog-note" style="color: #10b981;">✅ Pendaftaran Dibuka</span>
+                <span class="prog-note" style="color: #10b981; text-align: center; margin-top: 4px;">✅ Pendaftaran Dibuka</span>
               @else
-                <span class="prog-note">✦ {{ __('messages.program.batch.enroll_info') }}</span>
+                <span class="prog-note" style="text-align: center; margin-top: 4px;">✦ {{ __('messages.program.batch.enroll_info') }}</span>
               @endif
             </div>
           </article>
@@ -146,30 +151,38 @@
     if (!carousel || !btnPrev || !btnNext) return;
 
     let autoScrollInterval;
-    const scrollPace = 4000;
+    const scrollPace = 5000; // Increased slightly for better reading time
+
+    function getScrollStep() {
+      const card = carousel.querySelector('.prog-card');
+      return card ? card.getBoundingClientRect().width + 30 : carousel.clientWidth / 2;
+    }
 
     function scrollNext() {
-      if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 10) {
+      const step = getScrollStep();
+      // Allow a buffer of 15px to account for browser subpixel rounding
+      if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 15) {
         carousel.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        carousel.scrollBy({ left: carousel.clientWidth / 2, behavior: 'smooth' });
+        carousel.scrollBy({ left: step, behavior: 'smooth' });
       }
     }
 
     function scrollPrev() {
-      if (carousel.scrollLeft <= 0) {
+      const step = getScrollStep();
+      if (carousel.scrollLeft <= 15) {
         carousel.scrollTo({ left: carousel.scrollWidth, behavior: 'smooth' });
       } else {
-        carousel.scrollBy({ left: -(carousel.clientWidth / 2), behavior: 'smooth' });
+        carousel.scrollBy({ left: -step, behavior: 'smooth' });
       }
     }
 
     function startAutoScroll() { autoScrollInterval = setInterval(scrollNext, scrollPace); }
     function resetAutoScroll()  { clearInterval(autoScrollInterval); startAutoScroll(); }
 
-    btnNext.addEventListener('click', () => { scrollNext(); resetAutoScroll(); });
-    btnPrev.addEventListener('click', () => { scrollPrev(); resetAutoScroll(); });
-    carousel.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
+    btnNext.addEventListener('click', function() { scrollNext(); resetAutoScroll(); });
+    btnPrev.addEventListener('click', function() { scrollPrev(); resetAutoScroll(); });
+    carousel.addEventListener('mouseenter', function() { clearInterval(autoScrollInterval); });
     carousel.addEventListener('mouseleave', startAutoScroll);
 
     startAutoScroll();

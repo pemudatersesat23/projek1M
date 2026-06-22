@@ -88,6 +88,28 @@
     transform: translateY(-2px);
 }
 
+.btn-dark {
+    background: linear-gradient(135deg, #1a1a2e, #444);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+}
+
+.btn-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, .30);
+}
+
+.btn-mix {
+    background: linear-gradient(135deg, var(--red), var(--blue));
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(15, 76, 129, .25);
+}
+
+.btn-mix:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(15, 76, 129, .32);
+}
+
 .btn-lg {
     padding: 14px 28px;
     font-size: 15px;

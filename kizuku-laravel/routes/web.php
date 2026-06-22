@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Route;
 // ═══ PUBLIC ROUTES ═══
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/lang/{locale}', function ($locale) {
-    if (in_array($locale, ['en', 'id', 'jp'])) {
-        session()->put('locale', $locale);
-    }
     return redirect()->back();
 })->name('lang.switch');
 

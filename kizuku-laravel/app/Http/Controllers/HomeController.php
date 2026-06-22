@@ -25,17 +25,9 @@ class HomeController extends Controller
         $galleries    = \App\Models\Gallery::where('is_active', true)->orderBy('order')->get();
 
         $featuredPrograms = \App\Models\Program::active()
-            ->featured()
             ->ordered()
             ->with(['activeBatches', 'activeSchemas'])
             ->get();
-
-        if ($featuredPrograms->isEmpty()) {
-            $featuredPrograms = \App\Models\Program::active()
-                ->ordered()
-                ->with(['activeBatches', 'activeSchemas'])
-                ->get();
-        }
 
         // ── Site Stats ───────────────────────────────────────────────────────
         // Satu query untuk semua setting stats (bukan 5 query terpisah di blade).
@@ -58,7 +50,7 @@ class HomeController extends Controller
                     'label_key' => 'messages.home.stats.years',
                 ],
                 [
-                    'value'     => $settingsMap->get('stats_programs')?->value ?? '4',
+                    'value'     => \App\Models\Program::active()->count(),
                     'label_key' => 'messages.home.stats.programs',
                 ],
             ],

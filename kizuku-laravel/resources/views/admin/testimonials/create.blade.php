@@ -43,11 +43,7 @@
           </select>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Foto Peserta (Square recommended)</label>
-          <input type="file" name="avatar" accept="image/*"
-                 class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
-        </div>
+
 
         <div class="flex items-center pt-2">
           <label class="flex items-center gap-3 cursor-pointer">

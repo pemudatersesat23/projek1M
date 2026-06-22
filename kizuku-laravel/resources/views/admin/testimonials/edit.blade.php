@@ -44,21 +44,7 @@
           </select>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Ganti Foto Peserta</label>
-          <div class="flex items-center gap-4 mb-3">
-             <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0">
-                @if($testimonial->avatar_path)
-                  <img src="{{ asset('storage/' . $testimonial->avatar_path) }}" class="w-full h-full object-cover">
-                @else
-                  <div class="w-full h-full flex items-center justify-center text-slate-400 font-bold uppercase">{{ substr($testimonial->name, 0, 1) }}</div>
-                @endif
-             </div>
-             <div class="text-[10px] text-slate-500 italic">Pilih file baru untuk mengganti avatar.</div>
-          </div>
-          <input type="file" name="avatar" accept="image/*"
-                 class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
-        </div>
+
 
         <div class="flex items-center pt-2">
           <label class="flex items-center gap-3 cursor-pointer">
