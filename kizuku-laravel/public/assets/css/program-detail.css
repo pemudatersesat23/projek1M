@@ -372,14 +372,19 @@
   margin-bottom: 12px;
 }
 
-/* ── Batch Card (Sticky Right) ── */
+/* ── Batch Section Wrapper (Sticky Sidebar) ── */
+.batch-section-wrapper {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+
+/* ── Batch Card ── */
 .batch-card {
   background: white;
   border: 1px solid #f1f5f9;
   border-radius: 32px;
   padding: 40px;
-  position: sticky;
-  top: 100px;
   box-shadow: 0 30px 60px rgba(0,103,163,0.08);
 }
 .batch-status-badge {

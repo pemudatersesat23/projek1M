@@ -99,6 +99,7 @@
     padding: 16px 20px;
     background: #fff;
     border-top: 1px solid #f1f5f9;
+    text-align: center;
   }
   
   .fasilitas-nav-btn {
