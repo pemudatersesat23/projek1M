@@ -35,23 +35,19 @@
                     {{ $berita->emoji }}
                 </div>
             @endif
-
             <div class="p-8 md:p-12">
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-                        {{ \App\Helpers\KategoriHelper::label($berita->kategori) }}
-                    </span>
-                    <span class="text-slate-400 text-sm">
-                        {{ $berita->created_at->format('d M Y') }}
-                    </span>
-                </div>
-
-                <h1 style="font-size: 32px; font-weight: 800; color: #1e293b; margin-bottom: 24px; line-height: 1.2;">
+                <h1 style="font-size: 32px; font-weight: 800; color: #1e293b; margin-top: 12px; margin-bottom: 24px; line-height: 1.2;">
                     {{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}
                 </h1>
 
-                <div class="berita-content" style="color: #475569; line-height: 1.8; font-size: 16px; white-space: pre-line;">
+                <div class="berita-content" style="color: #475569; line-height: 1.8; font-size: 16px; white-space: pre-line; margin-bottom: 30px;">
                     {!! nl2br(e($berita->getTranslation('isi', app()->getLocale()) ?: $berita->isi)) !!}
+                </div>
+
+                <div style="padding-top: 20px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end;">
+                    <span style="font-size: 12px; color: #94a3b8; font-weight: 500;">
+                        Dibuat pada {{ $berita->created_at->format('d M Y') }}
+                    </span>
                 </div>
             </div>
         </article>

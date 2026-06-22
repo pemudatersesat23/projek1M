@@ -37,14 +37,16 @@
                       <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1; font-size:3rem;">{{ $berita->emoji }}</span>
                     @endif
                   </div>
-                  <div class="berita-body" style="flex-grow: 1; display: flex; flex-direction: column;">
+                  <div class="berita-body" style="flex-grow: 1; display: flex; flex-direction: column; padding: 18px 20px 20px;">
                     <div class="berita-meta" style="margin-bottom: 8px;">
                       <span class="b-kategori {{ $berita->kategori }}">{{ \App\Helpers\KategoriHelper::label($berita->kategori) }}</span>
-                      <span class="b-date">{{ $berita->created_at->format('d M Y') }}</span>
                     </div>
-                    <h4 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}</h4>
-                    <p style="margin: 0; font-size: 14px; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{{ $berita->getTranslation('isi', app()->getLocale()) ?: $berita->isi }}</p>
-                    <a href="{{ route('berita.show', $berita->id) }}" style="display:inline-block; margin-top:auto; padding-top:10px; font-weight:bold; color:var(--primary); font-size:13px;">{{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? '続きを読む' : 'Baca Selengkapnya' }} &rarr;</a>
+                    <h4 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; flex-grow: 1;">{{ $berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul }}</h4>
+                    
+                    <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid #f1f5f9; flex-wrap: wrap; gap: 8px;">
+                      <a href="{{ route('berita.show', $berita->id) }}" style="font-weight:bold; color:var(--primary); font-size:13px; text-decoration:none;">{{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? '続きを読む' : 'Baca Selengkapnya' }} &rarr;</a>
+                      <span class="b-date" style="font-size: 11.5px; color: #94a3b8; white-space: nowrap;">Dibuat pada {{ $berita->created_at->format('d M Y') }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
