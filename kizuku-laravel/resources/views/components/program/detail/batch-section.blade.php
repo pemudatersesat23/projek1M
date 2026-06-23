@@ -14,33 +14,47 @@
 
       <div class="schema-list" style="display: flex; flex-direction: column; gap: 16px;">
         @foreach($program->activeSchemas as $schema)
-          <label class="schema-option" style="display: block; cursor: pointer;">
-            <input type="radio" name="schema_selection" value="{{ $schema->id }}" style="display: none;" onchange="selectSchema({{ $schema->id }})">
-            <div class="schema-box" id="schema-box-{{ $schema->id }}" style="padding: 20px; border: 2px solid #e2e8f0; border-radius: 16px; transition: all 0.3s;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                <div>
-                  <span style="display: inline-block; padding: 4px 10px; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
-                    {{ str_replace('_', ' ', $schema->tipe) }}
-                  </span>
-                  <h4 style="font-size: 16px; font-weight: 800; color: #0f1c23;">{{ $schema->getTranslation('nama_skema', app()->getLocale()) ?: $schema->nama_skema }}</h4>
-                </div>
-                <div class="schema-radio-circle" style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #cbd5e1; position: relative;">
-                  <div class="schema-radio-dot" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 10px; height: 10px; border-radius: 50%; background: var(--primary); transition: all 0.2s;"></div>
-                </div>
+          <div class="schema-box" id="schema-box-{{ $schema->id }}" onclick="selectSchema({{ $schema->id }})" style="padding: 20px; border: 2px solid #e2e8f0; border-radius: 16px; transition: all 0.3s; cursor: pointer;">
+            <input type="radio" name="schema_selection" value="{{ $schema->id }}" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div>
+                <span style="display: inline-block; padding: 4px 10px; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
+                  {{ str_replace('_', ' ', $schema->tipe) }}
+                </span>
+                <h4 style="font-size: 16px; font-weight: 800; color: #0f1c23;">{{ $schema->getTranslation('nama_skema', app()->getLocale()) ?: $schema->nama_skema }}</h4>
               </div>
-              
-              <p style="font-size: 13px; color: #64748b; margin-bottom: 12px; line-height: 1.5;">
-                {{ $schema->getTranslation('deskripsi', app()->getLocale()) ?: $schema->deskripsi }}
-              </p>
-              
-              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 12px;">
-                <span style="font-size: 14px; font-weight: 900; color: var(--primary);">{{ $schema->formattedPrice() }}</span>
-                @if($schema->batch)
-                  <span style="font-size: 12px; font-weight: 700; color: #f59e0b;">🔥 Khusus: {{ $schema->batch->nama_batch }}</span>
-                @endif
+              <div class="schema-radio-circle" style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #cbd5e1; position: relative;">
+                <div class="schema-radio-dot" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 10px; height: 10px; border-radius: 50%; background: var(--primary); transition: all 0.2s;"></div>
               </div>
             </div>
-          </label>
+            
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 12px; line-height: 1.5;">
+              {{ $schema->getTranslation('deskripsi', app()->getLocale()) ?: $schema->deskripsi }}
+            </p>
+
+            @if($schema->persyaratan)
+              <div class="schema-requirements" style="margin-top: 12px; margin-bottom: 12px; padding: 12px; background: rgba(0,0,0,0.02); border-radius: 8px; font-size: 12px; color: #475569;">
+                <strong style="display: block; color: #0f1c23; margin-bottom: 6px; font-size: 12px; font-weight: 800;">Persyaratan Khusus:</strong>
+                <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                  @foreach(explode("\n", trim($schema->getTranslation('persyaratan', app()->getLocale()) ?: $schema->persyaratan)) as $line)
+                    @if(trim($line))
+                      <li style="display: flex; align-items: flex-start; gap: 6px; line-height: 1.4;">
+                        <span style="color: var(--primary); font-weight: bold;">•</span>
+                        <span>{{ ltrim(trim($line), '- ') }}</span>
+                      </li>
+                    @endif
+                  @endforeach
+                </ul>
+              </div>
+            @endif
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 12px;">
+              <span style="font-size: 14px; font-weight: 900; color: var(--primary);">{{ $schema->formattedPrice() }}</span>
+              @if($schema->batch)
+                <span style="font-size: 12px; font-weight: 700; color: #f59e0b;">🔥 Khusus: {{ $schema->batch->nama_batch }}</span>
+              @endif
+            </div>
+          </div>
         @endforeach
       </div>
     </div>
@@ -125,15 +139,15 @@
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-  .schema-option input:checked + .schema-box {
-    border-color: var(--primary);
-    background: #f0f9ff;
+  .schema-box.active {
+    border-color: var(--primary) !important;
+    background: #f0f9ff !important;
   }
-  .schema-option input:checked + .schema-box .schema-radio-circle {
-    border-color: var(--primary);
+  .schema-box.active .schema-radio-circle {
+    border-color: var(--primary) !important;
   }
-  .schema-option input:checked + .schema-box .schema-radio-dot {
-    transform: translate(-50%, -50%) scale(1);
+  .schema-box.active .schema-radio-dot {
+    transform: translate(-50%, -50%) scale(1) !important;
   }
 </style>
 
@@ -150,15 +164,17 @@
     const schemaInput = document.getElementById('selected_schema_id');
     if (schemaInput) schemaInput.value = id;
 
+    // Check the radio input programmatically
+    const radio = document.querySelector(`input[name="schema_selection"][value="${id}"]`);
+    if (radio) radio.checked = true;
+
     // Update active state visuals
     document.querySelectorAll('.schema-box').forEach(box => {
-      box.style.borderColor = '#e2e8f0';
-      box.style.background  = 'transparent';
+      box.classList.remove('active');
     });
     const activeBox = document.getElementById('schema-box-' + id);
     if (activeBox) {
-      activeBox.style.borderColor = 'var(--primary)';
-      activeBox.style.background  = '#f0f9ff';
+      activeBox.classList.add('active');
     }
 
     // Fetch dynamic fields for this schema and inject them
@@ -205,8 +221,6 @@
     // Use single loop to maintain order
     fields.forEach(f => {
         if (f.type === 'file') {
-            // For files, we might still want a grid or specific wrapper if needed, 
-            // but let's follow the builder's order.
             container.insertAdjacentHTML('beforeend', buildFieldHtml(f));
         } else {
             container.insertAdjacentHTML('beforeend', buildFieldHtml(f));
@@ -219,6 +233,19 @@
   }
 
   function buildFieldHtml(f) {
+    if (f.type === 'section') {
+      const desc = f.description ? `<p class="text-sm text-slate-500 mt-1 pl-[5px] whitespace-pre-line leading-relaxed">${escHtml(f.description)}</p>` : '';
+      
+      return `
+        <div class="form-full py-6 mt-4 border-t border-slate-100 first:border-t-0 first:mt-0">
+          <div class="flex items-center gap-3 mb-2">
+            <h3 class="text-xl font-bold text-slate-800">${escHtml(f.label)}</h3>
+          </div>
+          ${desc}
+        </div>
+      `;
+    }
+
     const reqAttr = f.is_required ? 'required' : '';
     const req     = f.is_required ? '<span style="color:#E31E24">*</span>' : '';
     const isHalf  = ['text','email','phone','number','date','select','radio'].includes(f.type);
@@ -261,18 +288,6 @@
         <div class="upload-text text-[11px] font-bold">${escHtml(f.label)}</div>
         <div class="file-name-display text-[10px]">Format: ${exts.map(e => escHtml(e)).join(', ')} | Maks: ${maxMb} MB</div>
       </div>`;
-    }
-
-      const desc = f.description ? `<p class="text-sm text-slate-500 mt-1 pl-[5px] whitespace-pre-line leading-relaxed">${escHtml(f.description)}</p>` : '';
-      
-      return `
-        <div class="form-full py-6 mt-4 border-t border-slate-100 first:border-t-0 first:mt-0">
-          <div class="flex items-center gap-3 mb-2">
-            <h3 class="text-xl font-bold text-slate-800">${escHtml(f.label)}</h3>
-          </div>
-          ${desc}
-        </div>
-      `;
     }
 
     const hint = f.description ? `<p class="dynamic-field-hint">${escHtml(f.description)}</p>` : '';

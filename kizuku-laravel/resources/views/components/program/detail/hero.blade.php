@@ -31,7 +31,9 @@
 
       {{-- Kiri: Judul + Stats --}}
       <div class="reveal">
-        <div class="pd-tag">{{ __('messages.hero.badge') }}</div>
+        @if($program->is_featured)
+          <div class="pd-tag">{{ __('messages.hero.badge') }}</div>
+        @endif
         <h1 class="pd-h1">{{ $program->nama_program }}</h1>
         <p class="pd-p">{{ $program->deskripsi }}</p>
 
