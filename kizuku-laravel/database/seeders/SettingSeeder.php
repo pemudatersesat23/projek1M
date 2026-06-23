@@ -13,19 +13,19 @@ class SettingSeeder extends Seeder
             [
                 'key' => 'office_address',
                 'label' => 'Alamat Kantor',
-                'value' => 'Jl. Bontotangnga, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
+                'value' => 'Jl. Bontotangnga No.47, Paccinongang, Kec. Somba Opu, Kabupaten Gowa, Sulawesi Selatan 90233',
                 'type' => 'textarea',
             ],
             [
                 'key' => 'whatsapp_number',
                 'label' => 'Nomor WhatsApp (Contoh: 6281234567890)',
-                'value' => '6281217549529',
+                'value' => '6282261888851',
                 'type' => 'text',
             ],
             [
-                'key' => 'admin_email',
-                'label' => 'Email Admin',
-                'value' => 'info@kizuku-academy.com',
+                'key' => 'facebook_url',
+                'label' => 'Facebook URL',
+                'value' => 'https://www.facebook.com/share/1BHHcLbuLP/?mibextid=wwXIfr',
                 'type' => 'text',
             ],
             [

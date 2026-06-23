@@ -431,12 +431,6 @@ class FinalDynamicFormQaTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        [, , , $noName] = $this->createQaForm(status: 'draft', includeName: false);
-        $this->actingAs($admin)->postJson(route('admin.forms.publish', $noName))->assertUnprocessable();
-
-        [, , , $noContact] = $this->createQaForm('qa-no-contact', status: 'draft', includeEmail: false, includePhone: false);
-        $this->actingAs($admin)->postJson(route('admin.forms.publish', $noContact))->assertUnprocessable();
-
         [, , , $duplicateRole] = $this->createQaForm('qa-duplicate-role', status: 'draft');
         $this->addField($duplicateRole, 'nama_lengkap_dua', 'Nama Lain', 'text', 'applicant_name');
         $this->actingAs($admin)->postJson(route('admin.forms.publish', $duplicateRole))->assertUnprocessable();

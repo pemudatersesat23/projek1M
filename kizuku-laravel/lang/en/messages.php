@@ -143,11 +143,11 @@ return [
         'kontak_labels' => [
             'address' => 'Alamat',
             'phone' => 'WhatsApp',
-            'email' => 'Email',
+            'email' => 'Facebook',
             'hours' => 'Jam Operasional',
         ],
         'kontak_btn_wa' => '💬 Chat WhatsApp',
-        'kontak_btn_email' => '✉️ Kirim Email',
+        'kontak_btn_email' => '📘 Facebook',
         'kontak_form_title' => 'Form Pendaftaran',
         'kontak_form_sub' => 'Isi form di bawah, kami akan menghubungi kamu dalam 1×24 jam.',
         'kontak_form_program_ph' => '-- Pilih Program --',

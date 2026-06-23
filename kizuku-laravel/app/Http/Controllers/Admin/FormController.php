@@ -157,13 +157,18 @@ class FormController extends Controller
         }
 
         $hasName = $activeFields->where('field_role', 'applicant_name')->count();
-        if ($hasName !== 1) {
-            return response()->json(['message' => 'Gagal publish: Form harus memiliki tepat satu field dengan role "applicant_name".'], 422);
+        if ($hasName > 1) {
+            return response()->json(['message' => 'Gagal publish: Form tidak boleh memiliki lebih dari satu field dengan role "applicant_name".'], 422);
         }
 
-        $hasContact = $activeFields->whereIn('field_role', ['applicant_email', 'applicant_phone'])->isNotEmpty();
-        if (!$hasContact) {
-            return response()->json(['message' => 'Gagal publish: Form harus meminta Email atau Nomor WhatsApp.'], 422);
+        $emailCount = $activeFields->where('field_role', 'applicant_email')->count();
+        if ($emailCount > 1) {
+            return response()->json(['message' => 'Gagal publish: Form tidak boleh memiliki lebih dari satu field dengan role "applicant_email".'], 422);
+        }
+
+        $phoneCount = $activeFields->where('field_role', 'applicant_phone')->count();
+        if ($phoneCount > 1) {
+            return response()->json(['message' => 'Gagal publish: Form tidak boleh memiliki lebih dari satu field dengan role "applicant_phone".'], 422);
         }
 
         $uniqueNames = $activeFields->pluck('field_name')->unique()->count() === $activeFields->count();

@@ -335,22 +335,7 @@
                             <input type="text" class="field-name-input text-[10px] font-mono text-slate-400 bg-transparent border-none focus:ring-0 p-0 w-32" placeholder="field_name">
                         </div>
                     </div>
-                    
-                    <button type="button" class="toggle-adv-meta text-[9px] font-bold text-slate-400 hover:text-purple-600 uppercase tracking-widest">
-                        + More Options (JP, Placeholder, Desc)
-                    </button>
-                    <div class="adv-meta-container hidden space-y-3 bg-slate-50 p-3 rounded border border-slate-100">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div class="space-y-1">
-                                <label class="text-[9px] font-bold text-slate-400 uppercase">Placeholder (ID)</label>
-                                <input type="text" class="field-placeholder-id w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-[9px] font-bold text-slate-400 uppercase">Description (ID)</label>
-                                <input type="text" class="field-description-id w-full text-xs border-slate-200 rounded focus:ring-purple-100 focus:border-purple-600">
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 
                 <div class="w-full sm:w-52 shrink-0">
@@ -515,8 +500,7 @@
         card.querySelector('.field-type-select').value = field.type || 'text';
         card.querySelector('.field-role-select').value = field.field_role || 'none';
         card.querySelector('.field-required-toggle').checked = !!field.is_required;
-        card.querySelector('.field-placeholder-id').value = field.placeholder?.id || '';
-        card.querySelector('.field-description-id').value = field.description?.id || '';
+
         
         // Real-time label update for inactive view
         card.querySelector('.field-label-id').addEventListener('input', (e) => {
@@ -543,10 +527,7 @@
             updateTypeIcon(card, e.target.value);
         });
 
-        card.querySelector('.toggle-adv-meta').addEventListener('click', (e) => {
-            e.stopPropagation();
-            card.querySelector('.adv-meta-container').classList.toggle('hidden');
-        });
+
 
         card.querySelector('.add-option-btn').addEventListener('click', (e) => { e.stopPropagation(); addOptionRow(card); });
         card.querySelector('.save-field-btn').addEventListener('click', (e) => { e.stopPropagation(); saveField(card); });
@@ -672,8 +653,8 @@
         const payload = {
             program_id: {{ $form->program_id }}, schema_id: {{ $form->schema_id ?? 'null' }},
             label_id: card.querySelector('.field-label-id').value || 'Untitled',
-            placeholder_id: card.querySelector('.field-placeholder-id').value,
-            description_id: card.querySelector('.field-description-id').value,
+            placeholder_id: null,
+            description_id: null,
             field_name: card.querySelector('.field-name-input').value,
             type: type, field_role: card.querySelector('.field-role-select').value,
             is_required: card.querySelector('.field-required-toggle').checked ? 1 : 0, status: 'aktif'

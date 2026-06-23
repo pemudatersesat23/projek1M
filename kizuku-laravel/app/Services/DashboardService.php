@@ -88,17 +88,30 @@ class DashboardService
         $laporanBulanan = [];
         $sixMonthsAgo = Carbon::now()->subMonths(5)->startOfMonth();
 
-        // Single query dengan SQL GROUP BY — jauh lebih efisien dari load-all-in-PHP
-        $monthlyStats = Applicant::selectRaw('
-                YEAR(created_at)  AS tahun,
-                MONTH(created_at) AS bulan_num,
-                COUNT(*)          AS total,
-                SUM(CASE WHEN status_seleksi = "lolos" THEN 1 ELSE 0 END) AS lolos
-            ')
-            ->where('created_at', '>=', $sixMonthsAgo)
-            ->groupByRaw('YEAR(created_at), MONTH(created_at)')
-            ->get()
-            ->keyBy(fn ($r) => $r->tahun . '-' . str_pad($r->bulan_num, 2, '0', STR_PAD_LEFT));
+        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        if ($driver === 'sqlite') {
+            $monthlyStats = Applicant::selectRaw("
+                    strftime('%Y', created_at) AS tahun,
+                    cast(strftime('%m', created_at) as integer) AS bulan_num,
+                    COUNT(*)          AS total,
+                    SUM(CASE WHEN status_seleksi = 'lolos' THEN 1 ELSE 0 END) AS lolos
+                ")
+                ->where('created_at', '>=', $sixMonthsAgo)
+                ->groupByRaw("strftime('%Y', created_at), strftime('%m', created_at)")
+                ->get()
+                ->keyBy(fn ($r) => $r->tahun . '-' . str_pad($r->bulan_num, 2, '0', STR_PAD_LEFT));
+        } else {
+            $monthlyStats = Applicant::selectRaw('
+                    YEAR(created_at)  AS tahun,
+                    MONTH(created_at) AS bulan_num,
+                    COUNT(*)          AS total,
+                    SUM(CASE WHEN status_seleksi = "lolos" THEN 1 ELSE 0 END) AS lolos
+                ')
+                ->where('created_at', '>=', $sixMonthsAgo)
+                ->groupByRaw('YEAR(created_at), MONTH(created_at)')
+                ->get()
+                ->keyBy(fn ($r) => $r->tahun . '-' . str_pad($r->bulan_num, 2, '0', STR_PAD_LEFT));
+        }
 
         for ($i = 0; $i < 6; $i++) {
             $date = Carbon::now()->subMonths($i);

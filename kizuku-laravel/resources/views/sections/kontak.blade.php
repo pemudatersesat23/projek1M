@@ -6,31 +6,51 @@
         <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.kontak_tag') }}</div>
         <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.kontak_h2') !!}</h2>
         <p>{{ __('messages.home.kontak_p') }}</p>
-        <div class="kontak-item"><div class="k-icon">📍</div><div><div class="k-label">{{ __('messages.home.kontak_labels.address') }}</div><div class="k-val">{{ $appSettings['office_address'] }}</div></div></div>
-        <div class="kontak-item"><div class="k-icon">📱</div><div><div class="k-label">{{ __('messages.home.kontak_labels.phone') }}</div><div class="k-val">+{{ $appSettings['whatsapp_number'] }}</div></div></div>
-        <div class="kontak-item"><div class="k-icon">📧</div><div><div class="k-label">{{ __('messages.home.kontak_labels.email') }}</div><div class="k-val">{{ $appSettings['admin_email'] }}</div></div></div>
-        <div class="kontak-item">
+        <a href="https://maps.app.goo.gl/4h96GCFLLyAQPb3o6" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
+          <div class="k-icon">📍</div>
+          <div>
+            <div class="k-label">{{ __('messages.home.kontak_labels.address') }}</div>
+            <div class="k-val">{{ $appSettings['office_address'] }}</div>
+          </div>
+        </a>
+        <a href="https://wa.me/{{ $appSettings['whatsapp_number'] }}" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
+          <div class="k-icon">📱</div>
+          <div>
+            <div class="k-label">{{ __('messages.home.kontak_labels.phone') }}</div>
+            <div class="k-val">+{{ $appSettings['whatsapp_number'] }}</div>
+          </div>
+        </a>
+        <a href="{{ $appSettings['facebook_url'] }}" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
+          <div class="k-icon" style="display:flex; align-items:center; justify-content:center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #1877F2;"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          </div>
+          <div>
+            <div class="k-label">{{ __('messages.home.kontak_labels.email') }}</div>
+            <div class="k-val">Kizuku International Academy</div>
+          </div>
+        </a>
+        <a href="https://www.instagram.com/kizuku.academy" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
           <div class="k-icon" style="display:flex; align-items:center; justify-content:center;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #E1306C;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </div>
           <div>
             <div class="k-label">Instagram</div>
-            <div class="k-val"><a href="https://instagram.com/kizuku_academy" target="_blank" style="color:inherit; text-decoration:none;">@kizuku_academy</a></div>
+            <div class="k-val">@kizuku.academy</div>
           </div>
-        </div>
-        <div class="kontak-item">
+        </a>
+        <a href="https://www.tiktok.com/@kizuku.academy" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
           <div class="k-icon" style="display:flex; align-items:center; justify-content:center;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #000000;"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
           </div>
           <div>
             <div class="k-label">TikTok</div>
-            <div class="k-val"><a href="https://tiktok.com/@kizuku_academy" target="_blank" style="color:inherit; text-decoration:none;">@kizuku_academy</a></div>
+            <div class="k-val">@kizuku.academy</div>
           </div>
-        </div>
+        </a>
         <div class="kontak-item"><div class="k-icon">⏰</div><div><div class="k-label">{{ __('messages.home.kontak_labels.hours') }}</div><div class="k-val">{{ $appSettings['office_hours'] }}</div></div></div>
         <div style="margin-top:24px;">
           <a class="btn btn-primary" href="https://wa.me/{{ $appSettings['whatsapp_number'] }}" target="_blank" style="margin-right:10px;">{{ __('messages.home.kontak_btn_wa') }}</a>
-          <a class="btn btn-outline" href="mailto:{{ $appSettings['admin_email'] }}">{{ __('messages.home.kontak_btn_email') }}</a>
+          <a class="btn btn-outline" href="{{ $appSettings['facebook_url'] }}" target="_blank">{{ __('messages.home.kontak_btn_email') }}</a>
         </div>
       </div>
 

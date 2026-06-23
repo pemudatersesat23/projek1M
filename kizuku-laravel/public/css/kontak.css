@@ -36,6 +36,12 @@
     align-items: flex-start;
     gap: 14px;
     margin-bottom: 18px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+a.kontak-item:hover {
+    transform: translateX(4px);
+    opacity: 0.85;
 }
 
 .k-icon {
