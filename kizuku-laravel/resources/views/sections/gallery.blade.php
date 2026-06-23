@@ -9,7 +9,7 @@
 
     <div class="swiper gallerySwiper reveal">
       <div class="swiper-wrapper">
-        @forelse($galleries as $gallery)
+        @foreach($galleries as $gallery)
           <div class="swiper-slide">
             <div class="gallery-card">
               <img src="{{ asset('storage/' . $gallery->image) }}" alt="{{ $gallery->title }}" class="gallery-img">
@@ -20,11 +20,7 @@
               @endif
             </div>
           </div>
-        @empty
-          <div class="text-center text-slate-500 py-12 w-full">
-            <p>{{ __('messages.home.gallery_empty') ?: 'Belum ada foto kegiatan.' }}</p>
-          </div>
-        @endforelse
+        @endforeach
       </div>
       <!-- Add Pagination -->
       <div class="swiper-pagination !-bottom-2"></div>
