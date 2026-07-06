@@ -34,7 +34,14 @@ class AppServiceProvider extends ServiceProvider
             'youtube_link'    => 'https://youtube.com/@kizuku_academy',
         ];
 
-        View::share('appSettings', Schema::hasTable('settings') ? [
+        $hasSettingsTable = false;
+        try {
+            $hasSettingsTable = Schema::hasTable('settings');
+        } catch (\Throwable $e) {
+            // Database not ready or not migrated yet
+        }
+
+        View::share('appSettings', $hasSettingsTable ? [
             'whatsapp_number' => Setting::get('whatsapp_number', $defaultSettings['whatsapp_number']),
             'facebook_url'    => Setting::get('facebook_url', $defaultSettings['facebook_url']),
             'office_address'  => Setting::get('office_address', $defaultSettings['office_address']),
