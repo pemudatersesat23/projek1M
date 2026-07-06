@@ -724,8 +724,8 @@
         el.setAttribute('translate', 'no');
       });
 
-      var googtrans = getCookie('googtrans');
-      var isJp = (googtrans === '/id/ja');
+      // Cek seluruh cookie googtrans yang aktif di browser (menghindari bug duplikasi cookie domain di production)
+      var isJp = document.cookie.includes('googtrans=/id/ja');
 
       var btnIds = document.querySelectorAll('.lang-btn-id');
       var btnJps = document.querySelectorAll('.lang-btn-jp');
