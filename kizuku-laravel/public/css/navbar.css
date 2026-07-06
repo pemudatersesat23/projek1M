@@ -113,13 +113,24 @@ nav.scrolled {
     padding: 16px 5vw 20px;
     flex-direction: column;
     gap: 4px;
+    max-height: calc(100vh - 68px);
+    overflow-y: auto;
 }
 
 .mobile-menu.open {
     display: flex;
 }
 
+.mob-links {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .mobile-menu a {
+    display: block; /* Membuat menu berjejer ke bawah */
+    width: 100%;
+    text-align: left; /* Rata kiri */
     text-decoration: none;
     color: var(--black);
     font-size: 14px;
@@ -127,9 +138,34 @@ nav.scrolled {
     padding: 10px 14px;
     border-radius: 12px;
     transition: background .18s;
+    box-sizing: border-box;
 }
 
 .mobile-menu a:hover {
+    background: var(--gray);
+}
+
+.mob-auth-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mob-auth-section .mob-link {
+    display: block;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 12px;
+    transition: background .18s;
+    box-sizing: border-box;
+}
+
+.mob-auth-section .mob-link:hover {
     background: var(--gray);
 }
 
