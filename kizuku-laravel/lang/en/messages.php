@@ -137,6 +137,7 @@ return [
         'testi_tag' => '✦ Testimoni',
         'testi_h2' => 'Cerita Sukses Alumni Kizuku',
         'testi_p' => 'Bukan kami yang bilang — dengarlah langsung dari mereka yang sudah membuktikannya.',
+        'testi_empty' => 'No testimonials available yet.',
         'kontak_tag' => '✦ Hubungi Kami',
         'kontak_h2' => 'Siap Mulai Perjalananmu?',
         'kontak_p' => 'Tim kami siap membantu kamu memilih program terbaik, menjawab pertanyaan, dan memandu proses pendaftaran dari awal hingga akhir.',
