@@ -456,10 +456,10 @@
         <div class="ft-col">
           <h5>{{ __('messages.nav.program') }}</h5>
           <ul>
-            <li><a href="{{ route('pages.tokutei') }}">Tokutei Ginou (TG)</a></li>
-            <li><a href="{{ route('pages.engineer') }}">Engineering</a></li>
-            <li><a href="{{ route('pages.kursus') }}">Kelas Bahasa Jepang</a></li>
-            <li><a href="{{ route('pages.magang') }}">Returnee / Ex Jepang</a></li>
+            <li><span>Tokutei Ginou (TG)</span></li>
+            <li><span>Engineering</span></li>
+            <li><span>Kelas Bahasa Jepang</span></li>
+            <li><span>Returnee / Ex Jepang</span></li>
           </ul>
         </div>
         <div class="ft-col">
