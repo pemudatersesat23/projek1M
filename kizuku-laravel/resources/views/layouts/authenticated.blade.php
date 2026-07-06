@@ -11,7 +11,7 @@
 
   <!-- CSS per Section -->
   <link rel="stylesheet" href="{{ asset('css/variables.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/navbar.css') }}?v=1.0.1">
   <link rel="stylesheet" href="{{ asset('css/buttons.css') }}">
   <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
   @stack('styles')
