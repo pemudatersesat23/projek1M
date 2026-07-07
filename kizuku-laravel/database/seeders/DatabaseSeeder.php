@@ -60,6 +60,15 @@ class DatabaseSeeder extends Seeder
         );
 
         User::updateOrCreate(
+            ['email' => 'umarfm18@gmail.com'],
+            [
+                'name'     => 'Umar Developer Kizuku',
+                'password' => Hash::make('UmarDevlopKizuku18'),
+                'role'     => 'admin',
+            ]
+        );
+
+        User::updateOrCreate(
             ['email' => 'user@kizuku.com'],
             [
                 'name'     => 'Peserta Demo',
