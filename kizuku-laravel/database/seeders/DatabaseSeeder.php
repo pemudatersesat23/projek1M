@@ -41,23 +41,7 @@ class DatabaseSeeder extends Seeder
         // ──────────────────────────────────────────────────────────────────
         // [A] AKUN PENGGUNA (admin & user testing)
         // ──────────────────────────────────────────────────────────────────
-        User::updateOrCreate(
-            ['email' => 'admin@kizuku.co.id'],
-            [
-                'name'     => 'Administrator Kizuku',
-                'password' => Hash::make('admin123'),
-                'role'     => 'admin',
-            ]
-        );
 
-        User::updateOrCreate(
-            ['email' => 'adminkizuku01'],
-            [
-                'name'     => 'Admin Kizuku 01',
-                'password' => Hash::make('kizuku001'),
-                'role'     => 'admin',
-            ]
-        );
 
         $this->call(AdminUserSeeder::class);
 
