@@ -3,9 +3,7 @@
 @section('title', $program->nama_program . ' — LPK Kizuku International Academy')
 @section('meta_description', Str::limit(strip_tags($program->getTranslation('deskripsi', 'id') ?? ''), 160) . ' Daftar sekarang di LPK Kizuku International Academy.')
 @section('og_type', 'article')
-@if($program->thumbnail_path)
-@section('og_image', asset('storage/' . $program->thumbnail_path))
-@endif
+@section('og_image', $program->thumbnail_path ? asset('storage/' . $program->thumbnail_path) : asset('image/logo kiuzuku utama.png'))
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('assets/css/program-detail.css') }}">

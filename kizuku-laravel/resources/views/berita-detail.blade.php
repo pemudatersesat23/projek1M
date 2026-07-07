@@ -4,9 +4,7 @@
 @section('title', ($berita->getTranslation('judul', app()->getLocale()) ?: $berita->judul) . ' - LPK Kizuku')
 @section('meta_description', Str::limit(strip_tags($berita->getTranslation('isi', 'id') ?: $berita->isi), 160))
 @section('og_type', 'article')
-@if($berita->image)
-@section('og_image', asset('storage/' . $berita->image))
-@endif
+@section('og_image', $berita->image ? asset('storage/' . $berita->image) : asset('image/logo kiuzuku utama.png'))
 
 @section('content')
 <main class="berita-detail-page" style="padding-top: 68px; min-height: 80vh; background: radial-gradient(circle at 10% 10%, rgba(225, 6, 0, 0.03) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(15, 76, 129, 0.03) 0%, transparent 40%), #fff;">
