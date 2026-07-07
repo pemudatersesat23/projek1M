@@ -6,7 +6,7 @@
         <div class="sec-tag" style="background: rgba(15, 76, 129, 0.08); color: var(--blue); border-color: rgba(15, 76, 129, 0.1);">{{ __('messages.home.kontak_tag') }}</div>
         <h2 class="sec-h2" style="background: linear-gradient(90deg, var(--black), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{!! __('messages.home.kontak_h2') !!}</h2>
         <p>{{ __('messages.home.kontak_p') }}</p>
-        <a href="https://maps.google.com/?q={{ rawurlencode($appSettings['office_address']) }}" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
+        <a href="https://maps.app.goo.gl/4h96GCFLLyAQPb3o6" target="_blank" class="kontak-item" style="color:inherit; text-decoration:none;">
           <div class="k-icon">📍</div>
           <div>
             <div class="k-label">{{ __('messages.home.kontak_labels.address') }}</div>
@@ -53,7 +53,7 @@
         </div>
         <div style="flex:1; min-height: 360px; position: relative;">
           <iframe
-            src="https://maps.google.com/maps?q={{ rawurlencode($appSettings['office_address']) }}&t=&z=16&ie=UTF8&iwloc=&output=embed"
+            src="https://maps.google.com/maps?q=LPK+Kizuku+International+Academy&t=&z=16&ie=UTF8&iwloc=&output=embed"
             width="100%"
             height="100%"
             style="border:0; display:block; min-height:360px;"
@@ -64,7 +64,7 @@
           ></iframe>
         </div>
         <div style="padding: 16px 28px; border-top: 1px solid rgba(0,0,0,0.06);">
-          <a href="https://maps.google.com/?q={{ rawurlencode($appSettings['office_address']) }}" target="_blank" class="btn btn-primary" style="width:100%; text-align:center; display:block;">
+          <a href="https://maps.app.goo.gl/4h96GCFLLyAQPb3o6" target="_blank" class="btn btn-primary" style="width:100%; text-align:center; display:block;">
             🗺️ {{ __('messages.nav.home') === 'Beranda' ? 'Buka di Google Maps' : 'Google Mapsで開く' }}
           </a>
         </div>
