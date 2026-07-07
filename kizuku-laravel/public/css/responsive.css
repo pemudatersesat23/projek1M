@@ -36,6 +36,15 @@
 
 /* ═══════════════ RESPONSIVE ═══════════════ */
 @media (max-width: 900px) {
+    .nav-logo-img {
+        height: 52px !important;
+        flex-shrink: 0;
+    }
+
+    .nav-brand {
+        flex-shrink: 0;
+    }
+
     .hero-inner {
         grid-template-columns: 1fr;
         gap: 40px;
