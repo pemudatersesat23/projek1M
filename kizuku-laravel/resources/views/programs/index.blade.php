@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', __('messages.nav.program') . ' — LPK Kizuku International Academy')
+@section('meta_description', 'Pilih program pelatihan kerja ke Jepang terbaik: Tokutei Ginou, Engineering, kelas bahasa Jepang intensif, dan program returnee di LPK Kizuku International Academy Makassar.')
 
 @push('styles')
 <style>

@@ -1,6 +1,29 @@
 @extends('layouts.app')
 
 @section('title', app()->getLocale() == 'jp' ? 'FAQ (よくある質問) - Kizuku' : 'FAQ (Pertanyaan Umum) - Kizuku')
+@section('meta_description', 'Temukan jawaban untuk pertanyaan umum seputar pendaftaran, program kerja ke Jepang, persyaratan, biaya, dan proses keberangkatan di LPK Kizuku International Academy.')
+
+@push('seo')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    @php $allFaqs = collect($faqsGrouped)->flatten(1); @endphp
+    @foreach($allFaqs as $i => $faq)
+    {
+      "@type": "Question",
+      "name": "{{ e($faq->getTranslation('question', 'id')) }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ e($faq->getTranslation('answer', 'id')) }}"
+      }
+    }@if($i < $allFaqs->count() - 1),@endif
+    @endforeach
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 <!-- Hero Section FAQ -->

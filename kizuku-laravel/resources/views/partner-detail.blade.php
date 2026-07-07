@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('title', ($partnerCampus->getTranslation('name', app()->getLocale()) ?: $partnerCampus->name) . ' - LPK Kizuku')
+@section('meta_description', Str::limit(strip_tags($partnerCampus->getTranslation('description', 'id') ?: $partnerCampus->description), 160))
+@if($partnerCampus->logo)
+@section('og_image', Storage::url($partnerCampus->logo))
+@endif
 
 @section('content')
 <main class="partner-detail-page" style="padding-top: 68px; min-height: 80vh; background: radial-gradient(circle at 10% 10%, rgba(225, 6, 0, 0.03) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(15, 76, 129, 0.03) 0%, transparent 40%), #fff;">

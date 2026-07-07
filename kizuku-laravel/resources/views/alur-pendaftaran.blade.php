@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', __('messages.nav.alur') . ' — LPK Kizuku International Academy')
+@section('meta_description', 'Pahami alur pendaftaran dan proses seleksi kerja ke Jepang di LPK Kizuku International Academy. Mulai dari pendaftaran, pelatihan bahasa, hingga keberangkatan ke Jepang.')
 
 @push('styles')
 <style>

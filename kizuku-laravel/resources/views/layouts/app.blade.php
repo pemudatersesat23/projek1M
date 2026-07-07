@@ -4,7 +4,62 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>@yield('title', 'LPK Kizuku International Academy')</title>
+  <title>@yield('title', 'LPK Kizuku International Academy — Pelatihan Kerja ke Jepang Terpercaya')</title>
+
+  {{-- SEO Meta Tags --}}
+  <meta name="description" content="@yield('meta_description', 'LPK Kizuku International Academy adalah lembaga pelatihan kerja ke Jepang terpercaya di Makassar. Program Tokutei Ginou, Engineering, magang Jepang, dan kursus bahasa Jepang intensif.')">
+  <meta name="keywords" content="@yield('meta_keywords', 'kerja ke jepang, lpk makassar, tokutei ginou, magang jepang, kursus bahasa jepang makassar, kizuku academy, pelatihan kerja jepang, lowongan kerja jepang, belajar bahasa jepang, lpk sulawesi selatan')">
+  <meta name="author" content="LPK Kizuku International Academy">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ url()->current() }}">
+
+  {{-- Open Graph (Facebook, LinkedIn, WhatsApp) --}}
+  <meta property="og:type" content="@yield('og_type', 'website')">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:title" content="@yield('title', 'LPK Kizuku International Academy — Pelatihan Kerja ke Jepang Terpercaya')">
+  <meta property="og:description" content="@yield('meta_description', 'LPK Kizuku International Academy adalah lembaga pelatihan kerja ke Jepang terpercaya di Makassar. Program Tokutei Ginou, Engineering, magang Jepang, dan kursus bahasa Jepang intensif.')">
+  <meta property="og:image" content="@yield('og_image', asset('image/logo kiuzuku utama.png'))">
+  <meta property="og:site_name" content="LPK Kizuku International Academy">
+  <meta property="og:locale" content="id_ID">
+
+  {{-- Twitter Card --}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="@yield('title', 'LPK Kizuku International Academy — Pelatihan Kerja ke Jepang Terpercaya')">
+  <meta name="twitter:description" content="@yield('meta_description', 'LPK Kizuku International Academy adalah lembaga pelatihan kerja ke Jepang terpercaya di Makassar. Program Tokutei Ginou, Engineering, magang Jepang, dan kursus bahasa Jepang intensif.')">
+  <meta name="twitter:image" content="@yield('og_image', asset('image/logo kiuzuku utama.png'))">
+
+  {{-- JSON-LD Structured Data --}}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "LPK Kizuku International Academy",
+    "url": "{{ url('/') }}",
+    "logo": "{{ asset('image/logo kiuzuku utama.png') }}",
+    "description": "Lembaga pelatihan kerja ke Jepang terpercaya di Makassar yang menyediakan program Tokutei Ginou, Engineering, dan kursus bahasa Jepang intensif.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ $appSettings['office_address'] ?? 'Jl. Bontotangnga, Paccinongang' }}",
+      "addressLocality": "Kabupaten Gowa",
+      "addressRegion": "Sulawesi Selatan",
+      "postalCode": "90233",
+      "addressCountry": "ID"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+{{ $appSettings['whatsapp_number'] ?? '6282261888851' }}",
+      "contactType": "customer service",
+      "availableLanguage": ["Indonesian", "Japanese"]
+    },
+    "sameAs": [
+      "{{ $appSettings['facebook_url'] ?? '' }}",
+      "{{ $appSettings['instagram_link'] ?? 'https://www.instagram.com/kizuku.academy' }}",
+      "{{ $appSettings['tiktok_link'] ?? 'https://www.tiktok.com/@kizuku.academy' }}"
+    ]
+  }
+  </script>
+  @stack('seo')
+
   <link rel="icon" type="image/png" href="{{ asset('image/logo tab broswer.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
