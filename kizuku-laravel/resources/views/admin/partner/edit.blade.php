@@ -35,7 +35,7 @@
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Logo Kampus (Saat Ini)</label>
           <div class="mb-3 p-3 bg-slate-50 rounded-lg border border-slate-200 w-max">
-              <img src="{{ asset($partnerCampus->logo) }}" alt="Logo {{ $partnerCampus->name }}" class="h-24 object-contain">
+              <img src="{{ Storage::url($partnerCampus->logo) }}" alt="Logo {{ $partnerCampus->name }}" class="h-24 object-contain">
           </div>
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Ganti Logo (Opsional)</label>
           <input type="file" name="logo" accept="image/*"
@@ -48,7 +48,7 @@
           <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Gambar Banner (Saat Ini)</label>
           <div class="mb-3 p-1 bg-slate-50 rounded-lg border border-slate-200 w-max overflow-hidden">
               @if($partnerCampus->banner)
-                <img src="{{ asset($partnerCampus->banner) }}" alt="Banner {{ $partnerCampus->name }}" class="h-24 w-auto object-cover rounded">
+                <img src="{{ Storage::url($partnerCampus->banner) }}" alt="Banner {{ $partnerCampus->name }}" class="h-24 w-auto object-cover rounded">
               @else
                 <div class="h-24 w-40 flex items-center justify-center bg-slate-200 rounded text-slate-400 text-xs text-center p-2">Belum ada banner</div>
               @endif

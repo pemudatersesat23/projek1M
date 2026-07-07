@@ -51,6 +51,15 @@ class DatabaseSeeder extends Seeder
         );
 
         User::updateOrCreate(
+            ['email' => 'adminkizuku01'],
+            [
+                'name'     => 'Admin Kizuku 01',
+                'password' => Hash::make('kizuku001'),
+                'role'     => 'admin',
+            ]
+        );
+
+        User::updateOrCreate(
             ['email' => 'user@kizuku.com'],
             [
                 'name'     => 'Peserta Demo',

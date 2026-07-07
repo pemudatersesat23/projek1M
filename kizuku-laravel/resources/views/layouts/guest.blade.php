@@ -427,8 +427,8 @@
                 @csrf
 
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="admin@kizuku.com">
+                    <label for="email">Username / Email</label>
+                    <input id="email" type="text" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="Username / Email">
                 </div>
 
                 <div class="form-group">
