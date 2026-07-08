@@ -144,7 +144,8 @@ return [
         'kontak_labels' => [
             'address' => 'Alamat',
             'phone' => 'WhatsApp',
-            'email' => 'Facebook',
+            'email' => 'Email',
+            'facebook' => 'Facebook',
             'hours' => 'Jam Operasional',
         ],
         'kontak_btn_wa' => '💬 Chat WhatsApp',

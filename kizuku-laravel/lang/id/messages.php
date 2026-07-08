@@ -220,7 +220,8 @@ return [
         'kontak_labels' => [
             'address' => 'Alamat',
             'phone' => 'WhatsApp',
-            'email' => 'Facebook',
+            'email' => 'Email',
+            'facebook' => 'Facebook',
             'hours' => 'Jam Operasional',
         ],
         'kontak_loc_h3' => '📍 Lokasi Kami',
