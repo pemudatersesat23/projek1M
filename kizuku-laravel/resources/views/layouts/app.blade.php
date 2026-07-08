@@ -60,7 +60,7 @@
   </script>
   @stack('seo')
 
-  <link rel="icon" type="image/png" href="{{ asset('image/logo tab broswer.png') }}">
+  <link rel="icon" type="image/png" href="{{ asset('image/favicon-square.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
