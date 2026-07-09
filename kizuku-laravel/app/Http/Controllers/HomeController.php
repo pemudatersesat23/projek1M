@@ -34,11 +34,16 @@ class HomeController extends Controller
         $statKeys    = ['stats_active', 'stats_alumni', 'stats_success', 'stats_years', 'stats_programs'];
         $settingsMap = \App\Models\Setting::whereIn('key', $statKeys)->get()->keyBy('key');
 
+        $alumniVal = $settingsMap->get('stats_alumni')?->value;
+        if (in_array($alumniVal, [null, '', '-'], true)) {
+            $alumniVal = '100+';
+        }
+
         $siteStats = [
             'active'   => (bool) ($settingsMap->get('stats_active')?->value ?? 1),
             'items'    => [
                 [
-                    'value'     => $settingsMap->get('stats_alumni')?->value   ?? '100+',
+                    'value'     => $alumniVal,
                     'label_key' => 'messages.home.stats.alumni',
                 ],
                 [
