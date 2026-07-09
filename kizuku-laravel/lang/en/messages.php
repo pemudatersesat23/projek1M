@@ -122,8 +122,8 @@ return [
         'registration_success' => 'Pendaftaran Anda berhasil dikirim! Kami akan menghubungi Anda segera melalui WhatsApp.',
     ],
     'home' => [
-        'hero_pill' => 'Terpercaya sejak 2014 &nbsp;·&nbsp; 🇯🇵 Jepang',
-        'trust_text' => '1000+ alumni ditempatkan',
+        'hero_pill' => 'KIZUKU INTERNATIONAL ACADEMY',
+        'trust_text' => '100+ alumni ditempatkan',
         'trust_sub' => 'di berbagai perusahaan Jepang',
         'mc_title' => 'Program Tersedia',
         'program_tag' => '✦ Program Kami',

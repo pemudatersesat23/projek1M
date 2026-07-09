@@ -379,7 +379,7 @@
             <p>Kelola program pelatihan, berita, dan data peserta dari satu tempat yang mudah dan terpusat.</p>
             <div class="left-feature">
                 <div class="left-feature-item">
-                    <span class="feat-num">1000<span>+</span></span>
+                    <span class="feat-num">100<span>+</span></span>
                     <span class="feat-label">Alumni</span>
                 </div>
                 <div class="left-feature-item">

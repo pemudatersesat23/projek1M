@@ -38,7 +38,7 @@ class HomeController extends Controller
             'active'   => (bool) ($settingsMap->get('stats_active')?->value ?? 1),
             'items'    => [
                 [
-                    'value'     => $settingsMap->get('stats_alumni')?->value   ?? '1000+',
+                    'value'     => $settingsMap->get('stats_alumni')?->value   ?? '100+',
                     'label_key' => 'messages.home.stats.alumni',
                 ],
                 [

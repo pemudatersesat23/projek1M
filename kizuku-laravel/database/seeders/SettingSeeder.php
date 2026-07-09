@@ -61,7 +61,7 @@ class SettingSeeder extends Seeder
             [
                 'key' => 'stats_alumni',
                 'label' => 'Alumni Ditempatkan',
-                'value' => '1000+',
+                'value' => '100+',
                 'type' => 'text',
             ],
             [

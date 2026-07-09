@@ -545,7 +545,6 @@
             <li><span>Tokutei Ginou (TG)</span></li>
             <li><span>Engineering</span></li>
             <li><span>Kelas Bahasa Jepang</span></li>
-            <li><span>Returnee / Ex Jepang</span></li>
           </ul>
         </div>
         <div class="ft-col">
