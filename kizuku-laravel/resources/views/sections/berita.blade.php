@@ -45,7 +45,6 @@
                     
                     <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid #f1f5f9; flex-wrap: wrap; gap: 8px;">
                       <a href="{{ route('berita.show', $berita->id) }}" style="font-weight:bold; color:var(--primary); font-size:13px; text-decoration:none;">{{ (app()->getLocale() == 'ja' || app()->getLocale() == 'jp') ? '続きを読む' : 'Baca Selengkapnya' }} &rarr;</a>
-                      <span class="b-date" style="font-size: 11.5px; color: #94a3b8; white-space: nowrap;">Dibuat pada {{ $berita->created_at->format('d M Y') }}</span>
                     </div>
                   </div>
                 </div>

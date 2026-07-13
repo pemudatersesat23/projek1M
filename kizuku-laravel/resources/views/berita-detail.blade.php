@@ -47,11 +47,7 @@
                     {!! nl2br(e($berita->getTranslation('isi', app()->getLocale()) ?: $berita->isi)) !!}
                 </div>
 
-                <div style="padding-top: 20px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end;">
-                    <span style="font-size: 12px; color: #94a3b8; font-weight: 500;">
-                        Dibuat pada {{ $berita->created_at->format('d M Y') }}
-                    </span>
-                </div>
+
             </div>
         </article>
 
