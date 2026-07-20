@@ -6,7 +6,7 @@
 @push('seo')
 <script type="application/ld+json">
 {
-  "@@context": "https://schema.org",
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     @php $allFaqs = collect($faqsGrouped)->flatten(1); @endphp

@@ -31,7 +31,7 @@
   {{-- JSON-LD Structured Data --}}
   <script type="application/ld+json">
   {
-    "@@context": "https://schema.org",
+    "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     "name": "LPK Kizuku International Academy",
     "url": "{{ url('/') }}",
@@ -61,6 +61,7 @@
   @stack('seo')
 
   <link rel="icon" type="image/png" href="{{ asset('image/favicon-square.png') }}">
+  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
